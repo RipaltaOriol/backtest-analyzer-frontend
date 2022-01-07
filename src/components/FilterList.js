@@ -24,11 +24,6 @@ const FilterList = ({filters, removeFilter}) => {
 
   const classes = useStyles();
 
-  console.log(filters)
-  filters.map((name) => {
-    console.log(name)
-  })
-
   return (
     <List disablePadding>
       {filters.map((filter) => (

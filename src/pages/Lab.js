@@ -92,6 +92,7 @@ const Lab = () => {
         action,
         value
       }
+      console.log(filterObject)
       axios.put(API + '/labs/' + file.id + '/filter', filterObject, {
         headers: { 'Authorization': 'Bearer ' + token },
         params: { method: 'add' }

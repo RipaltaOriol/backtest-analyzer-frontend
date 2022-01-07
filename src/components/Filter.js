@@ -41,7 +41,7 @@ const Filter = ({applyFilter, filterList}) => {
       newChecked.splice(currentIndex, 1);
     }
     setChecked(newChecked)
-    setFilterValue(newChecked.toString())
+    setFilterValue(newChecked)
   }
 
   const dropdownUniqueOptions = (property) => {
@@ -49,6 +49,7 @@ const Filter = ({applyFilter, filterList}) => {
       return (
         <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
           {property.unique.map((value, i) => {
+            if (value !== null)
             return (
               <ListItem
                 key={i}

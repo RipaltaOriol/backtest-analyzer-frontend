@@ -25,7 +25,7 @@ const CreateLab = ({ changeFile }) => {
       headers: { 'Authorization': 'Bearer ' + token }
     })
     .then((response) => {
-      const id = response.data._id
+      const id = response.data._id['$oid']
       const name = response.data.name
       changeFile(id, name)
 
@@ -37,6 +37,7 @@ const CreateLab = ({ changeFile }) => {
   }
 
   const handleChange = (e) => {
+    
     setFile(e.target.value);
   }
 

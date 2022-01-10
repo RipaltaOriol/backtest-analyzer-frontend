@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { getAuth } from '../redux/auth'
-import { makeStyles } from '@mui/styles'
+import { getAuth } from '../../redux/auth'
 import Typography from '@mui/material/Typography'
 import TextField from '@mui/material/TextField'
 import Box from '@mui/material/Box'
@@ -10,24 +9,18 @@ import Container from '@mui/material/Container'
 import Button from '@mui/material/Button'
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
-
-const useStyles = makeStyles({
-  field: {
-    marginTop: 20,
-    marginBottom: 20,
-    display: 'block'
-  }
-})
-
 const Login = () => {
 
   const { token } = useSelector(state => state.auth)
   const dispatch = useDispatch()
   const history = useHistory()
-  const classes = useStyles();
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [errorMessage, setErrorMessage] = useState(null)
 
+  const handleError = (val) => {
+    setErrorMessage(val)
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -45,12 +38,14 @@ const Login = () => {
   return (
     <Container>
       { token ? 'You are logged in' : (
-        <Box>
+        <Box
+          sx={{ maxWidth: '400px', mx: 'auto'}}
+        >
           <Typography
+            sx={{ mb: 3 }}
             variant="h4"
             component="h1"
             color="primary"
-            align="left"
           >
             Log in
           </Typography>
@@ -60,22 +55,19 @@ const Login = () => {
             onSubmit={handleSubmit}
           >
             <TextField
-              id="outlined-basic"
-              className={classes.field}
+              sx={{ mb: 2 }}
               label="Email"
-              variant="outlined"
-              color="primary"
+              variant="standard"
               fullWidth
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
             <TextField
-              className={classes.field}
+              sx={{ mb: 2 }}
               type="password"
               label="Password"
-              variant="outlined"
-              color="primary"
+              variant="standard"
               fullWidth
               required
               value={password}

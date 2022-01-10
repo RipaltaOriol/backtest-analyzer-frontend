@@ -14,7 +14,7 @@ const Message = ({ message, setMessage, isError }) => {
   }, [message])
 
   return (
-    <Collapse in={open}>
+    <Collapse in={open} sx={{ mt: 3 }}>
       <Alert
         severity={alertType}
         action={
@@ -30,7 +30,6 @@ const Message = ({ message, setMessage, isError }) => {
             <CloseIcon fontSize="inherit" />
           </IconButton>
         }
-        sx={{ mb: 2 }}
       >
         {message}
       </Alert>

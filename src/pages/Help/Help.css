@@ -1,0 +1,16 @@
+body {
+  font-family: Montserrat,"Helvetica Neue",Helvetica,Arial;
+}
+
+.paragraph {
+  margin-bottom: 16px;
+}
+
+.note {
+  text-decoration: underline;
+}
+
+.marker {
+  padding: 0 5px;
+  background-color: #abcea1;
+}

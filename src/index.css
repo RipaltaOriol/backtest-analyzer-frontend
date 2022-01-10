@@ -13,3 +13,14 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+.MuiDataGrid-columnHeader:focus {
+  outline: none!important;
+}
+
+.MuiDataGrid-cell:focus {
+  outline: none!important
+}
+
+.MuiDataGrid-cell:focus-within {
+  outline: none!important;
+}

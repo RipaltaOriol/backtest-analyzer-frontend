@@ -1,16 +1,15 @@
 import axios from 'axios'
 import { Fragment, useState } from 'react'
 import { useSelector } from 'react-redux'
-import Message from './Message'
+import Message from '../../components/Message'
 import Progress from './Progess'
 import Button from '@mui/material/Button'
 
 const API = process.env.REACT_APP_API;
 
 const inputStyles = {
-  borderColor: '#181818',
-  boxShadow: 'none'
-  // '0 0 0 0.15rem rgb(18 18 18 / 25%)'
+  borderColor: '#558745',
+  boxShadow: '0 0 0 0.15rem rgb(148 193 134 / 25%)'
 }
 
 const FileUpload = ({updateDocuments}) => {

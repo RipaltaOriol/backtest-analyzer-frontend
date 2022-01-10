@@ -2,11 +2,11 @@ import axios from 'axios'
 import { useState, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useSelector } from 'react-redux'
-import FileUpload from './../components/FileUpload'
-import FileList from './../components/FileList'
-import DataTable from './../components/DataTable'
+import FileUpload from './FileUpload'
+import FileList from '../../components/FileList'
+import RichDataTable from '../../components/DataTable'
 import Typography from '@mui/material/Typography'
-import Container from '@mui/material/Container'
+import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
 
 const API = process.env.REACT_APP_API;
@@ -17,7 +17,8 @@ const Management = () => {
   const { token } = useSelector(state => state.auth)
   const [file, setFile] = useState(null)
   const [files, setFiles] = useState([])
-  const [fileData, setFileData] = useState(null)
+  const [documentData, setDocumentData] = useState([])
+  const [documentColumns, setDocumentColumns] = useState([])
   
   // FIX: some warning coming from here
   const changeFile = (id, name) => {
@@ -43,11 +44,18 @@ const Management = () => {
       headers: { 'Authorization': 'Bearer ' + token }
     })
     .then((response) => {
-      const table = JSON.parse(response.data.table)
-      setFileData(table)
+      const rawRows = JSON.parse(response.data.table)
+      const columns = response.data.columns.map((col) => {
+        return { field: col, minWidth: 100, headerClassName: 'datagrid-theme-header', flex: 1}
+      })
+      const rows = rawRows.map((row, idx) => {
+        return { id: idx, ...row}
+      })
+      setDocumentData(rows)
+      setDocumentColumns(columns)
     })
     .catch((err) => {
-      setFileData(null)
+      console.log(err)
     })
   }
 
@@ -58,7 +66,7 @@ const Management = () => {
   }, [file])
 
   return (
-    <Container>
+    <Box>
       <Typography
         variant="h4"
         component="h1"
@@ -73,10 +81,10 @@ const Management = () => {
           <FileList heading='File List' files={files} changeFile={changeFile} />
         </Grid>
         <Grid item xs={9}>
-          <DataTable data={fileData} />
+          <RichDataTable selectRow={() => false} tableData={documentData} tableColumns={documentColumns} />
         </Grid>
       </Grid>
-    </Container>
+    </Box>
   )
 }
 

@@ -1,4 +1,4 @@
-import { makeStyles } from '@mui/styles';
+import { createStyles, makeStyles } from '@mui/styles';
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import Paper from '@mui/material/Paper';
@@ -6,12 +6,13 @@ import MenuList from '@mui/material/MenuList';
 import MenuItem from '@mui/material/MenuItem';
 import ListItemText from '@mui/material/ListItemText';
 
-
-const useStyles = makeStyles({
-  noWrap: {
-    overflowX: 'auto'
-  }
-})
+const useStyles = makeStyles((theme) =>
+  createStyles({
+    noWrap: {
+      overflowX: 'auto',
+    }
+  }),
+)
 
 const FileList = ({ heading, files, changeFile }) => {
 
@@ -26,7 +27,7 @@ const FileList = ({ heading, files, changeFile }) => {
         {heading}:
       </Typography>
       <Paper variant='outlined'>
-        <MenuList>
+        <MenuList sx={{ p: 0 }}>
           {files ? files.map((file) => {
             return (
               <MenuItem>

@@ -30,6 +30,15 @@ const Filter = ({applyFilter, filterList}) => {
   const [filterAction, setFilterAction] = useState('none')
   const [checked, setChecked] = useState([]);
   const [filterValue, setFilterValue] = useState('')
+  const [fieldIndex, setFieldIndex] = useState(-1);
+  const [filterIndex, setFilterIndex] = useState(-1);
+  const buttonProps = (idx, value) => ({
+    selected: fieldIndex === idx,
+    onClick: () => {
+      setFieldIndex(idx)
+      setSelectFilter(value)
+    },
+  });
 
   const handleToggle = (value) => () => {
     const currentIndex = checked.indexOf(value);
@@ -47,7 +56,7 @@ const Filter = ({applyFilter, filterList}) => {
   const dropdownUniqueOptions = (property) => {
     if (property.unique) {
       return (
-        <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+        <List>
           {property.unique.map((value, i) => {
             if (value !== null)
             return (
@@ -56,7 +65,7 @@ const Filter = ({applyFilter, filterList}) => {
                 disablePadding
                 sx={{ m: 0 }}
               >
-                <ListItemButton sx={{ py: 0 }} onClick={handleToggle(value)} dense>
+                <ListItemButton sx={{ px: 3, py: 0 }} onClick={handleToggle(value)} dense>
                   <ListItemIcon>
                     <Checkbox
                       edge="start"
@@ -65,7 +74,7 @@ const Filter = ({applyFilter, filterList}) => {
                       disableRipple
                     />
                   </ListItemIcon>
-                  <ListItemText primary={value} />
+                  <ListItemText primary={value}/>
                 </ListItemButton>
               </ListItem>
             );
@@ -124,17 +133,19 @@ const Filter = ({applyFilter, filterList}) => {
         alignItems="center"
       >
         <Grid item xs={3}>
-          <Paper sx={{ width: '100%', height: 320, overflow: 'auto' }} variant='outlined'>
-            <MenuList>
+          <Typography variant="h6">Field</Typography>
+          <Paper sx={{ width: '100%', height: 300, overflow: 'auto' }} variant='outlined'>
+            <MenuList sx={{ p: 0 }}>
               {filterList.map((filter, i) => {
                 return (
-                  <MenuItem key={i}>
-                    <ListItemText
+                  <MenuItem key={i} sx={{ p: 0 }}>
+                    <ListItemButton
                       key={i}
-                      onClick={() => setSelectFilter(filter)}
+                      {...buttonProps(i, filter)}
+                      // onClick={() => setSelectFilter(filter)}
                     >
                       {filter.name}
-                    </ListItemText>
+                    </ListItemButton>
                   </MenuItem>
                 )
               })}
@@ -145,53 +156,102 @@ const Filter = ({applyFilter, filterList}) => {
           <ArrowForwardIosIcon color='primary'/>
         </Grid>
         <Grid item xs={4}>
-          <Paper sx={{ height: 320, overflow: 'auto' }} variant='outlined'>
-            <MenuList>
+          <Typography variant="h6">Filter</Typography>
+          <Paper sx={{ height: 300, overflow: 'auto' }} variant='outlined'>
+            <MenuList sx={{ p: 0 }}>
               { selectFilter && (selectFilter.dataType === 'float64' || selectFilter.dataType === 'int64') && (
                 <>
-                <MenuItem>
-                  <ListItemText onClick={() => setFilterAction('numericInclude')}>
+                <MenuItem sx={{ p: 0 }}>
+                  <ListItemButton
+                    selected={filterIndex === 0}
+                    onClick={() => {
+                      setFilterIndex(0)
+                      setFilterAction('numericInclude')}
+                    }
+                  >
                     Include
-                  </ListItemText>
+                  </ListItemButton>
                 </MenuItem>
-                <MenuItem>
-                  <ListItemText onClick={() => setFilterAction('numericExclude')}>
+                <MenuItem sx={{ p: 0 }}>
+                  <ListItemButton
+                    selected={filterIndex === 1}
+                    onClick={() => {
+                      setFilterIndex(1)
+                      setFilterAction('numericExclude')
+                    }}
+                  >
                     Exclue
-                  </ListItemText>
+                  </ListItemButton>
                 </MenuItem>
-                <MenuItem>
-                  <ListItemText onClick={() => setFilterAction('bigger')}>
+                <MenuItem sx={{ p: 0 }}>
+                  <ListItemButton 
+                    selected={filterIndex === 2}
+                    onClick={() => {
+                      setFilterIndex(2)
+                      setFilterAction('bigger')
+                    }}
+                  >
                     Bigger
-                  </ListItemText>
+                  </ListItemButton>
                 </MenuItem>
-                <MenuItem>
-                  <ListItemText onClick={() => setFilterAction('smaller')}>
+                <MenuItem sx={{ p: 0 }}>
+                  <ListItemButton
+                    selected={filterIndex === 3}
+                    onClick={() => {
+                      setFilterIndex(3)
+                      setFilterAction('smaller')
+                    }}
+                  >
                     Smaller
-                  </ListItemText>
+                  </ListItemButton>
                 </MenuItem>
-                <MenuItem>
-                  <ListItemText onClick={() => setFilterAction('range')}>
+                <MenuItem sx={{ p: 0 }}>
+                  <ListItemButton
+                    selected={filterIndex === 4}
+                    onClick={() => {
+                      setFilterIndex(4)
+                      setFilterAction('range')
+                    }}
+                  >
                     Range
-                  </ListItemText>
+                  </ListItemButton>
                 </MenuItem>
-                <MenuItem>
-                  <ListItemText onClick={() => setFilterAction('notRange')}>
+                <MenuItem sx={{ p: 0 }}>
+                  <ListItemButton
+                    selected={filterIndex === 5}
+                    onClick={() => {
+                      setFilterIndex(5)
+                      setFilterAction('notRange')
+                    }}
+                  >
                     Not Range
-                  </ListItemText>
+                  </ListItemButton>
                 </MenuItem>
               </>
               ) }
               { selectFilter && selectFilter.dataType === 'object' && (
                 <>
-                <MenuItem>
-                  <ListItemText onClick={() => setFilterAction('textInclude')}>
+                <MenuItem sx={{ p: 0 }}>
+                  <ListItemButton
+                    selected={filterIndex === 6}
+                    onClick={() => {
+                      setFilterIndex(6)
+                      setFilterAction('textInclude')
+                    }}
+                  >
                     Include
-                  </ListItemText>
+                  </ListItemButton>
                 </MenuItem>
-                <MenuItem>
-                  <ListItemText onClick={() => setFilterAction('textExclude')}>
+                <MenuItem sx={{ p: 0 }}>
+                  <ListItemButton
+                    selected={filterIndex === 7}
+                    onClick={() => {
+                      setFilterIndex(7)
+                      setFilterAction('textExclude')
+                    }}
+                  >
                     Exclue
-                  </ListItemText>
+                  </ListItemButton>
                 </MenuItem>
               </>
               ) }
@@ -199,12 +259,13 @@ const Filter = ({applyFilter, filterList}) => {
           </Paper>
         </Grid>
         <Grid item xs={1} className={classes.centerIcon}>
-          <ArrowForwardIosIcon />
+          <ArrowForwardIosIcon color='primary' />
         </Grid>
         <Grid item xs={3}>
-          <Paper sx={{ height: 320, overflow: 'auto' }} variant='outlined'>
-            <Box sx={{ m: 3 }}>
-              <Typography>
+          <Typography variant="h6">Action</Typography>
+          <Paper sx={{ minHeight: 300, height: 300, overflow: 'auto' }} variant='outlined'>
+            <Box>
+              <Typography sx={{ p: 2, pb: 0 }}>
                 {listFilterActions[filterAction].text}
               </Typography>
               {(filterAction === 'textInclude' || filterAction === 'textExclude') ?

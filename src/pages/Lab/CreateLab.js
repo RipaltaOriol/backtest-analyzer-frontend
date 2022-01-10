@@ -25,6 +25,7 @@ const CreateLab = ({ changeFile }) => {
       headers: { 'Authorization': 'Bearer ' + token }
     })
     .then((response) => {
+      console.log(response.data)
       const id = response.data._id['$oid']
       const name = response.data.name
       changeFile(id, name)
@@ -88,9 +89,8 @@ const CreateLab = ({ changeFile }) => {
         sx={{ height: 40 }}
         style={{ alignSelf: 'flex-end' }}
         type="submit"
-        variant="outlined"
-        color="primary"
-        size='large'
+        variant="contained"
+        size='medium'
       >
         Create
       </Button>

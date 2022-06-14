@@ -13,6 +13,7 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
 .MuiDataGrid-columnHeader:focus {
   outline: none!important;
 }
@@ -23,4 +24,8 @@ code {
 
 .MuiDataGrid-cell:focus-within {
   outline: none!important;
+}
+
+.Mui-selected {
+  background-color: 'red';
 }

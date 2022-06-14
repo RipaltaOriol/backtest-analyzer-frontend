@@ -8,8 +8,7 @@ import exampleFormat from '../../assets/formatExample.png'
 const Help = (props) => {
 
   return (
-    <Container>
-      
+    <Box>
       <Box>
         <Typography
           sx={{ fontWeight: 700 }}
@@ -95,7 +94,7 @@ const Help = (props) => {
           How to use
         </Typography>
       </Box>
-    </Container>
+    </Box>
   )
 }
 

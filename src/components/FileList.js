@@ -34,7 +34,7 @@ const FileList = ({ heading, files, changeFile }) => {
                 <ListItemText
                   className={classes.noWrap}
                   key={file.id}
-                  onClick={() => { changeFile(file.id, file.name) }}
+                  onClick={() => { changeFile({ id: file.id, name: file.name }) }}
                 >
                   {file.name}
                 </ListItemText>

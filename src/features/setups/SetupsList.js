@@ -22,7 +22,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { 
+import {
     useGetSetupsQuery,
     useAddSetupsMutation,
     useUpdateSetupsMutation,
@@ -57,14 +57,14 @@ const SetupsList = () => {
             setOpenAdd(true);
         }
     };
-    
+
     const handleClose = () => {
         setNewSetupName('');
         setSetupId('');
         setOpenUpdate(false);
         setOpenAdd(false);
     };
-    
+
     const handleAddSetup = () => {
         addSetups({ documentId, name: newSetupName })
         setOpenAdd(false);
@@ -97,43 +97,43 @@ const SetupsList = () => {
                 </ListItemAvatar>
                 <ListItemText
                     primary={setup.name}
-                    secondary={setup.default ? 'Default': ''}
+                    secondary={setup.default ? 'Default' : ''}
                 />
                 <ListItemSecondaryAction>
-                <IconButton 
-                    edge="end"
-                    aria-label="rename" 
-                    sx={{ ml: 2 }}
-                    onClick={() => handleClickOpen('update', setup.id)}
-                >
-                    <DriveFileRenameOutlineIcon />
-                </IconButton>
-                <IconButton
-                    onClick={() => deleteSetups({ documentId, setupId: setup.id }) }
-                    edge="end" 
-                    aria-label="delete"
-                    sx={{ ml: 2 }}
-                >
-                    <DeleteIcon />
-                </IconButton>
+                    <IconButton
+                        edge="end"
+                        aria-label="rename"
+                        sx={{ ml: 2 }}
+                        onClick={() => handleClickOpen('update', setup.id)}
+                    >
+                        <DriveFileRenameOutlineIcon />
+                    </IconButton>
+                    <IconButton
+                        onClick={() => deleteSetups({ documentId, setupId: setup.id })}
+                        edge="end"
+                        aria-label="delete"
+                        sx={{ ml: 2 }}
+                    >
+                        <DeleteIcon />
+                    </IconButton>
                 </ListItemSecondaryAction>
             </ListItem>
         ))
     } else if (isError) {
-        content = <p>Error</p> 
+        content = <p>Error</p>
     }
 
     return (
         <Box>
             <Grid item>
                 <Typography
-                variant="h1"
-                color="primary"
+                    variant="h1"
+                    color="primary"
                 >
-                Setups Overview
+                    Setups Overview
                 </Typography>
                 <List dense={true}>
-                {content}
+                    {content}
                 </List>
             </Grid>
             <Box sx={{ mt: 2, display: 'flex' }}>

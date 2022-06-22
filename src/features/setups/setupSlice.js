@@ -1,29 +1,28 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-    name: null,
-    filters: [],
-    data: {},
-    status: 'idle', //'idle' | 'loading' | 'succeeded' | 'failed'
-    error: null
-}
+  name: null,
+  filters: [],
+  data: {},
+  status: "idle", //'idle' | 'loading' | 'succeeded' | 'failed'
+  error: null,
+};
 
 const setupSlice = createSlice({
-    name: 'setup',
-    initialState,
-    reducers: {
-        setSetup: (state, action) => {
-
-            const setup = action.payload;
-            console.log(setup)
-            state.id = setup.id;
-            state.name = setup.name;
-            state.filters = setup.filters;
-            state.data = setup.state;
-            state.status = 'succeeded';
-        }
-    }
-})
+  name: "setup",
+  initialState,
+  reducers: {
+    setSetup: (state, action) => {
+      const setup = action.payload;
+      // console.log(setup)
+      state.id = setup.id;
+      state.name = setup.name;
+      state.filters = setup.filters;
+      state.data = setup.state;
+      state.status = "succeeded";
+    },
+  },
+});
 
 export const { setSetup } = setupSlice.actions;
 

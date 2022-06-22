@@ -93,29 +93,29 @@ export const {
 // Define function to get selectors based on arguments (query) of getSetups
 export const getSelectors = (
     query,
-  ) => {
+) => {
     const selectSetupsResult = setupsApiSlice.endpoints.getSetups.select(query)
-  
+
     const adapterSelectors = createSelector(
-      selectSetupsResult,
-      (result) => setupsAdapter.getSelectors(() => result?.data ?? initialState)
+        selectSetupsResult,
+        (result) => setupsAdapter.getSelectors(() => result?.data ?? initialState)
     )
-  
+
     return {
-      selectAll: createSelector(adapterSelectors, (s) =>
-        s.selectAll(undefined)
-      ),
-      selectEntities: createSelector(adapterSelectors, (s) =>
-        s.selectEntities(undefined)
-      ),
-      selectIds: createSelector(adapterSelectors, (s) =>
-        s.selectIds(undefined)
-      ),
-      selectTotal: createSelector(adapterSelectors, (s) =>
-        s.selectTotal(undefined)
-      ),
-      selectById: (id) => createSelector(adapterSelectors, (s) =>
-        s.selectById(s, id)
-      ),
+        selectAll: createSelector(adapterSelectors, (s) =>
+            s.selectAll(undefined)
+        ),
+        selectEntities: createSelector(adapterSelectors, (s) =>
+            s.selectEntities(undefined)
+        ),
+        selectIds: createSelector(adapterSelectors, (s) =>
+            s.selectIds(undefined)
+        ),
+        selectTotal: createSelector(adapterSelectors, (s) =>
+            s.selectTotal(undefined)
+        ),
+        selectById: (id) => createSelector(adapterSelectors, (s) =>
+            s.selectById(s, id)
+        ),
     }
-  }
+}

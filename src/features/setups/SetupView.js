@@ -1,80 +1,222 @@
-import { useSelector } from "react-redux"
-import {
-    selectSetupId,
-    selectSetupName,
-    selectSetupData,
-} from "./setupSlice"
+import { useSelector } from "react-redux";
+import { selectSetupId, selectSetupName, selectSetupData } from "./setupSlice";
+import React from "react";
 
-import Box from '@mui/material/Box'
-import { DataGrid } from '@mui/x-data-grid';
+import MaterialTable from "material-table";
+// import { ThemeProvider, createTheme } from "@mui/material";
+// import { ThemeProvider } from "@material-ui/styles";
+import { ThemeProvider } from "@material-ui/core";
+// import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
 
-const columns = [
-    { field: 'id', headerName: 'ID', width: 90 },
-    {
-      field: 'firstName',
-      headerName: 'First name',
-      width: 150,
-      editable: true,
-    },
-    {
-      field: 'lastName',
-      headerName: 'Last name',
-      width: 150,
-      editable: true,
-    },
-    {
-      field: 'age',
-      headerName: 'Age',
-      type: 'number',
-      width: 110,
-      editable: true,
-    },
-    {
-      field: 'fullName',
-      headerName: 'Full name',
-      description: 'This column has a value getter and is not sortable.',
-      sortable: false,
-      width: 160,
-      valueGetter: (params) =>
-        `${params.row.firstName || ''} ${params.row.lastName || ''}`,
-    },
-  ];
-  
-  const rows = [
-    { id: 1, lastName: 'Snow', firstName: 'Jon', age: 35 },
-    { id: 2, lastName: 'Lannister', firstName: 'Cersei', age: 42 },
-    { id: 3, lastName: 'Lannister', firstName: 'Jaime', age: 45 },
-    { id: 4, lastName: 'Stark', firstName: 'Arya', age: 16 },
-    { id: 5, lastName: 'Targaryen', firstName: 'Daenerys', age: null },
-    { id: 6, lastName: 'Melisandre', firstName: null, age: 150 },
-    { id: 7, lastName: 'Clifford', firstName: 'Ferrara', age: 44 },
-    { id: 8, lastName: 'Frances', firstName: 'Rossini', age: 36 },
-    { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
-  ];
+// export default createMuiTheme({});
+import { createMuiTheme } from "@material-ui/core/styles";
+import Box from "@mui/material/Box";
+import { DataGrid } from "@mui/x-data-grid";
+import { left, right } from "@popperjs/core";
 
 const SetupView = () => {
+  //   const { isFetching } = useGetSetupsQuery({ documentId });
 
-    const setupId = useSelector(selectSetupId);
-    const setupName = useSelector(selectSetupName);
-    const setupData = useSelector(selectSetupData);
+  // const { isFetching } = useSelector(selectSetupData);
 
-    return (
-            <>
-            <h1>{setupName}</h1>
-            <h1>{setupId}</h1>
-            </>
-            // <Box sx={{ my: 2, height: 500, width: '100%' }}>
-            //     <DataGrid
-            //         rows={rows}
-            //         columns={columns}
-            //         pageSize={10}
-            //         rowsPerPageOptions={[10]}
-            //         disableMultipleSelection={true}
-            //         // onRowClick={(id) => selectRow(id)}
-            //     />
-            // </Box>
-    )
+  // const defaultMaterialTheme = createTheme();
+  const tableTheme = createMuiTheme({});
+  const setupId = useSelector(selectSetupId);
+  const setupName = useSelector(selectSetupName);
+  const setupData = useSelector(selectSetupData);
+  console.log(
+    "setupID:",
+    setupId,
+    "setupName:",
+    setupName,
+    "setupData:",
+    setupData
+  );
+  //
+  var dataResponse = {
+    columns: [
+      {
+        field: "#",
+        title: "#",
 
-}
+        headerName: "#",
+        width: 90,
+      },
+      {
+        field: ".m_RRR",
+        title: ".m_RRR",
+
+        headerName: ".m_RRR",
+        width: 90,
+      },
+      {
+        field: ".r_Result",
+        title: ".r_Result",
+
+        headerName: ".r_Result",
+        width: 90,
+      },
+      {
+        field: ".r_Result 50% Candle SL",
+        title: ".r_Result 50% Candle SL",
+
+        headerName: ".r_Result 50% Candle SL",
+        width: 90,
+      },
+      {
+        field: ".m_Entry Candle",
+        title: ".m_Entry Candle",
+
+        headerName: ".m_Entry Candle",
+        width: 90,
+      },
+      {
+        field: ".m_Zone Touch #",
+        title: ".m_Zone Touch #",
+
+        headerName: ".m_Zone Touch #",
+        width: 90,
+      },
+      {
+        field: ".m_Zone Origin",
+        title: ".m_Zone Origin",
+
+        headerName: ".m_Zone Origin",
+        width: 90,
+      },
+      {
+        field: ".m_Re-entry @ Other Level",
+        title: ".m_Re-entry @ Other Level",
+
+        headerName: ".m_Re-entry @ Other Level",
+        width: 90,
+      },
+      {
+        field: ".m_Fast Into Profits",
+        title: ".m_Fast Into Profits",
+
+        headerName: ".m_Fast Into Profits",
+        width: 90,
+      },
+      {
+        field: ".m_Trade @ Range Over",
+        title: ".m_Trade @ Range Over",
+
+        headerName: ".m_Trade @ Range Over",
+        width: 90,
+      },
+      {
+        field: ".m_Checked",
+        title: ".m_Checked",
+
+        headerName: ".m_Checked",
+        width: 90,
+      },
+      {
+        field: ".p",
+        title: ".p",
+
+        headerName: ".p",
+        width: 90,
+      },
+    ],
+    data: [
+      {
+        "#": 1,
+        ".m_RRR": 0,
+        ".r_Result": 0,
+        ".r_Result 50% Candle SL": 0,
+        ".m_Entry Candle": "0",
+        ".m_Zone Touch #": 0,
+        ".m_Zone Origin": 0,
+        ".m_Re-entry @ Other Level": "No",
+        ".m_Fast Into Profits": "No",
+        ".m_Trade @ Range Over": "No",
+        ".m_Checked": "No",
+        ".p": "AUDUSD",
+      },
+    ],
+  };
+  if (setupData && Object.keys(setupData).length !== 0) {
+    dataResponse = JSON.parse(setupData);
+
+    if (dataResponse) {
+      const freeArray = [];
+      const { columns, data } = dataResponse;
+      for (const iterator of columns) {
+        if (iterator == "#") {
+          freeArray.push({
+            title: iterator,
+            field: iterator,
+            headerName: iterator,
+            width: 90,
+          });
+        } else {
+          freeArray.push({
+            title: iterator,
+            field: iterator,
+            headerName: iterator,
+            width: 90,
+          });
+        }
+      }
+
+      const freeDataArray = [];
+      for (const dataIteration of data) {
+        const totalLength = dataIteration.length;
+        const dataObject = {};
+        for (let index = 0; index < totalLength; index++) {
+          dataObject[columns[index]] = dataIteration[index] || null;
+        }
+        freeDataArray.push(dataObject);
+      }
+
+      dataResponse.columns = freeArray;
+      dataResponse.data = freeDataArray;
+    }
+  }
+
+  return (
+    <>
+      <h1>{setupName}</h1>
+      <h1>{setupId}</h1>
+
+      <ThemeProvider theme={tableTheme}>
+        <MaterialTable
+          options={{
+            showFirstLastPageButtons: false,
+            toolbarButtonAlignment: left,
+            searchFieldAlignment: right,
+          }}
+          columns={dataResponse.columns}
+          data={dataResponse.data}
+          title="Record"
+        />
+      </ThemeProvider>
+      {/* {setupData && setupData.columns ? (
+        <ThemeProvider theme={defaultMaterialTheme}>
+          <MaterialTable
+            columns={setupData.columns}
+            data={setupData.data}
+            title="Personen"
+          />
+        </ThemeProvider>
+      ) : (
+        {}
+      )} */}
+      {/* <h1>{setupData}</h1> */}
+    </>
+    // <Box sx={{ my: 2, height: 500, width: '100%' }}>
+    //     <DataGrid
+    //         rows={rows}
+    //         columns={columns}
+    //         pageSize={10}
+    //         rowsPerPageOptions={[10]}
+    //         disableMultipleSelection={true}
+    //         // onRowClick={(id) => selectRow(id)}
+    //     />
+    // </Box>
+  );
+};
 
 export default SetupView;

@@ -17,6 +17,7 @@ import PersistLogin from './components/PersistLogin';
 import LoadDocument from './components/LoadDocument';
 import SetupsList from './features/setups/SetupsList'
 
+//Both the bugs are resolved now
 
 function App() {
 

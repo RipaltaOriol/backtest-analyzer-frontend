@@ -4,7 +4,6 @@ import { apiSlice } from '../api/apiSlice';
 import authReducer from '../features/auth/authSlice';
 import setupReucer from '../features/setups/setupSlice';
 import counterReducer from '../features/counter/counterSlice';
-import documentsReducer from '../features/documents/documentsSlice';
 
 export const store = configureStore({
   reducer: {
@@ -12,7 +11,6 @@ export const store = configureStore({
     auth: authReducer,
     setup: setupReucer,
     counter: counterReducer,
-    documents: documentsReducer,
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware().concat(apiSlice.middleware),

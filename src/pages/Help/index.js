@@ -1,9 +1,10 @@
-import './Help.css'
-import Container from '@mui/material/Container';
+import './Help.css';
+
+import Box from '@mui/material/Box';
+import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box'
-import Paper from '@mui/material/Paper'
-import exampleFormat from '../../assets/formatExample.png'
+
+import exampleFormat from '../../assets/formatExample.png';
 
 const Help = (props) => {
 

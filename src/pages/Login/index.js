@@ -1,42 +1,39 @@
-import axios from 'axios'
-import { useState, useEffect } from 'react'
-import { Link, useNavigate, useLocation } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux';
+import { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 
 import { setCredentials } from '../../features/auth/authSlice';
 import { useLoginMutation } from '../../features/auth/authApiSlice';
 
-// import { getAuth } from '../../redux/slices/authSlice'
-import useAuth from '../../hooks/useAuth'
-import Message from '../../components/Message'
-import Typography from '@mui/material/Typography'
-import TextField from '@mui/material/TextField'
-import Box from '@mui/material/Box'
-import Container from '@mui/material/Container'
-import Button from '@mui/material/Button'
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import CircularProgress from '@mui/material/CircularProgress';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Message from '../../components/Message';
+import TextField from '@mui/material/TextField';
+import Container from '@mui/material/Container';
+import Typography from '@mui/material/Typography';
+
 
 const Login = () => {
 
-  const { setAuth } = useAuth();
-  const navigate = useNavigate();
   const location = useLocation();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const from = location.state?.from?.pathname || '/overview';
 
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
   const [msg, setMsg] = useState('');
-  const [isError, setIsError] = useState(false)
-  const [login, { isLoading }] = useLoginMutation()
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [isError, setIsError] = useState(false);
+
+  const [login] = useLoginMutation();
 
   useEffect(() => {
     setMsg('');
   }, [email, password])
 
+  // Handles the login logic
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
@@ -57,24 +54,6 @@ const Login = () => {
         setIsError(true)
       }
     }
-    // try {
-    //   const response = await axios.post('/login',
-    //     {
-    //       email,
-    //       password
-    //     }, {
-    //       headers: { 'Content-Type': 'application/json' },
-    //       withCredentials: true
-    //     }
-    //   )
-    //   const accessToken = response?.data?.access_token;
-    //   const success = response?.data?.success
-    //   setAuth({ success, accessToken })
-    //   navigate(from, { replace: true })
-
-    // } catch (err) {
-    //   console.log(err)
-    // }
   }
 
   return (
@@ -116,16 +95,12 @@ const Login = () => {
             onChange={(e) => setPassword(e.target.value)}
           />
           <Button
-              type="submit"
-              variant="contained"
-              color="primary"
-              // endIcon={loading !== 'pending' && <ArrowForwardIosIcon />}
-            >
-              Signin
-              {/* {isAuth} */}
-              {/* {loading !== 'pending' && <span>Signin</span>}
-              {loading === 'pending' && <CircularProgress color='secondary'  size={30} />} */}
-            </Button>
+            type="submit"
+            variant="contained"
+            color="primary"
+          >
+            Sign In
+          </Button>
         </form>
       </Box>
     </Container>

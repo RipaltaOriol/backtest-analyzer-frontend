@@ -1,45 +1,47 @@
-import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid';
-import List from '@mui/material/List';
-import Avatar from '@mui/material/Avatar';
-import ListItem from '@mui/material/ListItem';
-import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
-import ListItemText from '@mui/material/ListItemText';
-import ListItemAvatar from '@mui/material/ListItemAvatar';
-import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction';
-import DeleteIcon from '@mui/icons-material/Delete';
-import ContentCopyIcon from '@mui/icons-material/ContentCopy';
-import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
-import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
+
+
 import { useState } from 'react';
-import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
+
 import {
     useGetSetupsQuery,
     useAddSetupsMutation,
     useUpdateSetupsMutation,
     useDeleteSetupsMutation,
 } from './setupsApiSlice';
-import { selectAllSetups } from './setupsApiSlice'
-import DisplaySettingsIcon from '@mui/icons-material/DisplaySettings';
+import { getSelectors } from "./setupsApiSlice";
+
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
+import List from '@mui/material/List';
+import Avatar from '@mui/material/Avatar';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
 import AddIcon from '@mui/icons-material/Add';
+import ListItem from '@mui/material/ListItem';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
+import IconButton from '@mui/material/IconButton';
+import DeleteIcon from '@mui/icons-material/Delete';
+import DialogTitle from '@mui/material/DialogTitle';
+import ListItemText from '@mui/material/ListItemText';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
+import DialogContentText from '@mui/material/DialogContentText';
+import DisplaySettingsIcon from '@mui/icons-material/DisplaySettings';
+import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction';
+import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
 
 const SetupsList = () => {
 
     const { documentId } = useParams()
 
+    const [setupId, setSetupId] = useState('');
     const [openAdd, setOpenAdd] = useState(false);
     const [openUpdate, setOpenUpdate] = useState(false);
     const [newSetupName, setNewSetupName] = useState('');
-    const [setupId, setSetupId] = useState('')
 
     const [addSetups] = useAddSetupsMutation()
     const [updateSetups] = useUpdateSetupsMutation()
@@ -49,11 +51,11 @@ const SetupsList = () => {
 
     const handleClickOpen = (formType, id) => {
         setNewSetupName('');
-        if (formType == 'update') {
+        if (formType === 'update') {
             setSetupId(id);
             setOpenUpdate(true);
         }
-        if (formType == 'add') {
+        if (formType === 'add') {
             setOpenAdd(true);
         }
     };
@@ -77,16 +79,17 @@ const SetupsList = () => {
 
     const {
         data: setups,
-        isLoading,
         isSuccess,
         isError,
-        error
-    } = useGetSetupsQuery(documentId)
+    } = useGetSetupsQuery({ documentId })
 
+    const { selectAll: selectAllSetups } = getSelectors({ documentId });
+    const allSetups = useSelector(selectAllSetups);
 
     let content = <p>Loading...</p>
     if (isSuccess) {
-        content = setups.map((setup) => (
+        console.log(setups)
+        content = allSetups.map((setup) => (
             <ListItem
                 sx={{ pl: 0 }}
             >

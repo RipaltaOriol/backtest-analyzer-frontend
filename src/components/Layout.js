@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { Outlet, useNavigate, useLocation } from "react-router-dom";
-import useAxiosPrivate from "../hooks/useAxiosPrivate";
+
+import { Link, Outlet, useNavigate, useLocation } from "react-router-dom";
+
 import useLogout from "../hooks/useLogout";
+import DocumentBar from "../features/documents/DocumentBar";
+
 import { createStyles, makeStyles } from "@mui/styles";
-import useDocuments from "../hooks/useDocuments";
 
 import Box from "@mui/material/Box";
 import List from "@mui/material/List";
@@ -23,7 +23,6 @@ import HelpIcon from "@mui/icons-material/Help";
 import PreviewIcon from "@mui/icons-material/Preview";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 
-import DocumentBar from "../features/documents/DocumentBar";
 
 const drawerWidth = 240;
 
@@ -59,71 +58,29 @@ const features = [
 
 export default function Layout() {
   const classes = useStyles();
+  const location = useLocation();
 
-  const axiosPrivate = useAxiosPrivate();
   const navigate = useNavigate();
   const logout = useLogout();
-  const location = useLocation();
-  const { documents, setDocuments } = useDocuments();
-
-  const changeDocument = async (document) => {
-    await setDocuments((prev) => {
-      return {
-        ...prev,
-        currentId: document.id,
-        currentName: document.name,
-      };
-    });
-  };
 
   const signOut = async () => {
     await logout();
     navigate("/login");
   };
 
-  useEffect(() => {
-    let isMounted = true;
-    const controller = new AbortController();
-
-    const getDocuments = async () => {
-      try {
-        const response = await axiosPrivate.get("/documents", {
-          signal: controller.signal,
-        });
-        isMounted &&
-          setDocuments((prev) => {
-            return {
-              ...prev,
-              all: response.data.documents,
-            };
-          });
-      } catch (err) {
-        console.error(err);
-        navigate("/login", { state: { from: location }, replace: true });
-      }
-    };
-
-    // getDocuments();
-
-    return () => {
-      isMounted = false;
-      controller.abort();
-    };
-  }, []);
-
   return (
-    // here was a div with className root
     <Box sx={{ display: "flex" }}>
-      {/* app bar */}
+      {/* App Bar */}
       <AppBar
         position="fixed"
         sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
       >
         <Toolbar>
+          {/* Title  */}
           <Typography variant="h6" className={classes.brand}>
             Backtest Analyzer
           </Typography>
-          {/* Delete this after the redesign is done */}
+          {/* Sign out */}
           <Button
             sx={{ ml: 1 }}
             color="secondary"
@@ -132,12 +89,10 @@ export default function Layout() {
           >
             Sign Out
           </Button>
-          {/* {!isAuth && <Button sx={{ ml: 1 }} color='secondary' variant='contained' href='/login'>Login</Button>} */}
-          {/* {isAuth && <Button sx={{ ml: 1 }} color='secondary' variant='contained' onClick={() => logout()}>Logout</Button>} */}
         </Toolbar>
       </AppBar>
 
-      {/* side bar */}
+      {/* Side Bar */}
       <Drawer
         variant="permanent"
         sx={{
@@ -151,8 +106,9 @@ export default function Layout() {
       >
         <Toolbar />
         <Box sx={{ overflow: "auto" }}>
+          {/* Features */}
           <List sx={{ py: 0 }}>
-            {features.map((feat, index) => (
+            {features.map((feat) => (
               <ListItemButton
                 key={feat.name}
                 component={Link}
@@ -166,31 +122,12 @@ export default function Layout() {
             ))}
           </List>
           <Divider />
+          {/* Files */}
           <List>
             <Typography sx={{ px: 2, py: 1 }} variant="h5">
               Files
             </Typography>
             <DocumentBar />
-            {/* {documents && documents?.all.map((document, idx) => (
-              <ListItemButton 
-                key={document.id}
-                component={Link}
-                to='/analysis'
-                sx={{ py: 0.5 }}
-                selected={document.id === documents.currentId && location.pathname === '/analysis'}
-                onClick={() => changeDocument(document)}
-                disableRipple
-              >
-                <ListItemText
-                  primary={document.name}
-                  sx={{
-                    whiteSpace: 'nowrap',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis'
-                  }}
-                />
-              </ListItemButton>
-            ))} */}
           </List>
         </Box>
       </Drawer>

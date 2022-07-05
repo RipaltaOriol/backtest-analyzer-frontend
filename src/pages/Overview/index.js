@@ -1,67 +1,62 @@
-import useDocuments from "../../hooks/useDocuments";
-import useDocument from "../../hooks/useDocument";
-import FileList from "../../components/FileList";
-import RichDataTable from "../../components/DataTable";
 import { useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { documentCopied } from "../../features/documents/documentsSlice";
-import { nanoid } from "@reduxjs/toolkit";
-import Box from "@mui/material/Box";
-import Grid from "@mui/material/Grid";
-import List from "@mui/material/List";
-import Avatar from "@mui/material/Avatar";
-import ListItem from "@mui/material/ListItem";
-import Typography from "@mui/material/Typography";
-import IconButton from "@mui/material/IconButton";
-import ListItemText from "@mui/material/ListItemText";
-import ListItemAvatar from "@mui/material/ListItemAvatar";
-import ListItemSecondaryAction from "@mui/material/ListItemSecondaryAction";
+import { useSelector } from "react-redux";
+
 import {
   useGetDocumentsQuery,
   useCloneDocumentMutation,
   useRenameDocumentMutation,
   useDeleteDocumentMutation,
 } from "../../features/documents/documentsApiSlice";
-import DeleteIcon from "@mui/icons-material/Delete";
-import ContentCopyIcon from "@mui/icons-material/ContentCopy";
-import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
-import DriveFileRenameOutlineIcon from "@mui/icons-material/DriveFileRenameOutline";
+import { selectAllDocuments } from "../../features/documents/documentsApiSlice";
+
+import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid";
+import List from "@mui/material/List";
+import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
+import ListItem from "@mui/material/ListItem";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
+import IconButton from "@mui/material/IconButton";
+import DialogTitle from "@mui/material/DialogTitle";
+import DeleteIcon from "@mui/icons-material/Delete";
+import ListItemText from "@mui/material/ListItemText";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
+import ListItemAvatar from "@mui/material/ListItemAvatar";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
-import { selectAllDocuments } from "../../features/documents/documentsApiSlice";
-// import { selectAllDocuments } from '../../features/documents/documentsApiSlice';
+import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
+import ListItemSecondaryAction from "@mui/material/ListItemSecondaryAction";
+import DriveFileRenameOutlineIcon from "@mui/icons-material/DriveFileRenameOutline";
 
 const Overview = () => {
-  const dispatch = useDispatch();
 
   const [open, setOpen] = useState(false);
-  const [documentId, setDocumentId] = useState("");
   const [newName, setNewName] = useState("");
+  const [documentId, setDocumentId] = useState("");
 
-  const { isLoading, isSuccess, isError, error } = useGetDocumentsQuery();
+  const { isSuccess, isError } = useGetDocumentsQuery();
 
   const orderedDocuments = useSelector(selectAllDocuments);
 
   const [cloneDocument] = useCloneDocumentMutation();
   const [renameDocument] = useRenameDocumentMutation();
   const [deleteDocument] = useDeleteDocumentMutation();
-  // const { documents, setIsDocumentUpload } = useDocuments()
-  // const { documentData, documentColumns, setDocument } = useDocument()
+  
 
+  // Handles start of rename logic
   const handleClickOpen = (id) => {
     setDocumentId(id);
-    setNewName("");
+    setNewName('');
     setOpen(true);
   };
 
+  // Handles rename running logic
   const handleClose = () => {
-    setDocumentId("");
-    setNewName("");
+    setDocumentId('');
+    setNewName('');
     setOpen(false);
   };
 
@@ -70,11 +65,8 @@ const Overview = () => {
     setOpen(false);
   };
 
-  const onCopiedPostClick = (name) => {
-    dispatch(documentCopied(name));
-  };
-
   let content = <p>Loading...</p>;
+
   if (isSuccess) {
     content = orderedDocuments.map((doc) => (
       <ListItem sx={{ pl: 0 }}>
@@ -149,15 +141,7 @@ const Overview = () => {
           </Button>
         </DialogActions>
       </Dialog>
-      {/* <FileUpload updateDocuments={setIsDocumentUpload} />
-      <Grid container spacing={2} sx={{ mt: 2 }}>
-        <Grid item xs={3}>
-          <FileList heading='File List' files={documents} changeFile={setDocument} />
-        </Grid>
-        <Grid item xs={9}>
-          <RichDataTable selectRow={() => false} tableData={documentData} tableColumns={documentColumns} />
-        </Grid>
-      </Grid> */}
+  
     </Box>
   );
 };

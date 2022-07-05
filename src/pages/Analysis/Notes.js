@@ -1,13 +1,12 @@
-import axios from 'axios'
-import { useState, useEffect } from 'react'
-import { useSelector } from 'react-redux'
+import axios from 'axios';
+import { useState, useEffect } from 'react';
+
 import Box from '@mui/material/Box';
-import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
 
 const Notes = ({ labId, note, changeNote }) => {
 
-  const { token } = useSelector(state => state.auth)
   const [newNote, setNewNote] = useState(note)
 
   const handleSubmit = (e) => {

@@ -30,6 +30,19 @@ export const setupsApiSlice = apiSlice.injectEndpoints({
                 method: 'GET'
             })
         }),
+        addFilterSetup: builder.mutation({
+            query: ({ setupId, filter }) => ({
+                url: `/setups/${setupId}/filters`,
+                method: 'POST',
+                body: filter
+            })
+        }),
+        deleteFilterSetup: builder.mutation({
+            query: ({ setupId, filterId}) => ({
+                url: `/setups/${setupId}/filters/${filterId}`,
+                method: 'DELETE',
+            })
+        }),
         addSetups: builder.mutation({
             query: ({ documentId, name }) => ({
                 url: `/documents/${documentId}/setups`,
@@ -70,7 +83,9 @@ export const {
     useGetSetupQuery,
     useAddSetupsMutation,
     useUpdateSetupsMutation,
-    useDeleteSetupsMutation
+    useDeleteSetupsMutation,
+    useAddFilterSetupMutation,
+    useDeleteFilterSetupMutation,
 } = setupsApiSlice
 
 // export const selectSetupsResult = setupsApiSlice.endpoints.getSetups.select()

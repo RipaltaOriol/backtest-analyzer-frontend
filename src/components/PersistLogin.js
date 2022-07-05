@@ -1,8 +1,9 @@
 import { Outlet } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setCredentials, selectCurrentToken } from '../features/auth/authSlice';
+
 import { useRefreshTokenMutation } from '../features/auth/authApiSlice';
+import { setCredentials, selectCurrentToken } from '../features/auth/authSlice';
 
 const PersistLogin = () => {
   const dispatch = useDispatch();
@@ -31,7 +32,7 @@ const PersistLogin = () => {
 
     return () => isMounted = false;
 
-  }, [])
+  }, [token, dispatch, refreshToken])
 
   return (
     <>

@@ -1,16 +1,16 @@
-import { useState } from 'react';
+import { useSelector } from 'react-redux';
 import { useLocation, Link } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
-import { useGetDocumentsQuery } from "./documentsApiSlice"
-import { selectAllDocuments } from './documentsApiSlice';
 
-import ListItemButton from '@mui/material/ListItemButton'
-import ListItemText from '@mui/material/ListItemText'
+import { selectAllDocuments } from './documentsApiSlice';
+import { useGetDocumentsQuery } from './documentsApiSlice';
+
+import ListItemText from '@mui/material/ListItemText';
+import ListItemButton from '@mui/material/ListItemButton';
+
 
 const DocumentBar = () => {
 
     const location = useLocation();
-    const [currentDoc, setCurrentDoc] = useState('')
 
     const {
         isLoading,
@@ -20,10 +20,6 @@ const DocumentBar = () => {
       } = useGetDocumentsQuery()
 
     const orderedDocuments = useSelector(selectAllDocuments)
-
-    const changeDocument = async (id) => {
-        setCurrentDoc(id)
-      };
 
     let content;
 
@@ -37,8 +33,7 @@ const DocumentBar = () => {
                 component={Link}
                 to={'/' + doc.id}
                 sx={{ py: 0.5 }}
-                selected={'/' + doc.id === location.pathname}
-                onClick={() => changeDocument(doc.id)}
+                selected={location.pathname.includes(doc.id)}
                 disableRipple
             >
             <ListItemText

@@ -1,54 +1,55 @@
-import List from '@mui/material/List';
-import IconButton from '@mui/material/IconButton';
-import Alert from '@mui/material/Alert';
-import DeleteIcon from '@mui/icons-material/Delete';
-import { makeStyles } from '@mui/styles';
-import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
+import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
-const useStyles = makeStyles({
-  filterBorder: {
-    border: '1.5px solid #263238',
-    borderRadius: '5px'
-  },
-  squareHover: {
-    "&:hover": {
-      borderRadius: '5px',
-      TransitionEvent: 'none !important'
-    }
+import {
+  addFilter,
+  selectSetupId,
+  selectSetupFilters
+} from '../../features/setups/setupSlice';
+
+import { useDeleteFilterSetupMutation } from '../../features/setups/setupsApiSlice';
+
+import Chip from '@mui/material/Chip';
+import Stack from '@mui/material/Stack';
+
+const FilterList = () => {
+  
+  const dispatch = useDispatch();
+  const [isValid, setIsValid] = useState(false);
+
+  const [deleteFilterSetup, { data, isSuccess, isLoading, isError }] = useDeleteFilterSetupMutation();
+
+  let setupId = useSelector(selectSetupId);
+  let setupFilters = useSelector(selectSetupFilters);
+  if (setupFilters === undefined) {
+    setupFilters = []
   }
-});
 
+  if (isSuccess && !isLoading && isValid) {
+    const { state, filters } = data;
+    dispatch(
+      addFilter({ state, filters })
+    )
+    setIsValid(false)
+  }
 
-const FilterList = ({filters, removeFilter}) => {
-
-  const classes = useStyles();
+  const handleDelete = async (id) => {
+    const filterId = id['$oid']
+    await deleteFilterSetup({ setupId, filterId }).unwrap();
+    setIsValid(true)
+  };
 
   return (
-    <List sx={{ my: 2 }} disablePadding>
-      {filters.map((filter, idx) => (
-        <Alert
-          key={idx}
-          icon={<FilterAltOutlinedIcon fontSize="inherit" />}
-          action={
-            <IconButton
-              size="small"
-              onClick={() => { removeFilter(filter.filter, filter.action, filter.value, 'delete') }}
-            >
-              <DeleteIcon fontSize="inherit" />
-            </IconButton>
-          }
-          sx={{ mb: 2 }}
-        >
-          {filter.filter.split("_").pop() + ' '}
-          when 
-          {' ' + filter.action
-          .replace(/([A-Z])/g, ' $1')
-          .replace(/^./, (str) => {
-            return str.toLowerCase();
-          })}: {filter.value}
-        </Alert>
-      ))}
-    </List>
+    <div>
+      { setupFilters.length > 0 && <Stack direction="row" spacing={1} sx={{ mb: 2 }}>
+        
+        {setupFilters.map((filter) => (
+          <Chip label={filter.name} variant="outlined" onDelete={() => handleDelete(filter.id)} />
+        ))}
+      </Stack>
+    }
+    </div>
+    
   )
 }
 

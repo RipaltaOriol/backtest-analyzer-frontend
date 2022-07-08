@@ -47,7 +47,7 @@ const FilterOptions = ({open, handleClose}) => {
     const [operation, setOperation] = useState('')
     const [optionIdx, setOptionIdx] = useState(-1)
 
-    const [addFilterSetup, { data, isLoading, isSuccess, isError }] = useAddFilterSetupMutation()
+    const [addFilterSetup, { data, isLoading, isSuccess }] = useAddFilterSetupMutation()
     
     let setupId = useSelector(selectSetupId)
     let setupOptions = useSelector(selectSetupOptions)
@@ -137,7 +137,7 @@ const FilterOptions = ({open, handleClose}) => {
                             setOperation(e.target.value)
                         }}
                     >
-                        { optionIdx != -1 ? setupOptions[optionIdx].type === 'number' ?
+                        { optionIdx !== -1 ? setupOptions[optionIdx].type === 'number' ?
                             Object.keys(operations.numeric).map((item, idx) => (
                                 <MenuItem key={idx} value={item}>{operations.numeric[item]}</MenuItem>
                             ))
@@ -148,7 +148,7 @@ const FilterOptions = ({open, handleClose}) => {
                         : (<></>)}
                     </Select>
                 </FormControl>
-                { optionIdx != -1 ? setupOptions[optionIdx].type === 'string' ? (
+                { optionIdx !== -1 ? setupOptions[optionIdx].type === 'string' ? (
                     <FormControl fullWidth sx={{ my: 1 }}>
                         <InputLabel>Value</InputLabel>
                         <Select

@@ -60,10 +60,18 @@ let SetupDropdown = () => {
 
   if (isRendered && !isLoading) {
     if (setupId === undefined || setupId === data._id.$oid) {
-      const { state, name, default: defVal, filters, _id, options } = data;
+      const { state, name, default: defVal, filters, _id, options, notes } = data;
       console.log(filters)
       dispatch(
-        setSetup({ id: _id.$oid, name, default: defVal, state, filters, options })
+        setSetup({
+          id: _id.$oid, 
+          name,
+          default: defVal, 
+          state, 
+          filters,
+          options,
+          notes
+        })
       );
     } else if (setupId !== undefined) {
       // setValue((value) => value + 1);

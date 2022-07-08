@@ -17,7 +17,7 @@ const FilterList = () => {
   const dispatch = useDispatch();
   const [isValid, setIsValid] = useState(false);
 
-  const [deleteFilterSetup, { data, isSuccess, isLoading, isError }] = useDeleteFilterSetupMutation();
+  const [deleteFilterSetup, { data, isSuccess, isLoading }] = useDeleteFilterSetupMutation();
 
   let setupId = useSelector(selectSetupId);
   let setupFilters = useSelector(selectSetupFilters);

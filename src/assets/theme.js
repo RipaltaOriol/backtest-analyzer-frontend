@@ -9,6 +9,13 @@ const theme = createTheme({
         }
       }
     },
+    MuiIconButton: {
+      styleOverrides: {
+        root: {
+          borderRadius: '10%'
+        }
+      }
+    },
     MuiButton: {
       variants: [
         {

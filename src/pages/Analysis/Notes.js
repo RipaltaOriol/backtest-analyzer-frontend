@@ -1,57 +1,95 @@
-import axios from 'axios';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { useSelector, useDispatch } from "react-redux";
 
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
+import {
+    addNotes,
+    selectSetupId,
+    selectSetupNotes
+} from "../../features/setups/setupSlice";
+import { useUpdateSetupsMutation } from '../../features/setups/setupsApiSlice';
+
 import TextField from '@mui/material/TextField';
+import IconButton from '@mui/material/IconButton';
+import InputAdornment from '@mui/material/InputAdornment';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import LockOpenOutlinedIcon from '@mui/icons-material/LockOpenOutlined';
 
-const Notes = ({ labId, note, changeNote }) => {
+import { createStyles, makeStyles } from '@mui/styles'
 
-  const [newNote, setNewNote] = useState(note)
+const useStyles = makeStyles((theme) =>
+  createStyles({
+    inputMultiline : {
+      height: "100%",
+      "& .MuiInputBase-root": {
+        height: "100%",
+        display: "flex",
+        alignItems: "start"
+      }
+    },
+  }),
+)
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    axios.patch('/labs/' + labId + '/note', {
-      note: newNote
-    })
-    .then((response) => {
-      changeNote(response.data)
-    })
-    .catch((err) => {
-      setNewNote(note)
-    })
-  }
+const Notes = () => {
 
-  useEffect(() => {
-    setNewNote(note)
-  }, [note])
+    const classes = useStyles();
+    const dispatch = useDispatch();
+    const { documentId } = useParams();
 
-  return (
-    <Box>
-      <form
-        noValidate
-        autoComplete="off"
-        onSubmit={handleSubmit}
-      >
+    const [isValid, setIsValid] = useState(false)
+    const setupId = useSelector(selectSetupId);
+    const setupNotes = useSelector(selectSetupNotes);
+
+    const [notes, setNotes] = useState(setupNotes);
+    const [updateSetups, { data, isLoading, isSuccess }] = useUpdateSetupsMutation();
+
+    useEffect(() => {
+        setNotes(setupNotes)
+      }, [setupNotes])
+    
+    const handleSaveNote = async () => {
+        if (notes !== setupNotes) {
+            try {
+                await updateSetups({ documentId, setupId, notes }).unwrap()
+                setIsValid(true)
+            } catch (err) {
+                console.error('Something went wrong', err)
+            }
+        }
+    }
+
+    if (isSuccess && !isLoading && isValid) {
+        dispatch(
+            addNotes({ notes: data.notes })
+        )
+        setIsValid(false)
+    }
+
+    return (
         <TextField
-          fullWidth
-          multiline
-          sx={{ mb: 1 }}
-          label="Notes"
-          rows={4}
-          placeholder='Type your notes'
-          value={newNote}
-          onChange={(e) => setNewNote(e.target.value)}
-        />
-        <Button
-          type="submit"
-          variant='contained'
-        >
-          Save Note
-        </Button>
-      </form>
-    </Box>
-  )
+            className={classes.inputMultiline}
+            label="Notes"
+            multiline
+            fullWidth
+            value={notes}
+            rows={20}
+            variant="filled"
+            onChange={(e) => setNotes(e.target.value)}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    sx={{ mt: 1.5, fontSize: 16 }}
+                    onClick={() => handleSaveNote()}
+                  >
+                    {notes === setupNotes ? 'Save' : 'Unsaved'}
+                    {notes === setupNotes ? <LockOutlinedIcon /> : <LockOpenOutlinedIcon />}
+                  </IconButton>
+                </InputAdornment>
+              )
+            }}
+          />
+    )
 }
 
-export default Notes
+export default Notes;

@@ -55,10 +55,10 @@ export const setupsApiSlice = apiSlice.injectEndpoints({
             // invalidatesTags: ['Setups']
         }),
         updateSetups: builder.mutation({
-            query: ({ documentId, name, setupId }) => ({
+            query: ({ documentId, name, setupId, notes }) => ({
                 url: `/documents/${documentId}/setups/${setupId}`,
                 method: 'PUT',
-                body: { name },
+                body: { name, notes },
             }),
             invalidatesTags: (result, error, arg) => [
                 { type: 'Setup', id: arg.id }

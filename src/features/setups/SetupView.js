@@ -6,11 +6,12 @@ import { useSelector } from "react-redux";
 
 import { selectSetupData } from "./setupSlice";
 
+import Notes from '../../pages/Analysis/Notes'
+
 import Grid from '@mui/material/Grid';
 import MaterialTable from "material-table";
-import TextField from '@mui/material/TextField';
-import { createStyles, makeStyles } from '@mui/styles'
 
+import { createStyles, makeStyles } from '@mui/styles'
 
 
 const useStyles = makeStyles((theme) =>
@@ -25,15 +26,15 @@ const useStyles = makeStyles((theme) =>
         display: "flex",
         alignItems: "start"
       }
-    }
+    },
   }),
 )
 
-const SetupView = () => {
-  const classes = useStyles()
+let SetupView = () => {
+  const classes = useStyles();
   const setupData = useSelector(selectSetupData);
 
-  const [selectedRow, setSelectedRow] = useState({ '#': null})
+  const [selectedRow, setSelectedRow] = useState({ '#': null })
   
   let dataColumns = [];
   let dataContents = [];
@@ -66,14 +67,7 @@ const SetupView = () => {
     <>
       <Grid container spacing={2} sx={{ mb: 2 }}>
         <Grid item xs={5}>
-          <TextField
-            className={classes.inputMultiline}
-            label="Notes"
-            multiline
-            fullWidth
-            rows={7}
-            variant="filled"
-          />
+          <Notes />
         </Grid>
         <Grid item xs={7}>
           <img
@@ -102,32 +96,7 @@ const SetupView = () => {
         }}
         icons={tableIcons}
       />
-        
-
-      
-      {/* {setupData && setupData.columns ? (
-        <ThemeProvider theme={defaultMaterialTheme}>
-          <MaterialTable
-            columns={setupData.columns}
-            data={setupData.data}
-            title="Personen"
-          />
-        </ThemeProvider>
-      ) : (
-        {}
-      )} */}
-      {/* <h1>{setupData}</h1> */}
     </>
-    // <Box sx={{ my: 2, height: 500, width: '100%' }}>
-    //     <DataGrid
-    //         rows={rows}
-    //         columns={columns}
-    //         pageSize={10}
-    //         rowsPerPageOptions={[10]}
-    //         disableMultipleSelection={true}
-    //         // onRowClick={(id) => selectRow(id)}
-    //     />
-    // </Box>
   );
 };
 

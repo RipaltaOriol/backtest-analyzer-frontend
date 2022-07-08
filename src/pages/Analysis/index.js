@@ -27,8 +27,6 @@ const Analysis = () => {
   const { documentId } = useParams();
 
   const [open, setOpen] = useState(false);
-  const [age, setAge] = useState("");
-  const [option1, setOption1] = useState("");
 
   const setupName = useSelector(selectSetupName);
 
@@ -42,20 +40,10 @@ const Analysis = () => {
 
   const doc = useSelector((state) => selectDocumentById(state, documentId));
 
-  const handleChange = (event) => {
-    setAge(event.target.value);
-  };
-
-  const handleChangeO1 = (event) => {
-    setOption1(event.target.value);
-  };
-
-
   let documentName = "Loading";
   if (doc) {
     documentName = doc.name;
   }
-
 
   const handleManageSetups = () => {
     navigate("/" + documentId + "/setups");

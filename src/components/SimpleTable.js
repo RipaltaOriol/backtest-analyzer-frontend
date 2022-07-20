@@ -1,7 +1,3 @@
-import { useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
-
-import { selectSetupId } from '../features/setups/setupSlice';
 import { useGetStatisticsQuery } from '../features/statistics/statisticsApiSlice';
 
 import Paper from '@mui/material/Paper';
@@ -12,16 +8,12 @@ import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableContainer from '@mui/material/TableContainer';
 
-const SimpleTable = () => {
+const SimpleTable = ({ id }) => {
 
     let tableRows = []
     let tableData = []
 
-    const { documentId } = useParams()
-
-    const setupId = useSelector(selectSetupId)
-
-    const { data, isSuccess } = useGetStatisticsQuery({ documentId, setupId })
+    const { data, isSuccess } = useGetStatisticsQuery({ setupId: id })
 
     if (isSuccess) {
         if (data) {

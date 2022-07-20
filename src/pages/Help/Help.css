@@ -6,10 +6,7 @@ body {
   margin-bottom: 16px;
 }
 
-.note {
-  text-decoration: underline;
-}
-
-.marker {
-  color: #075eee;
+.instructions {
+  background-color: rgba(0, 0, 0, 0.2);
+  padding: 5px;
 }

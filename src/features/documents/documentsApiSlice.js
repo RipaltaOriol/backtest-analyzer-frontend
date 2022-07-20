@@ -8,11 +8,9 @@ const documentsAdapter = createEntityAdapter({
 const initialState = documentsAdapter.getInitialState()
 
 export const documentsApiSlice = apiSlice.injectEndpoints({
-    tagTypes: ['Document'],
     endpoints: builder => ({
         getDocuments: builder.query({
             query: () => '/documents',
-            // tagTypes: ['Document'],
             transformResponse: responseData => {
                 return documentsAdapter.setAll(initialState, responseData)
             },

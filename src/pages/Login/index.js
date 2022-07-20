@@ -2,12 +2,14 @@ import { useDispatch } from 'react-redux';
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 
+import Footer from '../../components/Footer';
 
 import { setCredentials } from '../../features/auth/authSlice';
 import { useLoginMutation } from '../../features/auth/authApiSlice';
 
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import Toolbar from '@mui/material/Toolbar';
 import Message from '../../components/Message';
 import TextField from '@mui/material/TextField';
 import Container from '@mui/material/Container';
@@ -38,7 +40,6 @@ const Login = () => {
     e.preventDefault()
     try {
       const userData = await login({ email, password }).unwrap()
-      console.log(userData)
       dispatch(setCredentials({
         token: userData.access_token,
         user: userData.user,
@@ -57,53 +58,57 @@ const Login = () => {
   }
 
   return (
-    <Container sx={{ my: 5 }}>
-      <Box
-        sx={{ maxWidth: '400px', mx: 'auto'}}
-      >
-        <Typography
-          sx={{ mb: 3 }}
-          variant="h4"
-          component="h1"
-          color="primary"
+    <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+      <Container sx={{ my: 5 }}>
+        <Toolbar />
+        <Box
+          sx={{ maxWidth: '400px', mx: 'auto'}}
         >
-          Log in
-        </Typography>
-        {msg && <Message message={msg} isError={isError} sx={{mb: 2}} />}
-        <form
-          noValidate
-          autoComplete="off"
-          onSubmit={handleSubmit}
-        >
-          <TextField
-            sx={{ mb: 2 }}
-            label="Email"
-            variant="standard"
-            fullWidth
-            required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <TextField
-            sx={{ mb: 2 }}
-            type="password"
-            label="Password"
-            variant="standard"
-            fullWidth
-            required
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <Button
-            type="submit"
-            variant="contained"
+          <Typography
+            sx={{ mb: 3 }}
+            variant="h4"
+            component="h1"
             color="primary"
           >
-            Sign In
-          </Button>
-        </form>
-      </Box>
-    </Container>
+            Log in
+          </Typography>
+          {msg && <Message message={msg} isError={isError} sx={{mb: 2}} />}
+          <form
+            noValidate
+            autoComplete="off"
+            onSubmit={handleSubmit}
+          >
+            <TextField
+              sx={{ mb: 2 }}
+              label="Email"
+              variant="standard"
+              fullWidth
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <TextField
+              sx={{ mb: 2 }}
+              type="password"
+              label="Password"
+              variant="standard"
+              fullWidth
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+            >
+              Sign In
+            </Button>
+          </form>
+        </Box>
+      </Container>
+      <Footer />
+    </Box>
   )
 }
 

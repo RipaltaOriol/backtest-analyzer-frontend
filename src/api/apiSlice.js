@@ -17,7 +17,6 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
     let result = await baseQuery(args, api, extraOptions)
     // check this error!
     if (result?.error?.status === 403) {
-        console.log('sending refresh token')
         // send refresh token to get new access token
         const refreshResult = await baseQuery('/refresh', { ...api, endpoint: 'refresh' } , extraOptions)
         if (refreshResult?.data) {
@@ -39,5 +38,6 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
 
 export const apiSlice = createApi({
     baseQuery: baseQueryWithReauth,
+    tagTypes: ['Document', 'Setup', 'Stats', 'Graphs'],
     endpoints: builder => ({})
 })

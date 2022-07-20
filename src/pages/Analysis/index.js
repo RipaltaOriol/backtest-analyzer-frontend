@@ -1,100 +1,91 @@
 import "./Analysis.css";
 
-import { useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useParams, Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 
-import FilterList from "./FilterList";
-import FilterOptions from "./FilterOptions";
 import SetupView from "../../features/setups/SetupView";
+import SetupData from "../../features/setups/SetupData";
 import SetupDropdown from "../../features/setups/SetupDropdown";
+import { selectDefaultSetup, selectSetupsByDocument, selectSetupOnId } from "../../features/setups/setupsSlice";
+import { useGetSetupsQuery } from "../../features/setups/setupsSlice";
 
-import { selectSetupName } from "../../features/setups/setupSlice";
 import { selectDocumentById } from "../../features/documents/documentsApiSlice";
 
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
 import Typography from "@mui/material/Typography";
-import ButtonGroup from "@mui/material/ButtonGroup";
-
-
 
 const Analysis = () => {
 
-  const navigate = useNavigate();
-
   const { documentId } = useParams();
 
-  const [open, setOpen] = useState(false);
+  const [currentSetup, setCurrentSetup] = useState();
+  const [isSetupView, setIsSetupView] = useState(true);
 
-  const setupName = useSelector(selectSetupName);
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
+  // NOTE: handle Errors
+  const {
+    setupsByDocument,
+    defaultSetup,
+    actualSetup,
+    isLoading,
+    isSuccess,
+    isError,
+    error
+  } = useGetSetupsQuery(undefined, {
+    selectFromResult: ({ data, isLoading, isError, isSuccess }) => ({
+      setupsByDocument: selectSetupsByDocument(data, documentId),
+      defaultSetup: selectDefaultSetup(data, documentId),
+      actualSetup: selectSetupOnId(data, currentSetup?.id),
+      isLoading,
+      isError,
+      isSuccess,
+    }),
+  })
 
-  const handleClose = () => {
-    setOpen(false);
-  };
+  const document = useSelector((state) => selectDocumentById(state, documentId));
 
-  const doc = useSelector((state) => selectDocumentById(state, documentId));
-
-  let documentName = "Loading";
-  if (doc) {
-    documentName = doc.name;
-  }
-
-  const handleManageSetups = () => {
-    navigate("/" + documentId + "/setups");
-  }
-
-  const handleChartsNData = () => {
-    navigate("/" + documentId + "/statistics")
-  }
+  useEffect(() => { }, [currentSetup])
 
   return (
     <Box>
       <Box sx={{ mb: 1, display: "flex", alignItems: "center" }}>
         <Typography variant="h1" color="primary" sx={{ mr: 2 }}>
-          {documentName}
+          {document ? document?.name : 'Loading'}
         </Typography>
-        <ButtonGroup color="secondary" variant="contained">
-          <Button onClick={() => handleChartsNData()}>Charts &#38; Data</Button>
-          <Button onClick={() => handleManageSetups()}>Manage Setups</Button>
-        </ButtonGroup>
+        <Button
+          color="secondary"
+          variant="contained"
+          onClick={() => setIsSetupView(!isSetupView)}
+        >
+          { isSetupView ? 'Charts & Data' : 'General View'}
+        </Button>
         {/* setups dropdown */}
         <Box sx={{ ml: "auto" }}>
-          <SetupDropdown />
+          <SetupDropdown defaultSetup={defaultSetup} setups={setupsByDocument} changeSetup={setCurrentSetup} />
+          <Button
+            sx={{ mx: 1 }}
+            color="secondary"
+            variant="contained"
+            component={Link}
+            to={"/" + documentId + "/setups"}
+          >
+            Manage
+          </Button>
+
         </Box>
       </Box>
-      
       <Divider />
-      <Typography variant='h6'>{setupName}</Typography>
-      <Box
-        sx={{
-          mt: 1,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-      >
-        <ButtonGroup variant="contained">
-          <Button disabled>Toggle Tables</Button>
-          <Button>Toggle Notes</Button>
-          <Button>Toggle Images</Button>
-        </ButtonGroup>
-        <ButtonGroup variant="contained">
-            <Button onClick={handleClickOpen}>Filter</Button>
-            <Button>Export Imgs</Button>
-            <Button>Export All</Button>
-        </ButtonGroup>
-      </Box>
-      <FilterOptions open={open} handleClose={handleClose}/>
-      <Box sx={{ my: 2 }}>
-        <FilterList />
-        <SetupView />
-      </Box>
+      <Typography sx={{ my: 0.5 }} variant='h6'>{currentSetup ? currentSetup?.name : defaultSetup?.name}</Typography>
+
+      { isSetupView ? (
+        <SetupView setup={actualSetup ? actualSetup : defaultSetup}/>
+      ) : (
+        <SetupData setup={currentSetup ? currentSetup : defaultSetup} />
+      )}
+      
     </Box>
   );
 };

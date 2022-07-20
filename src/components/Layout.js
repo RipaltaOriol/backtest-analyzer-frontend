@@ -1,7 +1,9 @@
-
+import { useDispatch } from 'react-redux';
 import { Link, Outlet, useNavigate, useLocation } from "react-router-dom";
 
-import useLogout from "../hooks/useLogout";
+
+import { logOut } from "../features/auth/authSlice";
+import { useLogoutMutation } from "../features/auth/authApiSlice";
 import DocumentBar from "../features/documents/DocumentBar";
 
 import { createStyles, makeStyles } from "@mui/styles";
@@ -29,7 +31,12 @@ const drawerWidth = 240;
 const useStyles = makeStyles((theme) =>
   createStyles({
     brand: {
+      color: '#fff',
+      textDecoration: 'none',
       flexGrow: 1,
+      "&:hover": {
+          color: 'inherit',
+      }
     },
     toolbar: theme.mixins.toolbar,
   })
@@ -58,13 +65,16 @@ const features = [
 
 export default function Layout() {
   const classes = useStyles();
+  const dispatch = useDispatch();
   const location = useLocation();
 
   const navigate = useNavigate();
-  const logout = useLogout();
+  const [logout] = useLogoutMutation();
+
 
   const signOut = async () => {
-    await logout();
+    dispatch(logOut())
+    await logout().unwrap()
     navigate("/login");
   };
 
@@ -77,7 +87,12 @@ export default function Layout() {
       >
         <Toolbar>
           {/* Title  */}
-          <Typography variant="h6" className={classes.brand}>
+          <Typography 
+            variant="h6"
+            component={Link}
+            to='/'
+            className={classes.brand}
+          >
             Backtest Analyzer
           </Typography>
           {/* Sign out */}

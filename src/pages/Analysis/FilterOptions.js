@@ -1,14 +1,7 @@
 
-import { useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux';
+import { useState, useEffect } from 'react'
 
-import { useAddFilterSetupMutation } from '../../features/setups/setupsApiSlice';
-
-import {
-    addFilter,
-    selectSetupId,
-    selectSetupOptions
-} from '../../features/setups/setupSlice';
+import { useAddFilterSetupMutation } from '../../features/setups/setupsSlice';
 
 import Select from "@mui/material/Select";
 import Dialog from "@mui/material/Dialog";
@@ -37,23 +30,17 @@ const operations = {
     }
 }
 
-const FilterOptions = ({open, handleClose}) => {
+const FilterOptions = ({ open, handleClose, setupId, options }) => {
 
-    const dispatch = useDispatch();
     const [column, setColumn] = useState('')
     const [values, setValues] = useState([])
     const [number, setNumber] = useState()
-    const [isValid, setIsValid] = useState(false)
     const [operation, setOperation] = useState('')
     const [optionIdx, setOptionIdx] = useState(-1)
 
-    const [addFilterSetup, { data, isLoading, isSuccess }] = useAddFilterSetupMutation()
+    const [addFilterSetup] = useAddFilterSetupMutation()
     
-    let setupId = useSelector(selectSetupId)
-    let setupOptions = useSelector(selectSetupOptions)
-    if (setupOptions === undefined) {
-        setupOptions = []
-    }
+    // useEffect(() => { }, [options]) // test if this is necessary
 
     const handleValueChange = (event) => {
         const {
@@ -69,15 +56,16 @@ const FilterOptions = ({open, handleClose}) => {
         if (column === '' || operation === '' || number === '' || number === undefined) {
             return handleClose()
         }
+
         const filter = {
             column,
             operation,
         }
 
-        if (optionIdx !== -1 && setupOptions[optionIdx].type === 'number') {
+        if (optionIdx !== -1 && options[optionIdx].type === 'number') {
             filter.value = [Number(number)]
         }
-        if (optionIdx !== -1 && setupOptions[optionIdx].type === 'string') {
+        if (optionIdx !== -1 && options[optionIdx].type === 'string') {
             filter.value = values
         }
         try {
@@ -88,25 +76,16 @@ const FilterOptions = ({open, handleClose}) => {
             setOperation('')
             setOptionIdx(-1)
             handleClose()
-            setIsValid(true)
         } catch (err) {
             console.error('Something went wrong', err)
         }
     }
 
-    if (isSuccess && !isLoading && isValid) {
-        const { state, filters } = data
-        console.log('But this gets triggered')
-        dispatch(
-            addFilter({ state, filters })
-        )
-        setIsValid(false)
-    }
-
     return(
         <Dialog open={open} onClose={handleClose} fullWidth={true}> 
             <DialogTitle>Filter</DialogTitle>
-            <DialogContent>
+            { options && (
+                <DialogContent>
                 <DialogContentText sx={{ mb: 2 }}>
                     Select from the dropdown to apply filters to your setups.
                 </DialogContentText>
@@ -122,7 +101,7 @@ const FilterOptions = ({open, handleClose}) => {
                             setOptionIdx(child.props.id)
                         }}
                     >
-                        {setupOptions.map((option, idx) => (
+                        {options.map((option, idx) => (
                             <MenuItem key={idx} id={idx} value={option.id}>{option.name}</MenuItem>
                         ))}
                     </Select>
@@ -137,7 +116,7 @@ const FilterOptions = ({open, handleClose}) => {
                             setOperation(e.target.value)
                         }}
                     >
-                        { optionIdx !== -1 ? setupOptions[optionIdx].type === 'number' ?
+                        { optionIdx !== -1 ? options[optionIdx].type === 'number' ?
                             Object.keys(operations.numeric).map((item, idx) => (
                                 <MenuItem key={idx} value={item}>{operations.numeric[item]}</MenuItem>
                             ))
@@ -148,7 +127,7 @@ const FilterOptions = ({open, handleClose}) => {
                         : (<></>)}
                     </Select>
                 </FormControl>
-                { optionIdx !== -1 ? setupOptions[optionIdx].type === 'string' ? (
+                { optionIdx !== -1 ? options[optionIdx].type === 'string' ? (
                     <FormControl fullWidth sx={{ my: 1 }}>
                         <InputLabel>Value</InputLabel>
                         <Select
@@ -159,7 +138,7 @@ const FilterOptions = ({open, handleClose}) => {
                             renderValue={(selected) => selected.join(', ')}
                             MenuProps={{ MenuListProps: { sx: { p: 0 } } }}
                         >
-                            {setupOptions[optionIdx].values.map((value, idx) => (
+                            {options[optionIdx].values.map((value, idx) => (
                                 <MenuItem key={idx} value={value}>
                                     <Checkbox checked={values.indexOf(value) > -1} />
                                     <ListItemText primary={value} />
@@ -179,6 +158,7 @@ const FilterOptions = ({open, handleClose}) => {
                     )
                 : (<></>)}
             </DialogContent>
+            )}
             <DialogActions>
                 <Button variant="contained" onClick={handleClose}>
                     Cancel

@@ -1,7 +1,4 @@
-
-
 import { useState } from 'react';
-import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
 import {
@@ -9,8 +6,8 @@ import {
     useAddSetupsMutation,
     useUpdateSetupsMutation,
     useDeleteSetupsMutation,
-} from './setupsApiSlice';
-import { getSelectors } from "./setupsApiSlice";
+} from './setupsSlice';
+import { selectSetupsByDocument } from "./setupsSlice";
 
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
@@ -18,9 +15,11 @@ import List from '@mui/material/List';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
+import Tooltip from '@mui/material/Tooltip';
 import AddIcon from '@mui/icons-material/Add';
 import ListItem from '@mui/material/ListItem';
 import TextField from '@mui/material/TextField';
+import StarIcon from '@mui/icons-material/Star';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -47,7 +46,20 @@ const SetupsList = () => {
     const [updateSetups] = useUpdateSetupsMutation()
     const [deleteSetups] = useDeleteSetupsMutation()
 
-    // const orderedSetups = useSelector(selectAllSetups)
+    const {
+        setupsByDocument,
+        isLoading,
+        isSuccess,
+        isError,
+        error
+      } = useGetSetupsQuery(undefined, {
+        selectFromResult: ({ data, isLoading, isError, isSuccess }) => ({
+          setupsByDocument: selectSetupsByDocument(data, documentId),
+          isLoading,
+          isError,
+          isSuccess,
+        }),
+      })
 
     const handleClickOpen = (formType, id) => {
         setNewSetupName('');
@@ -68,28 +80,22 @@ const SetupsList = () => {
     };
 
     const handleAddSetup = () => {
-        addSetups({ documentId, name: newSetupName })
+        addSetups({
+            document: documentId,
+            name: newSetupName
+        })
         setOpenAdd(false);
     }
 
     const handleChangeName = () => {
-        updateSetups({ documentId, name: newSetupName, setupId })
+        updateSetups({ setupId, name: newSetupName })
         setOpenUpdate(false);
     }
 
-    const {
-        data: setups,
-        isSuccess,
-        isError,
-    } = useGetSetupsQuery({ documentId })
-
-    const { selectAll: selectAllSetups } = getSelectors({ documentId });
-    const allSetups = useSelector(selectAllSetups);
 
     let content = <p>Loading...</p>
     if (isSuccess) {
-        console.log(setups)
-        content = allSetups.map((setup) => (
+        content = setupsByDocument.map((setup) => (
             <ListItem
                 sx={{ pl: 0 }}
             >
@@ -103,6 +109,17 @@ const SetupsList = () => {
                     secondary={setup.default ? 'Default' : ''}
                 />
                 <ListItemSecondaryAction>
+                    <Tooltip title="Set Default" placement="left">
+                        <IconButton
+                            edge="end"
+                            aria-label="set default"
+                            sx={{ ml: 2 }}
+                            disabled={ setup.default ? true : false }
+                            onClick={() => updateSetups({ setupId: setup.id, isDefault: true })}
+                        >
+                            <StarIcon />
+                        </IconButton>
+                    </Tooltip>
                     <IconButton
                         edge="end"
                         aria-label="rename"
@@ -112,7 +129,7 @@ const SetupsList = () => {
                         <DriveFileRenameOutlineIcon />
                     </IconButton>
                     <IconButton
-                        onClick={() => deleteSetups({ documentId, setupId: setup.id })}
+                        onClick={() => deleteSetups({ setupId: setup.id })}
                         edge="end"
                         aria-label="delete"
                         sx={{ ml: 2 }}
@@ -199,6 +216,7 @@ const SetupsList = () => {
             </Dialog>
         </Box>
     )
+  
 }
 
 export default SetupsList;

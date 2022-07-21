@@ -51,7 +51,7 @@ const Login = () => {
       navigate(from, { replace: true })
     } catch (err) {
       if (!err?.originalStatus) {
-        setMsg(err.data.msg)
+        setMsg(err?.data?.msg || 'Something went wrong')
         setIsError(true)
       }
     }

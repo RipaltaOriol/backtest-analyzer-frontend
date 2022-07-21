@@ -54,5 +54,6 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "proxy": "https://serene-beach-99280.herokuapp.com"
 }

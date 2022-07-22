@@ -53,7 +53,7 @@ const Home = () => {
                 Apply differentent layers and generate multiple scenario to generat leads.
               </Typography>
               <Box sx={{ mt: 'auto' }}>
-                <img src={HomePage} alt="Change" />
+                <img src={HomeFilter} alt="Change" />
               </Box>
             </Item>
           </Grid>
@@ -67,7 +67,7 @@ const Home = () => {
                 Write custom notes to record your thought process and keep track of what you are looking for.
               </Typography>
               <Box sx={{ mt: 'auto' }}>
-                <img src={HomePage} alt="Change" />
+                <img src={HomeObserve} alt="Change" />
               </Box>
             </Item>
           </Grid>
@@ -81,7 +81,7 @@ const Home = () => {
                 If you also have screenshots of your trades we offer image embeding to look at them as you work on your data.
               </Typography>
               <Box sx={{ mt: 'auto' }}>
-                <img src={HomePage} alt="Change" />
+                <img src={HomeVisualise} alt="Change" />
               </Box>
             </Item>
           </Grid>

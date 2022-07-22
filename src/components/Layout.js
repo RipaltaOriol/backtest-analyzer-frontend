@@ -73,8 +73,8 @@ export default function Layout() {
 
 
   const signOut = async () => {
-    dispatch(logOut())
     await logout().unwrap()
+    dispatch(logOut())
     navigate("/login");
   };
 

@@ -47,7 +47,6 @@ const Login = () => {
       setEmail('')
       setPassword('')
       setMsg('Successfully logged in!')
-      navigate('/help')
       navigate(from, { replace: true })
     } catch (err) {
       if (!err?.originalStatus) {

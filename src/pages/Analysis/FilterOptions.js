@@ -53,7 +53,8 @@ const FilterOptions = ({ open, handleClose, setupId, options }) => {
     };
 
     const handleApply = async () => {
-        if (column === '' || operation === '' || number === '' || number === undefined) {
+
+        if (column === '' || operation === '' || (!values.length && number === undefined)) {
             return handleClose()
         }
 
@@ -61,7 +62,7 @@ const FilterOptions = ({ open, handleClose, setupId, options }) => {
             column,
             operation,
         }
-
+        
         if (optionIdx !== -1 && options[optionIdx].type === 'number') {
             filter.value = [Number(number)]
         }
@@ -72,7 +73,7 @@ const FilterOptions = ({ open, handleClose, setupId, options }) => {
             await addFilterSetup({ setupId, filter }).unwrap()
             setColumn('')
             setValues([])
-            setNumber(null)
+            setNumber(undefined)
             setOperation('')
             setOptionIdx(-1)
             handleClose()

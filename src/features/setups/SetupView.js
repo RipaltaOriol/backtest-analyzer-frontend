@@ -1,7 +1,7 @@
 import tableIcons from '../../assets/IconProvider';
 import MissingScreenshot from '../../assets/MissingScreenshot.png';
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 import Notes from '../../pages/Analysis/Notes'
 import FilterList from "../../pages/Analysis/FilterList";
@@ -49,6 +49,10 @@ let SetupView = ({ setup }) => {
   let dataColumns = [];
   let dataContents = [];
 
+  useEffect(() => {
+    setSelectedRow({ '#': null })
+  }, [setup?.id])
+
   // NOTE: where to put them
   const handleClickOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -63,6 +67,8 @@ let SetupView = ({ setup }) => {
         header = column.name.substring(3)
       } else if (column.name === '.p') {
         header = 'Pair'
+      } else if (column.name === '.s') {
+        header = 'Screenshot'
       }
 
       dataColumns.push({
@@ -116,7 +122,7 @@ let SetupView = ({ setup }) => {
           { isImageOpen && (
             <img
               className={classes.contianedImage}
-              src={MissingScreenshot}
+              src={selectedRow['.s'] || MissingScreenshot}
               alt="Trade screenshot"
             />
           )}
@@ -129,6 +135,7 @@ let SetupView = ({ setup }) => {
           columns={dataColumns}
           data={dataContents}
           onRowClick={(evt, selectedRow) => {
+            console.log(selectedRow)
             setSelectedRow(selectedRow)
           }}
           options={{

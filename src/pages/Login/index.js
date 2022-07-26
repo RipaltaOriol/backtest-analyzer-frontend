@@ -1,11 +1,13 @@
-import { useDispatch } from 'react-redux';
 import { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 import Footer from '../../components/Footer';
 
 import { setCredentials } from '../../features/auth/authSlice';
+import { setLoginMsg } from '../../features/messages/messagesSlice';
 import { useLoginMutation } from '../../features/auth/authApiSlice';
+import { selectLoginMsg } from '../../features/messages/messagesSlice';
 
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -24,7 +26,7 @@ const Login = () => {
 
   const from = location.state?.from?.pathname || '/overview';
 
-  const [msg, setMsg] = useState('');
+  const msg = useSelector(selectLoginMsg)
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isError, setIsError] = useState(false);
@@ -32,7 +34,10 @@ const Login = () => {
   const [login] = useLoginMutation();
 
   useEffect(() => {
-    setMsg('');
+    if (msg !== 'Successfully logged out!') {
+      dispatch(setLoginMsg({ msg: '' }));
+    }
+    
   }, [email, password])
 
   // Handles the login logic
@@ -46,11 +51,11 @@ const Login = () => {
       }))
       setEmail('')
       setPassword('')
-      setMsg('Successfully logged in!')
+      dispatch(setLoginMsg({ msg: 'Successfully logged in!' }))
       navigate(from, { replace: true })
     } catch (err) {
       if (!err?.originalStatus) {
-        setMsg(err?.data?.msg || 'Something went wrong')
+        dispatch(setLoginMsg({ msg: err?.data?.msg || 'Something went wrong' }))
         setIsError(true)
       }
     }

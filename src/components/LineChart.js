@@ -1,6 +1,7 @@
 import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS } from "chart.js/auto";
 
+const chartColours = ['#e8920b', '#075eee', '#8338ec', '#ffdb43', '#f2d2e6', '#09080d']
 
 const LineChart = ({ dataLineChart }) => {
 
@@ -15,8 +16,8 @@ const LineChart = ({ dataLineChart }) => {
                 {
                     label: dataset.name,
                     data: dataset.values,
-                    borderColor: idx % 2 === 0 ? '#e8920b': '#075eee',
-                    backgroundColor: idx % 2 === 0 ? '#e8920b': '#075eee',
+                    borderColor: chartColours[idx],
+                    backgroundColor: chartColours[idx],
                 }
             )
         })

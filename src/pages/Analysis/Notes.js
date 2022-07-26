@@ -46,7 +46,7 @@ const Notes = ({ setupId, notes, isOpened }) => {
           label="Notes"
           multiline
           fullWidth
-          value={setupNotes}
+          value={setupNotes || ''}
           rows={20}
           variant="filled"
           onChange={(e) => setSetupNotes(e.target.value)}

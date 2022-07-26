@@ -28,7 +28,8 @@ export const documentsApiSlice = apiSlice.injectEndpoints({
                 body: file,
             }),
             invalidatesTags: [
-                { type: 'Document', id: 'LIST' }
+                { type: 'Document', id: 'LIST' },
+                'Setup'
             ]
         }),
         cloneDocument: builder.mutation({
@@ -37,7 +38,8 @@ export const documentsApiSlice = apiSlice.injectEndpoints({
                 method: 'POST'
             }),
             invalidatesTags: [
-                { type: 'Document', id: 'LIST' }
+                { type: 'Document', id: 'LIST' },
+                'Setup'
             ]
         }),
         renameDocument: builder.mutation({

@@ -22,7 +22,7 @@ const operations = {
         gt: '<',
         lt: '>',
         eq: '=',
-        nq: '≠',
+        ne: '≠',
     },
     string: {
         in: 'Include',

@@ -1,10 +1,12 @@
 import { useDispatch } from 'react-redux';
-import { Link, Outlet, useNavigate, useLocation } from "react-router-dom";
+import { Link, Outlet, useLocation } from "react-router-dom";
 
 
 import { logOut } from "../features/auth/authSlice";
-import { useLogoutMutation } from "../features/auth/authApiSlice";
 import DocumentBar from "../features/documents/DocumentBar";
+import { setLoginMsg } from '../features/messages/messagesSlice';
+import { useLogoutMutation } from "../features/auth/authApiSlice";
+
 
 import { createStyles, makeStyles } from "@mui/styles";
 
@@ -68,14 +70,12 @@ export default function Layout() {
   const dispatch = useDispatch();
   const location = useLocation();
 
-  const navigate = useNavigate();
   const [logout] = useLogoutMutation();
-
 
   const signOut = async () => {
     await logout().unwrap()
+    dispatch(setLoginMsg({ msg: 'Successfully logged out!' }))
     dispatch(logOut())
-    navigate("/login");
   };
 
   return (

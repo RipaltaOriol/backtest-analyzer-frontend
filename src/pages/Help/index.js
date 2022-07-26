@@ -1,8 +1,10 @@
 import './Help.css';
 import { useLocation } from 'react-router-dom';
 
-import exampleFormat from '../../assets/formatExample.png';
+import emptyColumns from '../../assets/empty-columns.png';
+import exampleFormat from '../../assets/structure-table.png';
 
+import YoutubeEmbed from '../../components/YoutubeEmbed'
 import Footer from '../../components/Footer';
 
 import Box from '@mui/material/Box';
@@ -113,11 +115,51 @@ const Help = () => {
           <Box sx={{ my: 2 }}>
             <Typography
               variant='h5'
+              component='h2'
+            >
+              Documents
+            </Typography>
+            <Typography variant='body1' sx={{ my: 1 }}>
+              After a file is uploaded Backtest Analyser will create a <span className='highlight'>document</span> of the file where the original data will be stored. These <span className="highlight">documents</span> cannot be accessed directly but instead they serve as a reference point for the uploaded file. <span className="highlight">Documents</span> can be renamed, duplicated and deleted in the overview section. Additionally, to access <span className="highlight">documents</span> for analysis you can click on the <span className="highlight">document</span> name on the left side of the screen within the app.
+            </Typography>
+          </Box>
+          <Box sx={{ my: 2 }}>
+            <Typography
+              variant='h5'
+              component='h2'
+            >
+              Setups
+            </Typography>
+            <Typography variant='body1' sx={{ my: 1 }}>
+              To work on analyzing a document Backtest Analyser uses <span className="highlight">setups</span>. The main reason for that is to give the user the possibility to work on different analysis within the same document without the need of deleting previous analysis or uploading the same file twice. The <span className="highlight">setups</span> of a document are accessed through the dropdown and can be created, renamed and deleted in the manage section that is visible after selecting a document. Additionally, when selecting a document the <span className="highlight">setup</span> that will first load is the one marked as default but this can be changed in manage section.
+            </Typography>
+          </Box>
+          <Box sx={{ my: 2 }}>
+            <Typography
+              variant='h5'
               component='h1'
             >
-              Example
+              Examples
             </Typography>
-            <span>Video example</span>
+            <Box>
+              <Typography variant='h6'>Upload File</Typography>
+              <Typography>
+                This short video shows how to code your columns in your file to prepare it for upload in Backtest Analyser. Additionally, it demonstrates how to save an Excel file as CSV.
+              </Typography>
+              <YoutubeEmbed embedId="16EXtGBntxA" />
+            </Box>
+            <Box>
+              <Typography variant='h6'>Remove Blank Columns in CSV</Typography>
+              <Typography>
+                After uploading your files you might have empty columns which will prevent some features from working properly. If you have something like the following image check this next video to solve the problem in Excel.
+              </Typography>
+              <img
+                src={emptyColumns}
+                className='image-embed'
+                alt="Empty columns being displayed"
+              />
+              <YoutubeEmbed embedId="Y3NE8Oy178w" />
+            </Box>
           </Box>
           <Typography variant='overline'>Enjoy - More documentation coming soon</Typography>
       </Box>

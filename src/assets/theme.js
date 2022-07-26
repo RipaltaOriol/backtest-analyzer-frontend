@@ -53,7 +53,13 @@ const theme = createTheme({
           },
           '&:focus': {
             backgroundColor: '#b4caf0'
-          }
+          },
+          '&.Mui-selected': {
+            backgroundColor: '#8db1ef',
+            '&:hover': {
+              backgroundColor: '#8db1ef',
+            }
+          },
         }
       }
     },

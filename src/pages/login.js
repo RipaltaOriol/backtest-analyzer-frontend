@@ -2,17 +2,17 @@ import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useLocation } from 'react-router-dom';
 
-import Footer from '../../components/Footer';
+import Footer from '../common/Footer';
 
-import { setCredentials } from '../../features/auth/authSlice';
-import { setLoginMsg } from '../../features/messages/messagesSlice';
-import { useLoginMutation } from '../../features/auth/authApiSlice';
-import { selectLoginMsg } from '../../features/messages/messagesSlice';
+import { setCredentials } from '../features/auth/authSlice';
+import { setLoginMsg } from '../features/messages/messagesSlice';
+import { useLoginMutation } from '../features/auth/authApiSlice';
+import { selectLoginMsg } from '../features/messages/messagesSlice';
 
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Toolbar from '@mui/material/Toolbar';
-import Message from '../../components/Message';
+import Message from '../common/Message';
 import TextField from '@mui/material/TextField';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
@@ -69,8 +69,8 @@ const Login = () => {
           sx={{ maxWidth: '400px', mx: 'auto'}}
         >
           <Typography
-            sx={{ mb: 3 }}
-            variant="h4"
+            sx={{ mb: 2 }}
+            variant="h5"
             component="h1"
             color="primary"
           >

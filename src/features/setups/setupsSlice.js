@@ -76,7 +76,7 @@ export const setupsSlice = apiSlice.injectEndpoints({
             invalidatesTags: (result, error, arg) => [
                 { type: 'Setup', id: arg.id }
             ]
-        })
+        }),
     })
 })
 

@@ -60,6 +60,12 @@ export const documentsApiSlice = apiSlice.injectEndpoints({
             invalidatesTags: [
                 { type: 'Document', id: 'LIST' }
             ]
+        }),
+        compareDocumentSetups: builder.query({
+            query: ({ documentId }) => `/documents/${documentId}/compare`
+        }),
+        getDocumentSetups: builder.query({
+            query: () => '/documents/extended'
         })
     })
 })
@@ -70,6 +76,8 @@ export const {
     useCloneDocumentMutation,
     useRenameDocumentMutation,
     useDeleteDocumentMutation,
+    useCompareDocumentSetupsQuery,
+    useGetDocumentSetupsQuery
 } = documentsApiSlice
 
 // returns the query result object

@@ -1,25 +1,26 @@
-import { Pie } from 'react-chartjs-2';
+import { Doughnut } from 'react-chartjs-2';
 import { Chart as ChartJS } from "chart.js/auto";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
 
 const PieChart = ({ dataPieChart }) => {
-
     let data;
     if (Object.keys(dataPieChart).length !== 0) {
         data = {
            labels: dataPieChart.labels,
            datasets: [],
-       }
+        }
         data.datasets.push({
             data: dataPieChart.values,
             backgroundColor: [
-                '#e8920b',
-                '#075eee',
-                '#8338ec',
+                '#2CDDC7',
+                '#C479F3',
+                '#59A7FF',
             ],
             borderColor: [
-                '#e8920b',
-                '#075eee',
-                '#8338ec',
+                '#2CDDC7',
+                '#C479F3',
+                '#59A7FF',
             ],
             borderWidth: 1,
         })
@@ -27,17 +28,23 @@ const PieChart = ({ dataPieChart }) => {
 
 
     return (
-        <>
+        <Box>
+            <Typography align="center">{dataPieChart.name}</Typography>
             {
                 Object.keys(dataPieChart).length !== 0
                 ? (
-                    <Pie
+                    <Doughnut
                         data={data}
                         options = {{
                             plugins: {
+                                legend: {
+                                    labels: {
+                                        usePointStyle: true,
+                                    }
+                                },
                                 title: {
-                                    display: true,
-                                    text: dataPieChart.name
+                                    // display: true,
+                                    // text: dataPieChart.name
                                 }
                             }
                         }}
@@ -45,7 +52,7 @@ const PieChart = ({ dataPieChart }) => {
                 )
                 : <p>Loading...</p>
             }
-        </>
+        </Box>
     )
 }
 

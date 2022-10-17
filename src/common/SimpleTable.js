@@ -8,6 +8,14 @@ import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableContainer from '@mui/material/TableContainer';
 
+import { styled } from '@mui/system';
+
+const TablePaper = styled(Paper)({
+    border: '1px solid #E5E9EB',
+    borderRadius: '6px',
+    boxShadow: 'none',
+  })
+
 const SimpleTable = ({ id }) => {
 
     let tableRows = []
@@ -18,42 +26,50 @@ const SimpleTable = ({ id }) => {
     if (isSuccess) {
         if (data) {
             tableRows.push(
-                <TableCell>Name</TableCell>
+                <TableCell>Metric</TableCell>
             )
             for (const prop in data[0]) {
-                if (prop !== 'name') {
+                if (prop !== 'stat') {
                     tableRows.push(
-                        <TableCell align="right">{prop}</TableCell>
+                        <TableCell align="center">{prop}</TableCell>
                     )
                 }
             }
             tableData = data
         }
+        
     }
 
+    
+
     return (
-        <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 650 }} aria-label="simple table">
+        <TableContainer component={TablePaper}>
+            <Table
+                size="small"
+            >
                 <TableHead>
-                <TableRow>
+                <TableRow sx={{ fontSize: '14px' }}>
                     {tableRows}
                 </TableRow>
                 </TableHead>
                 <TableBody>
+               
                     {tableData.map((row, idx) => (
                        <TableRow
                             key={idx}
+                            hover
                         >
-                            <TableCell>{row.name}</TableCell>
+                            <TableCell>{row.stat}</TableCell>
                             {Object.keys(row).reduce((result, cell, idx) => {
-                                if (cell !== 'name') {
-                                    result.push(<TableCell key={idx} align="right">{row[cell]}</TableCell>)
+                                if (cell !== 'stat') {
+                                    result.push(<TableCell key={idx} align="center">{row[cell].toFixed(3)}</TableCell>)
                                 }
                                 return result
                             }, [])}
                         </TableRow>
                     
                     ))}
+
                 </TableBody>
             </Table>
         </TableContainer>

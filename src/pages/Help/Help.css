@@ -1,19 +1,6 @@
-body {
-  font-family: Montserrat,"Helvetica Neue",Helvetica,Arial;
-}
-
-.paragraph {
-  margin-bottom: 16px;
-}
-
-.instructions {
-  background-color: rgba(0, 0, 0, 0.2);
-  padding: 5px;
-}
-
 .highlight {
-  color: rgb(7, 94, 238);
-  background-color: rgb(165, 189, 229);
+  color: "#5B6871";
+  font-weight: 700;
 }
 
 .image-embed {

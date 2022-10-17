@@ -1,21 +1,24 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-
 import theme from './assets/theme';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 import Home from './pages/Home';
 import Help from './pages/Help';
-import Login from './pages/Login';
-import Upload from './pages/Upload';
+import Login from './pages/login';
+import Upload from './pages/upload';
 import Analysis from './pages/Analysis';
-import Overview from './pages/Overview';
+import Overview from './pages/overview';
 
-import Layout from './components/Layout';
-import HomeBar from './components/HomeBar';
-import RequireAuth from './components/RequireAuth';
-import PersistLogin from './components/PersistLogin';
+import Layout from './common/Layout';
+import HomeBar from './common/HomeBar';
+import RequireAuth from './common/RequireAuth';
+import PersistLogin from './common/PersistLogin';
 
-import SetupsList from './features/setups/SetupsList'
+import SetupsList from './features/setups/SetupsList';
+import AllSetups from './features/setups/AllSetups';
+import SetupsCompare from './features/setups/SetupsCompare';
+import AllDocuments from './features/documents/AllDocuments';
+import UpdateDocument from './features/documents/UpdateDocument';
 
 import { ThemeProvider } from '@mui/material';
 
@@ -36,9 +39,13 @@ function App() {
             <Route element={<RequireAuth />}>
               <Route element={<Layout />}>
                 <Route path="upload" element={<Upload />} />
+                <Route path="files" element={<AllDocuments />} />
+                <Route path="files/update/:doucmentId" element={<UpdateDocument />} />
+                <Route path="setups" element={<AllSetups />} />
                 <Route path="overview" element={<Overview />} />
                 <Route path="help" element={<Help />} />
                 <Route path=":documentId/setups" element={<SetupsList />} />
+                <Route path=":documentId/compare" element={<SetupsCompare />} />
                 <Route path=":documentId" element={<Analysis />} />
               </Route>
             </Route>

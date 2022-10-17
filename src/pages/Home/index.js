@@ -6,7 +6,7 @@ import HomeObserve from '../../assets/home-observe.png';
 import HomeVisualise from '../../assets/home-visualise.png';
 
 import Timeline from './Timeline';
-import Footer from '../../components/Footer';
+import Footer from '../../common/Footer';
 
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';

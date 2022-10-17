@@ -6,8 +6,8 @@ import {
   useCloneDocumentMutation,
   useRenameDocumentMutation,
   useDeleteDocumentMutation,
-} from "../../features/documents/documentsApiSlice";
-import { selectAllDocuments } from "../../features/documents/documentsApiSlice";
+} from "../features/documents/documentsApiSlice";
+import { selectAllDocuments } from "../features/documents/documentsApiSlice";
 
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";

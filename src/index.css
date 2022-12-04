@@ -25,7 +25,3 @@ code {
 .MuiDataGrid-cell:focus-within {
   outline: none!important;
 }
-
-.Mui-selected {
-  background-color: 'red';
-}

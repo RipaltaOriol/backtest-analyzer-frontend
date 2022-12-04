@@ -1,8 +1,11 @@
 import { useGetChartsQuery } from "../statistics/statisticsApiSlice"
 
-import PieChart from "../../components/PieChart";
-import LineChart from '../../components/LineChart';
-import SimpleTable from '../../components/SimpleTable';
+import PieChart from "../../common/PieChart";
+import LineChart from '../../common/LineChart';
+import SimpleTable from '../../common/SimpleTable';
+
+import ScatterGraph from '../graphs/ScatterGraph';
+import BarGraph from '../graphs/BarGraph';
 
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
@@ -35,6 +38,14 @@ const SetupData = ({ setup }) => {
             <Grid container spacing={2} sx={{ mt: 2 }}>
                 <Grid item xs={2}>
                     <PieChart dataPieChart={dataPieChart} />
+                </Grid>
+                <Grid item xs={6}>
+                    {/* Loading message */}
+                    {setup?.id && <ScatterGraph setupId={setup?.id} />}
+                </Grid>
+                <Grid item xs={6}>
+                    {/* Loading message */}
+                    {setup?.id && <BarGraph setupId={setup?.id} />}
                 </Grid>
             </Grid>
             

@@ -149,7 +149,6 @@ const AllDocuments = () => {
     } else if (isSuccess) {
         
         content = orderedDocuments.map((doc, idx) => (
-            <DocumentGrid container>
                 <Grid item xs={6} lg={4} xl={3} sx={{ backgroundColor: 'none' }}>
                     <DocumentItem>
                         <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -176,11 +175,12 @@ const AllDocuments = () => {
                         </IconButton>
                     </DocumentItem>
                 </Grid>
-            </DocumentGrid>
         ))
     } else if (isError) {
         content = <p>{error}</p>;
     }
+
+    console.log(content);
 
     return (
         <Box>
@@ -196,7 +196,13 @@ const AllDocuments = () => {
             </Box>
             <Divider sx={{ mt: 2, mb: 4 }}/>
             <Box sx={{ flexGrow: 1 }}>
-                {content}
+            { content.length > 0 &&
+                <DocumentGrid container>
+                    {content}
+                </DocumentGrid>
+            }
+            
+
             </Box>
             <Upload
                 open={openUpload}

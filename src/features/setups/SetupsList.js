@@ -80,6 +80,9 @@ const SetupsList = () => {
     };
 
     const handleAddSetup = () => {
+        console.log('Here')
+        console.log(documentId)
+        console.log(newSetupName)
         addSetups({
             document: documentId,
             name: newSetupName

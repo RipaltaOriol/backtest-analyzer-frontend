@@ -21,6 +21,18 @@ export const documentsApiSlice = apiSlice.injectEndpoints({
                 ...result.ids.map(id => ({ type: 'Document', id }))
             ]
         }),
+        getDocument: builder.query({
+            query: ({ documentId }) => `/documents/${documentId}`,
+            providesTags: ['DocumentTable']
+        }),
+        updateDocument: builder.mutation({
+            query: ({ id, method, data }) => ({
+                url: `/documents/${id}/update`,
+                method: 'PUT',
+                body: { method, data }
+            }),
+            invalidatesTags: ['DocumentTable']
+        }),
         uploadDocument: builder.mutation({
             query: file => ({
                 url: '/documents/upload',
@@ -61,23 +73,28 @@ export const documentsApiSlice = apiSlice.injectEndpoints({
                 { type: 'Document', id: 'LIST' }
             ]
         }),
-        compareDocumentSetups: builder.query({
-            query: ({ documentId }) => `/documents/${documentId}/compare`
+        getDocumentColumns: builder.query({
+            query: ({ documentId }) => `/documents/${documentId}/columns`,
         }),
-        getDocumentSetups: builder.query({
-            query: () => '/documents/extended'
-        })
+        compareDocumentSetups: builder.query({
+            query: ({ documentId, metric = null }) => ({
+                url: `/documents/${documentId}/compare`,
+                params: metric ? { metric: metric } : null
+            })
+        }),
     })
 })
 
 export const {
+    useGetDocumentQuery,
     useGetDocumentsQuery,
+    useUpdateDocumentMutation,
     useUploadDocumentMutation,
     useCloneDocumentMutation,
     useRenameDocumentMutation,
     useDeleteDocumentMutation,
     useCompareDocumentSetupsQuery,
-    useGetDocumentSetupsQuery
+    useGetDocumentColumnsQuery,
 } = documentsApiSlice
 
 // returns the query result object

@@ -1,6 +1,6 @@
-import Spinner from '../../common/Spinner'
+import Spinner from '../../../common/Spinner'
 
-import { useDeleteFilterSetupMutation } from '../../features/setups/setupsSlice';
+import { useDeleteFilterSetupMutation } from '../setupsSlice';
 
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';

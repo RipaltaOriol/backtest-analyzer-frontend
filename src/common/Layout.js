@@ -30,7 +30,7 @@ import FileUploadIcon from "@mui/icons-material/FileUpload";
 import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
 import Inventory2RoundedIcon from '@mui/icons-material/Inventory2Rounded';
 
-import LogoIcon from "../assets/layers-triple.svg";
+import LogoIcon from "../assets/svg/layers-triple.svg";
 
 import LogoTitle from './LogoTitle';
 import Upload from '../pages/upload';

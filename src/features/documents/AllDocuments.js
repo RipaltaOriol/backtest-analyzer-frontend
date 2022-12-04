@@ -2,13 +2,13 @@ import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-import { selectAllDocuments } from './documentsApiSlice';
+import { selectAllDocuments } from './documentSlice';
 import {
     useGetDocumentsQuery,
     useCloneDocumentMutation,
     useRenameDocumentMutation,
     useDeleteDocumentMutation,
-} from './documentsApiSlice';
+} from './documentSlice';
 
 import Box from '@mui/material/Box';
 import Menu from '@mui/material/Menu';
@@ -34,6 +34,8 @@ import DriveFileRenameOutlineRoundedIcon from '@mui/icons-material/DriveFileRena
 
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import TextSnippetIcon from '@mui/icons-material/TextSnippet';
+
+import Upload from 'pages/upload';
 
 import { styled } from '@mui/system';
 
@@ -65,6 +67,13 @@ const DocumentMenuItem = styled(MenuItem)({
     },
 })
 
+const DocumentSource = styled(Typography)({
+    fontSize: '14px',
+    fontWeight: '400',
+    lineHeight: '24px',
+    color: '#84919A'
+  })
+
 const AllDocuments = () => {
 
     let navigate = useNavigate();
@@ -73,7 +82,16 @@ const AllDocuments = () => {
     const [newName, setNewName] = useState("");
     const [anchorEl, setAnchorEl] = useState(null);
     const [documentId, setDocumentId] = useState(null);
+    const [openUpload, setOpenUpload] = useState(false);
     const open = Boolean(anchorEl);
+
+    const handleUploadOpen = () => {
+        setOpenUpload(true);
+    };
+    
+    const handleUploadClose = () => {
+        setOpenUpload(false);
+    };
 
     const handleClick = (id, event) => {
         setDocumentId(id)
@@ -131,27 +149,34 @@ const AllDocuments = () => {
     } else if (isSuccess) {
         
         content = orderedDocuments.map((doc, idx) => (
-            <Grid item xs={6} lg={4} xl={3} sx={{ backgroundColor: 'none' }}>
-                <DocumentItem>
-                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                        <Box sx={{ backgroundColor: 'white', p: 1, borderRadius: '6px', mr: 2, border: '1px solid #E5E9EB' }}>
-                            <TextSnippetIcon sx={{ color: '#84919A' }} />
+            <DocumentGrid container>
+                <Grid item xs={6} lg={4} xl={3} sx={{ backgroundColor: 'none' }}>
+                    <DocumentItem>
+                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                            <Box sx={{ backgroundColor: 'white', p: 1, borderRadius: '6px', mr: 2, border: '1px solid #E5E9EB' }}>
+                                <TextSnippetIcon sx={{ color: '#84919A' }} />
+                            </Box>
+                            <Box>
+                                <Typography>
+                                    {doc.name}
+                                </Typography>
+                                <DocumentSource>
+                                    {doc.source}
+                                </DocumentSource>
+                            </Box>
                         </Box>
-                        <Typography>
-                            {doc.name}
-                        </Typography>
-                    </Box>
-                    <IconButton
-                        id="demo-positioned-button"
-                        aria-controls={open ? 'demo-positioned-menu' : undefined}
-                        aria-haspopup="true"
-                        aria-expanded={open ? 'true' : undefined}
-                        onClick={(e) => handleClick(doc.id, e)}
-                    >
-                        <MoreHorizIcon sx={{ color: '#252C32' }} />
-                    </IconButton>
-                </DocumentItem>
-            </Grid>
+                        <IconButton
+                            id="demo-positioned-button"
+                            aria-controls={open ? 'demo-positioned-menu' : undefined}
+                            aria-haspopup="true"
+                            aria-expanded={open ? 'true' : undefined}
+                            onClick={(e) => handleClick(doc.id, e)}
+                        >
+                            <MoreHorizIcon sx={{ color: '#252C32' }} />
+                        </IconButton>
+                    </DocumentItem>
+                </Grid>
+            </DocumentGrid>
         ))
     } else if (isError) {
         content = <p>{error}</p>;
@@ -161,14 +186,22 @@ const AllDocuments = () => {
         <Box>
             <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                 <Typography variant='h5'>All Documents</Typography>
-                <Button color="primary" variant='contained'>Upload New Document</Button>
+                <Button
+                    color="primary"
+                    variant='contained'
+                    onClick={handleUploadOpen}
+                >
+                    Upload New Document
+                </Button>
             </Box>
             <Divider sx={{ mt: 2, mb: 4 }}/>
             <Box sx={{ flexGrow: 1 }}>
-                <DocumentGrid container>
-                    {content}
-                </DocumentGrid>
+                {content}
             </Box>
+            <Upload
+                open={openUpload}
+                onClose={handleUploadClose}
+            />
             <Dialog open={openDialog} onClose={handleDialogClose}>
                 <DialogTitle sx={{ color: 'inherit' }}>
                     <Typography variant="h5" sx={{ mt: 1 }}>

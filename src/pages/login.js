@@ -24,7 +24,7 @@ const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const from = location.state?.from?.pathname || '/overview';
+  const from = location.state?.from?.pathname || '/files';
 
   const msg = useSelector(selectLoginMsg)
   const [email, setEmail] = useState('');

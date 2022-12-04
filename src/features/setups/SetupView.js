@@ -1,11 +1,10 @@
 import tableIcons from '../../assets/utils/IconProvider';
-import MissingScreenshot from '../../assets/MissingScreenshot.png';
+import MissingScreenshot from '../../assets/images/MissingScreenshot.png';
 
 import { useState, useEffect } from 'react'
 
 import Notes from '../../pages/Analysis/Notes'
-import FilterList from "../../pages/Analysis/FilterList";
-import FilterOptions from "../../pages/Analysis/FilterOptions";
+import FilterList from "./filters/FilterList";
 
 import { useDownloadPDFFileMutation } from '../../features/pdfs/pdfsSlice';
 
@@ -29,6 +28,8 @@ import SimpleTable from '../../common/SimpleTable';
 import ScatterGraph from '../graphs/ScatterGraph';
 import BarGraph from '../graphs/BarGraph';
 
+import parseColumnName from 'utils/parseColumns';
+
 
 let dataLineChart = {}
 
@@ -51,7 +52,7 @@ const useStyles = makeStyles((theme) =>
   }),
 )
 
-const options = {year: 'numeric', month: 'numeric', day: 'numeric' };
+const options = { year: 'numeric', month: 'numeric', day: 'numeric' };
 
 let SetupView = ({ setup }) => {
   const classes = useStyles();
@@ -87,26 +88,11 @@ let SetupView = ({ setup }) => {
   // move this other side
   if (setup && setup.state && Object.keys(setup.state).length !== 0) {
     setup.state.schema.fields.forEach((column) => {
-      let header = column.name;
-      let hidden = false;
-
-      if (column.name === 'index') {
-        header = 'Index'
-        hidden = true
-      } else if (column.name.startsWith('.r_') || column.name.startsWith('.m_')) {
-        header = column.name.substring(3)
-      } else if (column.name === '.p') {
-        header = 'Pair'
-      } else if (column.name === '.s') {
-        header = 'Screenshot'
-      } else if (column.name === '.d') {
-        header = 'Date'
-      }
 
       dataColumns.push({
-        title: header,
+        title: parseColumnName(column.name),
         field: column.name,
-        hidden
+        hidden: column.name === 'index'
       })
     })
     setup.state.data.forEach((row, idx) => {
@@ -149,7 +135,6 @@ let SetupView = ({ setup }) => {
           </Tooltip>
         </ButtonGroup>
       </Box> */}
-      <FilterOptions open={open} handleClose={handleClose} setupId={setup?.id} options={setup?.options} />
       <FilterList setupId={setup?.id} filters={setup?.filters} />
       {/* <Grid container spacing={2} sx={{ mb: 2 }}>
         <Grid item xs={5}>

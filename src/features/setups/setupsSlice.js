@@ -34,7 +34,8 @@ export const setupsSlice = apiSlice.injectEndpoints({
             invalidatesTags: (result, error, arg) => [
                 { type: 'Setup', id: arg.id },
                 'Stats',
-                'Graphs'
+                'Graphs',
+                'Charts',
             ]
         }),
         deleteFilterSetup: builder.mutation({
@@ -45,7 +46,8 @@ export const setupsSlice = apiSlice.injectEndpoints({
             invalidatesTags: (result, error, arg) => [
                 { type: 'Setup', id: arg.id },
                 'Stats',
-                'Graphs'
+                'Graphs',
+                'Charts',
             ]
         }),
         addSetups: builder.mutation({
@@ -55,7 +57,8 @@ export const setupsSlice = apiSlice.injectEndpoints({
                 body: { document, name },
             }),
             invalidatesTags: [
-                { type: 'Setup', id: "LIST" }
+                { type: 'Setup', id: "LIST" },
+                'Document'
             ]
         }),
         updateSetups: builder.mutation({
@@ -65,7 +68,8 @@ export const setupsSlice = apiSlice.injectEndpoints({
                 body: { name, notes, default: isDefault },
             }),
             invalidatesTags: (result, error, arg) => [
-                { type: 'Setup', id: arg.id }
+                { type: 'Setup', id: arg.id },
+                'Document'
             ]
         }),
         deleteSetups: builder.mutation({
@@ -74,7 +78,8 @@ export const setupsSlice = apiSlice.injectEndpoints({
                 method: 'DELETE'
             }),
             invalidatesTags: (result, error, arg) => [
-                { type: 'Setup', id: arg.id }
+                { type: 'Setup', id: arg.id },
+                'Document'
             ]
         }),
     })

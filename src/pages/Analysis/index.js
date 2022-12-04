@@ -1,7 +1,7 @@
 import "./Analysis.css";
 
 import { useState, useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 import SetupView from "../../features/setups/SetupView";
@@ -10,8 +10,8 @@ import SetupFilter from "../../features/setups/SetupFilter";
 import SetupDropdown from "../../features/setups/SetupDropdown";
 import { selectDefaultSetup, selectSetupsByDocument, selectSetupOnId } from "../../features/setups/setupsSlice";
 import { useGetSetupsQuery } from "../../features/setups/setupsSlice";
-
-import { selectDocumentById } from "../../features/documents/documentsApiSlice";
+import { useDownloadPDFFileMutation } from '../../features/pdfs/pdfsSlice';
+import { selectDocumentById } from "../../features/documents/documentSlice";
 
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -47,7 +47,7 @@ const SetupMenuItem = styled(MenuItem)({
   },
 })
 
-const Analysis = () => {
+const Analysis = ({ hahaT = 'Hello' }) => {
 
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -60,6 +60,8 @@ const Analysis = () => {
 
 
   const { documentId } = useParams();
+  const location = useLocation();
+  const { setup } = location.state || {};
 
   const [currentSetup, setCurrentSetup] = useState();
   const [isSetupView, setIsSetupView] = useState(true);
@@ -85,6 +87,8 @@ const Analysis = () => {
     }),
   })
 
+  const [downloadPDFFile] = useDownloadPDFFileMutation()
+
   const document = useSelector((state) => selectDocumentById(state, documentId));
 
   useEffect(() => {}, [currentSetup])
@@ -97,11 +101,17 @@ const Analysis = () => {
           {document ? document?.name : 'Loading'}
         </Typography>
         <Box>
-          <MenuButton color='secondary' sx={{ ml: 1 }} startIcon={<ArrowUpwardRoundedIcon sx={{ color: "#5B6871" }} />}>
+          <MenuButton
+            color='secondary'
+            sx={{ ml: 1 }}
+            startIcon={<ArrowUpwardRoundedIcon
+            sx={{ color: "#5B6871" }} />}
+            onClick={() => downloadPDFFile({setupId: currentSetup?.id, name: currentSetup?.name})}
+          >
             Export
           </MenuButton>
           
-          <SetupFilter />
+          <SetupFilter setup={actualSetup ? actualSetup : defaultSetup} />
           <Button
             color='primary'
             variant='contained'

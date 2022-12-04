@@ -1,8 +1,8 @@
 import { useSelector } from 'react-redux';
 import { useLocation, Link } from 'react-router-dom';
 
-import { selectAllDocuments } from './documentsApiSlice';
-import { useGetDocumentsQuery } from './documentsApiSlice';
+import { selectAllDocuments } from './documentSlice';
+import { useGetDocumentsQuery } from './documentSlice';
 
 import ListItemText from '@mui/material/ListItemText';
 import ListItemButton from '@mui/material/ListItemButton';

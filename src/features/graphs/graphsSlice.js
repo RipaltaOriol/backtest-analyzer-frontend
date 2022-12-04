@@ -7,7 +7,8 @@ export const graphsSlice = apiSlice.injectEndpoints({
                 url: `/setups/${setupId}/graphs`,
                 method: 'GET',
                 params: { type }
-            })
+            }),
+            providesTags: ['Charts']
         })
     })
 })

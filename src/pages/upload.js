@@ -3,7 +3,7 @@ import { useState } from 'react';
 
 import Message from '../common/Message';
 
-import { useUploadDocumentMutation } from '../features/documents/documentsApiSlice';
+import { useUploadDocumentMutation } from '../features/documents/documentSlice';
 
 import Box from '@mui/material/Box';
 import Radio from '@mui/material/Radio';
@@ -16,12 +16,9 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import LinearProgress from '@mui/material/LinearProgress';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import UploadFileRoundedIcon from '@mui/icons-material/UploadFileRounded';
 
-const inputStyles = {
-  fontSize: '14px',
-  boxShadow: '0 0 0 0',
-}
+import FileUploadIcon from '@mui/icons-material/FileUpload';
+import UploadFileRoundedIcon from '@mui/icons-material/UploadFileRounded';
 
 const Upload = ({ open, onClose }) => {
   
@@ -29,12 +26,15 @@ const Upload = ({ open, onClose }) => {
   const [file, setFile] = useState('');
   const [isError, setIsError] = useState(false);
   const [fileName, setFileName] = useState('Choose File');
+  const [fileSource, setFileSource] = useState('default');
 
   const [uploadDocument, { isLoading: isUpdating }] = useUploadDocumentMutation()
 
   const onChange = (e) => {
-    setFile(e.target.files[0])
-    setFileName(e.target.files[0].name)
+    if (e.target.files.length > 0) {
+      setFile(e.target.files[0])
+      setFileName(e.target.files[0].name)
+    }
   }
 
   let progress;
@@ -52,9 +52,14 @@ const Upload = ({ open, onClose }) => {
   const onSubmit = async (e) => {
     e.preventDefault();
 
-    if (file.type !== 'text/csv') {
+    if (file.type !== 'text/csv' && file.type !== 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
       setIsError(true)
-      setMsg('This file is not of type CSV')
+      if (file.type === undefined) {
+        setMsg('Document not selected')
+      } else {
+        setMsg('This file is not of type CSV')
+      }
+      
       return true
     }
 
@@ -62,6 +67,7 @@ const Upload = ({ open, onClose }) => {
    
     data.append('file', file)
     data.append('fileName', fileName)
+    data.append('filesourcetype', fileSource)
 
     uploadDocument(data).unwrap()
     .then((response) => {
@@ -104,20 +110,38 @@ const Upload = ({ open, onClose }) => {
             <FormLabel>File Source:</FormLabel>
             <RadioGroup
               row
-              aria-labelledby="demo-row-radio-buttons-group-label"
-              name="row-radio-buttons-group"
+              value={fileSource}
+              onChange={(e) => setFileSource(e.target.value)}
             >
-              <FormControlLabel value="female" control={<Radio size="small" />} label="Default" />
-              <FormControlLabel value="male" disabled control={<Radio size="small" />} label="TraginView Paper Trade" />
-              <FormControlLabel value="other" disabled control={<Radio size="small" />} label="MT4" />
+              <FormControlLabel value="default" control={<Radio size="small" />} label="Default" />
+              <FormControlLabel value="mt4" control={<Radio size="small" />} label="MT4" />
+              <FormControlLabel value="trading_view" disabled control={<Radio size="small" />} label="TraginView Paper Trade" />
             </RadioGroup>
-            <input
-              className="form-control"
-              type="file"
-              id="formFile"
-              style={inputStyles}
-              onChange={onChange}
-            />
+            <label htmlFor='upload-file'>
+              <input
+                style={{ display: 'none' }} 
+                id="upload-file"  
+                name="upload-file"
+                type="file"
+                onChange={onChange}
+              />
+              <Button
+                variant="outlined"
+                component="span"
+                startIcon={<FileUploadIcon />}
+                size="small"
+                sx={{
+                  borderRadius: '6px',
+                  fontSize: '14px',
+                  textTransform: 'none'
+                }}
+              >
+                Upload File
+              </Button>
+            </label>
+            <Typography variant='body2' sx={{ mt: .5}}>
+              {fileName == "Choose File" ? "" : fileName || "" }
+            </Typography>
           </Box>
           {/* Progress Bar */}
           {progress}

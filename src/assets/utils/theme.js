@@ -210,7 +210,7 @@ const theme = createTheme({
       background: '#D7EDFF',
       borderRadius: '6px',
       padding: '4px 8px',
-    }
+    },
   },
   palette: {
     primary: {

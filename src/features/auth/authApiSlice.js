@@ -8,14 +8,14 @@ export const authApiSlice = apiSlice.injectEndpoints({
                 method: 'POST',
                 body: { ...credentials }
             }),
-            invalidatesTags: ['Document', 'Setup', 'Stats', 'Graphs']
+            invalidatesTags: ['Document', 'Setup', 'Stats', 'Graphs', 'Charts']
         }),
         logout: builder.mutation({
             query: () => ({
                 url: '/logout',
                 method: 'POST',
             }),
-            invalidatesTags: ['Document', 'Setup', 'Stats', 'Graphs']
+            invalidatesTags: ['Document', 'Setup', 'Stats', 'Graphs', 'Charts']
         }),
         refreshToken: builder.mutation({
             query: () => '/refresh' 

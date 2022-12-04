@@ -1,9 +1,9 @@
 import './Home.css';
 
-import HomePage from '../../assets/home-page.png';
-import HomeFilter from '../../assets/home-filter.png';
-import HomeObserve from '../../assets/home-observe.png';
-import HomeVisualise from '../../assets/home-visualise.png';
+import HomePage from '../../assets/images/home-page.png';
+import HomeFilter from '../../assets/images/home-filter.png';
+import HomeObserve from '../../assets/images/home-observe.png';
+import HomeVisualise from '../../assets/images/home-visualise.png';
 
 import Timeline from './Timeline';
 import Footer from '../../common/Footer';

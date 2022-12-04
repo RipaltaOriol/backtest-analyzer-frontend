@@ -1,8 +1,8 @@
 import './Help.css';
 import { useLocation } from 'react-router-dom';
 
-import emptyColumns from '../../assets/empty-columns.png';
-import exampleFormat from '../../assets/structure-table.png';
+import emptyColumns from '../../assets/images/empty-columns.png';
+import exampleFormat from '../../assets/images/structure-table.png';
 
 import Footer from '../../common/Footer';
 import LogoTitle from '../../common/LogoTitle';

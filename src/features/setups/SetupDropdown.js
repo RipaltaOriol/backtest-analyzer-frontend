@@ -26,7 +26,6 @@ const SetupMenuItem = styled(MenuItem)({
 })
 
 
-
 let SetupDropdown = ({ defaultSetup, setups, changeSetup }) => {
 
   const [anchorEl, setAnchorEl] = useState(null);

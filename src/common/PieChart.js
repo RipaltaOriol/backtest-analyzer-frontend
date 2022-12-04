@@ -3,9 +3,10 @@ import { Chart as ChartJS } from "chart.js/auto";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 
-const PieChart = ({ dataPieChart }) => {
+const PieChart = ({ dataPieChart, title = true }) => {
     let data;
     if (Object.keys(dataPieChart).length !== 0) {
+        console.log(dataPieChart)
         data = {
            labels: dataPieChart.labels,
            datasets: [],
@@ -29,7 +30,9 @@ const PieChart = ({ dataPieChart }) => {
 
     return (
         <Box>
-            <Typography align="center">{dataPieChart.name}</Typography>
+            {
+                title && <Typography gutterBottom align="center">{dataPieChart.name}</Typography>
+            }
             {
                 Object.keys(dataPieChart).length !== 0
                 ? (
@@ -40,11 +43,8 @@ const PieChart = ({ dataPieChart }) => {
                                 legend: {
                                     labels: {
                                         usePointStyle: true,
-                                    }
-                                },
-                                title: {
-                                    // display: true,
-                                    // text: dataPieChart.name
+                                    },
+                                    position: 'bottom'
                                 }
                             }
                         }}

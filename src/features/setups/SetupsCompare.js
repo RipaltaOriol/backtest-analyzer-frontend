@@ -1,18 +1,19 @@
-import { useParams, Link } from "react-router-dom";
-
-
+import { useState } from 'react';
 import { useSelector } from "react-redux";
+import { useParams, Link } from "react-router-dom";
 
 import { useGetSetupsQuery } from "./setupsSlice"
 import { selectSetupsByDocument } from "./setupsSlice";
-import { selectDocumentById } from "../documents/documentsApiSlice";
-import { useCompareDocumentSetupsQuery } from '../documents/documentsApiSlice'
+import { selectDocumentById } from "../documents/documentSlice";
+import { useCompareDocumentSetupsQuery } from '../documents/documentSlice'
 
 import PieChart from "../../common/PieChart"
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Divider from "@mui/material/Divider";
+import Menu from "@mui/material/Menu";
+import MenuItem from '@mui/material/MenuItem';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import Button from "@mui/material/Button";
@@ -44,7 +45,7 @@ const MenuButton = styled(Button)({
 const SetupTitle = styled(Typography)({
     fontWeight: '600',
     color: '#6E7C87',
-    fontSize: '16px'
+    fontSize: '16px',
 })
 
 const SetupItem = styled(Card)({
@@ -55,129 +56,43 @@ const SetupItem = styled(Card)({
     boxShadow: 'none'
 })
 
-const dataPieChart = {
-    labels: ['Win', 'Break Even', 'Losses'],
-    values: [5, 2, 3]
-}
+const MenuItemSelected = styled(Typography)({
+    fontSize: '0.875rem',
+    color: '#0E73F6',
+})
 
-const data = [
-    {
-        title: 'Some Title',
-        filters: [
-            'Filter 1',
-            'RRR bigger than 3',
-            'Exit leve include 4 and 5'
-        ],
-        statas: {
-            total: 34,
-            winRate: 0.4,
-            averageWin: 2.3,
-            period: 23,
-        },
-        graph: {
-            dataset: [3, 4, 5, 2, 1]
-        }
+const DropdownMenuItem = styled(MenuItem)({
+    fontSize: '0.875rem',
+    borderRadius: '6px',
+    '&:hover': {
+        color: '#0E73F6',
+        backgroundColor: '#D7EDFF',
     },
-    {
-        title: 'Some Title',
-        filters: [
-            'Filter 1',
-            'RRR bigger than 3',
-            'Exit leve include 4 and 5'
-        ],
-        statas: {
-            total: 34,
-            winRate: 0.4,
-            averageWin: 2.3,
-            period: 23,
-        },
-        graph: {
-            dataset: [3, 4, 5, 2, 1]
-        }
-    },
-    {
-        title: 'Some Title',
-        filters: [
-            'Filter 1',
-            'RRR bigger than 3',
-            'Exit leve include 4 and 5'
-        ],
-        statas: {
-            total: 34,
-            winRate: 0.4,
-            averageWin: 2.3,
-            period: 23,
-        },
-        graph: {
-            dataset: [3, 4, 5, 2, 1]
-        }
-    },
-    {
-        title: 'Some Title',
-        filters: [
-            'Filter 1',
-            'RRR bigger than 3',
-            'Exit leve include 4 and 5'
-        ],
-        statas: {
-            total: 34,
-            winRate: 0.4,
-            averageWin: 2.3,
-            period: 23,
-        },
-        graph: {
-            dataset: [3, 4, 5, 2, 1]
-        }
-    },
-    {
-        title: 'Some Title',
-        filters: [
-            'Filter 1',
-            'RRR bigger than 3',
-            'Exit leve include 4 and 5'
-        ],
-        stats: [
-            {
-                total: 34,
-                winRate: 0.4,
-                averageWin: 2.3,
-                period: 23,
-            }
-        ],
-        graph: {
-            dataset: [3, 4, 5, 2, 1]
-        }
-    }
-]
+})
 
 const SetupsCompare = () => {
 
     const { documentId } = useParams();
 
-    const {
-        data,
-        isLoading,
-        isSuccess,
-        isError,
-        error
-    } = useCompareDocumentSetupsQuery({ documentId })
+    const [anchorEl, setAnchorEl] = useState(null);
+    const [compareMetric, setCompareMetric] = useState(null);
 
-    // const {
-    //     setupsByDocument,
-    //     isLoading,
-    //     isSuccess,
-    //     isError,
-    //     error
-    // } = useCompareDocumentSetupsQuery(documentId, {
-    //         selectFromResult: ({ data, isLoading, isError, isSuccess }) => ({
-    //         setupsByDocument: selectSetupsByDocument(data, documentId),
-    //         isLoading,
-    //         isError,
-    //         isSuccess,
-    //     }),
-    // })
+    const open = Boolean(anchorEl);
 
-    // console.log(setupsByDocument)
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
+
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleChangeMetric = (metric) => {
+        setAnchorEl(null);
+        setCompareMetric(metric)
+    }
+
+    const { data } = useCompareDocumentSetupsQuery({ documentId, metric: compareMetric })
 
     const document = useSelector((state) => selectDocumentById(state, documentId));
 
@@ -188,6 +103,16 @@ const SetupsCompare = () => {
                     {document ? document?.name : 'Loading'}
                 </Typography>
                 <Box>
+                    <MenuButton
+                            color='secondary'
+                            sx={{ ml: 1 }}
+                            onClick={handleClick}
+                        >
+                            Compare:&nbsp;
+                            <MenuItemSelected>
+                                { data?.active || 'Loading'}
+                            </MenuItemSelected>
+                    </MenuButton>
                     <Button
                         color='primary'
                         variant='contained'
@@ -207,21 +132,28 @@ const SetupsCompare = () => {
                     >
                         Charts &amp; Data
                     </MenuButton>
+                    
                 </Box>
             </Box>
 
         <Divider sx={{ my: 2 }} />
             {/* the margin top is aesthetic */}
-            <Grid container spacing={2} sx={{ mt: 0.5 }}>
+            <Grid container spacing={2} sx={{ mt: 0.5 }} direction="row">
                 {/* Missing IDS */}
                 {
-                    data ? data.map((setup) => (
+                    data ? data.data.map((setup) => (
                         <Grid item xs={6} lg={4} xl={3}>
                             <SetupItem>
                                 <Box sx={{ display:"flex", alignItems: "center", justifyContent: "space-between", px: '16px' }}>
                                     <SetupTitle>{setup.name}</SetupTitle>
-                                    <Button
+                                    {/* Implement in the future */}
+                                    {/* <Button
                                         variant='text'
+                                        component={Link}
+                                        to={`/${documentId}`}
+                                        state={{
+                                            setup: setup.id 
+                                        }}
                                         endIcon={<TrendingUpRoundedIcon />}
                                         sx={{
                                             textTransform: 'none',
@@ -229,9 +161,8 @@ const SetupsCompare = () => {
                                         }}
                                     >
                                         Go To
-                                    </Button>
+                                    </Button> */}
                                 </Box>
-                                {/* make this into badged */}
                                 <List sx={{ px: '16px' }}>
                                     {
                                         setup.filters.map((filter) => (
@@ -245,14 +176,14 @@ const SetupsCompare = () => {
                                     }
                                 </List>
                                 <Table size="small">
-                                    <TableHead>
+                                    {/* <TableHead>
                                         <TableRow>
                                             <TableCell></TableCell>
                                             {
                                                 setup.stats.headers.map((header) => <TableCell>{header}</TableCell>)
                                             }
                                         </TableRow>
-                                    </TableHead>
+                                    </TableHead> */}
                                     <TableBody
                                         sx={{ borderTop: '1px solid #E5E9EB', borderBottom: '1px solid #E5E9EB' }}
                                     >
@@ -270,13 +201,34 @@ const SetupsCompare = () => {
                                     </TableBody>
                                 </Table>
                                 <Box sx={{ maxWidth: '50%', mx: 'auto', mt: 2 }}>
-                                    <PieChart dataPieChart={setup.breakdown} />
+                                    <PieChart dataPieChart={setup.breakdown} title={false} />
                                 </Box>
                             </SetupItem>
                         </Grid>
                     )) : null
                 }
             </Grid>
+            <Menu
+                anchorEl={anchorEl}
+                open={open}
+                onClose={handleClose}
+                autoFocus={false}
+                anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'left',
+                }}
+                transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'left',
+                }}
+            >
+                {
+                    data ? data.metrics.map(([metric, name]) =>
+                        <DropdownMenuItem onClick={() => handleChangeMetric(metric)}>{name}</DropdownMenuItem>
+                    )
+                    : null
+                }
+            </Menu>
         </Box>
     )
 }

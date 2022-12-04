@@ -9,7 +9,7 @@ import Toolbar from '@mui/material/Toolbar';
 
 import { makeStyles } from '@mui/styles'
 
-import LogoIcon from '../assets/layers-triple.svg';
+import LogoIcon from '../assets/svg/layers-triple.svg';
 
 const useStyles = makeStyles({
     logoLink: {

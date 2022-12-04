@@ -1,5 +1,5 @@
-import 'bootstrap/dist/css/bootstrap.min.css';
-import theme from './assets/theme';
+// import 'bootstrap/dist/css/bootstrap.min.css';
+import theme from './assets/utils/theme';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 import Home from './pages/Home';
@@ -7,7 +7,6 @@ import Help from './pages/Help';
 import Login from './pages/login';
 import Upload from './pages/upload';
 import Analysis from './pages/Analysis';
-import Overview from './pages/overview';
 
 import Layout from './common/Layout';
 import HomeBar from './common/HomeBar';
@@ -40,9 +39,8 @@ function App() {
               <Route element={<Layout />}>
                 <Route path="upload" element={<Upload />} />
                 <Route path="files" element={<AllDocuments />} />
-                <Route path="files/update/:doucmentId" element={<UpdateDocument />} />
+                <Route path="files/update/:documentId" element={<UpdateDocument />} />
                 <Route path="setups" element={<AllSetups />} />
-                <Route path="overview" element={<Overview />} />
                 <Route path="help" element={<Help />} />
                 <Route path=":documentId/setups" element={<SetupsList />} />
                 <Route path=":documentId/compare" element={<SetupsCompare />} />

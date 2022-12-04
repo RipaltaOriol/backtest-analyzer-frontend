@@ -2,7 +2,9 @@ import { useEffect, useState } from 'react';
 
 import { useUpdateSetupsMutation } from '../../features/setups/setupsSlice';
 
+import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import LockOpenOutlinedIcon from '@mui/icons-material/LockOpenOutlined';
@@ -39,16 +41,39 @@ const Notes = ({ setupId, notes, isOpened }) => {
   }
 
   return (
-    <>
+    <Box
+      sx={{
+        border: '1px solid #E5E9EB',
+        borderRadius: '6px 6px 6px 6px'
+      }}
+    >
+      <Typography sx={{ px: 2, py: '8px' }}>Notes</Typography>
       { isOpened && (
         <TextField
           className={classes.inputMultiline}
-          label="Notes"
+          label={null}
+          sx={{
+            '& legend': { display: 'none' },
+            '& fieldset': { top: 0 },
+            '& .MuiOutlinedInput-root': {
+              '& fieldset': {
+                border: "none",
+                borderTop: '1px solid #E5E9EB',
+                borderRadius: '0px 0px 6px 6px',
+              },
+              '&.Mui-focused fieldset': {
+                borderTop: '1px solid #E5E9EB',
+              },
+              '&:hover fieldset': {
+                borderColor: '#E5E9EB'
+              }
+            },
+          }}
           multiline
           fullWidth
-          value={setupNotes}
-          rows={20}
-          variant="filled"
+          value={setupNotes || ''}
+          rows={14}
+          variant="outlined"
           onChange={(e) => setSetupNotes(e.target.value)}
           InputProps={{
             endAdornment: 
@@ -69,7 +94,7 @@ const Notes = ({ setupId, notes, isOpened }) => {
           }}
         />
       )}
-    </>
+    </Box>
   )
 }
 

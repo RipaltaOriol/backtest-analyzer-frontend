@@ -1,11 +1,10 @@
-import tableIcons from '../../assets/IconProvider';
-import MissingScreenshot from '../../assets/MissingScreenshot.png';
+import tableIcons from '../../assets/utils/IconProvider';
+import MissingScreenshot from '../../assets/images/MissingScreenshot.png';
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 import Notes from '../../pages/Analysis/Notes'
-import FilterList from "../../pages/Analysis/FilterList";
-import FilterOptions from "../../pages/Analysis/FilterOptions";
+import FilterList from "./filters/FilterList";
 
 import { useDownloadPDFFileMutation } from '../../features/pdfs/pdfsSlice';
 
@@ -14,10 +13,28 @@ import Grid from '@mui/material/Grid';
 import Button from "@mui/material/Button";
 import MaterialTable from "material-table";
 import Tooltip from "@mui/material/Tooltip";
+import Typography from "@mui/material/Typography";
 import InfoIcon from '@mui/icons-material/Info';
 import ButtonGroup from "@mui/material/ButtonGroup";
-
 import { createStyles, makeStyles } from '@mui/styles'
+
+
+import { useGetChartsQuery } from "../statistics/statisticsApiSlice"
+
+import PieChart from "../../common/PieChart";
+import LineChart from '../../common/LineChart';
+import SimpleTable from '../../common/SimpleTable';
+
+import ScatterGraph from '../graphs/ScatterGraph';
+import BarGraph from '../graphs/BarGraph';
+
+import parseColumnName from 'utils/parseColumns';
+
+
+let dataLineChart = {}
+
+let dataPieChart = {}
+
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -35,6 +52,8 @@ const useStyles = makeStyles((theme) =>
   }),
 )
 
+const options = { year: 'numeric', month: 'numeric', day: 'numeric' };
+
 let SetupView = ({ setup }) => {
   const classes = useStyles();
 
@@ -42,12 +61,25 @@ let SetupView = ({ setup }) => {
   const [isNotesOpen, setIsNotesOpen] = useState(true)
   const [isImageOpen, setIsImageOpen] = useState(true)
   const [isTableOpen, setIsTableOpen] = useState(true)
-  const [selectedRow, setSelectedRow] = useState({ '#': null })
+  const [selectedRow, setSelectedRow] = useState({})
   
   const [downloadPDFFile] = useDownloadPDFFileMutation()
 
+  const { data, isSuccess, isError } = useGetChartsQuery({ setupId: setup?.id });
+
+  if (isSuccess) {
+    if (data) {
+      dataLineChart = data.line
+      dataPieChart = data.pie
+    }
+  }
+
   let dataColumns = [];
   let dataContents = [];
+
+  useEffect(() => {
+    setSelectedRow({})
+  }, [setup?.id])
 
   // NOTE: where to put them
   const handleClickOpen = () => setOpen(true);
@@ -56,29 +88,26 @@ let SetupView = ({ setup }) => {
   // move this other side
   if (setup && setup.state && Object.keys(setup.state).length !== 0) {
     setup.state.schema.fields.forEach((column) => {
-      if (column.name === 'index') return false;
-
-      let header = column.name;
-      if (column.name.startsWith('.r_') || column.name.startsWith('.m_')) {
-        header = column.name.substring(3)
-      } else if (column.name === '.p') {
-        header = 'Pair'
-      }
 
       dataColumns.push({
-        title: header,
+        title: parseColumnName(column.name),
         field: column.name,
+        hidden: column.name === 'index'
       })
     })
-    setup.state.data.forEach((row) => {
-        let {index, ...deepRow} = row
-        dataContents.push(deepRow)
-      })
+    setup.state.data.forEach((row, idx) => {
+      // TODO: index should not be added manually
+      let {index, ...deepRow} = row
+      deepRow.index = idx
+      // maybe this could be done in the backend
+      deepRow['.d'] = new Date(deepRow['.d']).toLocaleDateString('en-EN', options)
+      dataContents.push(deepRow)
+    })
   }
 
   return (
     <Box>
-      <Box
+      {/* <Box
         sx={{
           mb: 2,
           display: "flex",
@@ -105,10 +134,9 @@ let SetupView = ({ setup }) => {
               Export</Button>
           </Tooltip>
         </ButtonGroup>
-      </Box>
-      <FilterOptions open={open} handleClose={handleClose} setupId={setup?.id} options={setup?.options} />
+      </Box> */}
       <FilterList setupId={setup?.id} filters={setup?.filters} />
-      <Grid container spacing={2} sx={{ mb: 2 }}>
+      {/* <Grid container spacing={2} sx={{ mb: 2 }}>
         <Grid item xs={5}>
           <Notes setupId={setup?.id} notes={setup?.notes} isOpened={isNotesOpen} />
         </Grid>
@@ -116,33 +144,119 @@ let SetupView = ({ setup }) => {
           { isImageOpen && (
             <img
               className={classes.contianedImage}
-              src={MissingScreenshot}
+              src={selectedRow['.s'] || MissingScreenshot}
               alt="Trade screenshot"
             />
           )}
         </Grid>
+      </Grid> */}
+       <Grid container spacing={2}>
+          <Grid item xs={8}>
+              <LineChart dataLineChart={dataLineChart} />
+          </Grid>
+          <Grid item xs={4}>
+            <Box sx={{ border: '1px solid #E5E9EB', borderRadius: '6px', p: 2 }}>
+              <PieChart dataPieChart={dataPieChart} />
+            </Box>
+          </Grid>
+          <Grid item xs={6}>
+            {setup?.id && <BarGraph setupId={setup?.id} />}
+          </Grid>
+          <Grid item xs={6}>
+            {setup?.id && <ScatterGraph setupId={setup?.id} />}
+          </Grid>
+          <Grid item xs={6}>
+              <SimpleTable id={setup?.id} />
+          </Grid>
+          <Grid item xs={6}>
+            <Notes setupId={setup?.id} notes={setup?.notes} isOpened={isNotesOpen} />
+          </Grid>
+          <Grid item xs={12} sx={{ width: '1200px'}}>
+            <MaterialTable
+              title={<Typography>Data</Typography>}
+              columns={dataColumns}
+              data={dataContents}
+              editable={{
+                onRowAdd: newData => {
+                  console.log(newData)
+                }
+                  // new Promise((resolve, reject) => {
+                  //   setTimeout(() => {
+                  //     setData([...data, newData]);
+                  //     resolve();
+                  //   }, 1000)
+                  // })
+              }}
+              onRowClick={(evt, selectedRow) => {
+                setSelectedRow(selectedRow)
+              }}
+              options={{
+                padding: "dense",
+                pageSize: 10,
+                rowStyle: (rowData) => ({
+                  fontSize: 14,
+                  backgroundColor:
+                    selectedRow?.index === rowData?.index ? "#D7EDFF" : "#fff",
+                }),
+                headerStyle: {
+                  whiteSpace: 'nowrap'
+                }
+              }}
+              icons={tableIcons}
+            />
+          </Grid>
       </Grid>
+      {/* <Grid container spacing={2}>
+          <Grid item xs={6}>
+              <LineChart dataLineChart={dataLineChart} />
+          </Grid>
+          <Grid item xs={6}>
+              <SimpleTable id={setup?.id} />
+          </Grid>
+      </Grid> */}
+      {/* <Grid container spacing={2} sx={{ mt: 2 }}>
+          <Grid item xs={2}>
+              <PieChart dataPieChart={dataPieChart} />
+          </Grid>
+          <Grid item xs={6}>
+              {setup?.id && <ScatterGraph setupId={setup?.id} />}
+          </Grid>
+          <Grid item xs={6}>
+              {setup?.id && <BarGraph setupId={setup?.id} />}
+          </Grid>
+        </Grid> */}
       
-      { isTableOpen && (
+      {/* { isTableOpen && (
         <MaterialTable
           title='Data'
           columns={dataColumns}
           data={dataContents}
+          editable={{
+            onRowAdd: newData => {
+              console.log(newData)
+            }
+              // new Promise((resolve, reject) => {
+              //   setTimeout(() => {
+              //     setData([...data, newData]);
+              //     resolve();
+              //   }, 1000)
+              // })
+          }}
           onRowClick={(evt, selectedRow) => {
             setSelectedRow(selectedRow)
           }}
           options={{
             rowStyle: (rowData) => ({
               backgroundColor:
-                selectedRow['#'] === rowData['#'] ? "#0d6efd" : "#fff",
+                selectedRow?.index === rowData?.index ? "#0d6efd" : "#fff",
               color:
-                selectedRow['#'] === rowData['#'] ? "#fff" : "#000",
+                selectedRow?.index === rowData?.index ? "#fff" : "#000",
             }),
             
           }}
           icons={tableIcons}
         />
-      )}
+      )} */}
     </Box>
   );
 };

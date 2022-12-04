@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { setCredentials, logOut } from '../features/auth/authSlice'
 
 const baseQuery = fetchBaseQuery({
-    // baseUrl: 'http://localhost:3500',
+    baseUrl: 'https://serene-beach-99280.herokuapp.com',
     credentials: 'include',
     prepareHeaders: (headers, { getState, endpoint }) => {
         const token = getState().auth.token
@@ -32,12 +32,11 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
             api.dispatch(logOut())
         }
     }
-
     return result
 }
 
 export const apiSlice = createApi({
     baseQuery: baseQueryWithReauth,
-    tagTypes: ['Document', 'Setup', 'Stats', 'Graphs'],
+    tagTypes: ['Document', 'Setup', 'Stats', 'Graphs', 'DocumentTable', 'Charts'],
     endpoints: builder => ({})
 })

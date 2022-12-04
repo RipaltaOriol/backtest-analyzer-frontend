@@ -1,12 +1,12 @@
 import './Home.css';
 
-import HomePage from '../../assets/home-page.png';
-import HomeFilter from '../../assets/home-filter.png';
-import HomeObserve from '../../assets/home-observe.png';
-import HomeVisualise from '../../assets/home-visualise.png';
+import HomePage from '../../assets/images/home-page.png';
+import HomeFilter from '../../assets/images/home-filter.png';
+import HomeObserve from '../../assets/images/home-observe.png';
+import HomeVisualise from '../../assets/images/home-visualise.png';
 
 import Timeline from './Timeline';
-import Footer from '../../components/Footer';
+import Footer from '../../common/Footer';
 
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
@@ -53,7 +53,7 @@ const Home = () => {
                 Apply differentent layers and generate multiple scenario to generat leads.
               </Typography>
               <Box sx={{ mt: 'auto' }}>
-                <img src={HomePage} alt="Change" />
+                <img src={HomeFilter} alt="Change" />
               </Box>
             </Item>
           </Grid>
@@ -67,7 +67,7 @@ const Home = () => {
                 Write custom notes to record your thought process and keep track of what you are looking for.
               </Typography>
               <Box sx={{ mt: 'auto' }}>
-                <img src={HomePage} alt="Change" />
+                <img src={HomeObserve} alt="Change" />
               </Box>
             </Item>
           </Grid>
@@ -81,7 +81,7 @@ const Home = () => {
                 If you also have screenshots of your trades we offer image embeding to look at them as you work on your data.
               </Typography>
               <Box sx={{ mt: 'auto' }}>
-                <img src={HomePage} alt="Change" />
+                <img src={HomeVisualise} alt="Change" />
               </Box>
             </Item>
           </Grid>

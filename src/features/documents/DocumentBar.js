@@ -1,11 +1,19 @@
 import { useSelector } from 'react-redux';
 import { useLocation, Link } from 'react-router-dom';
 
-import { selectAllDocuments } from './documentsApiSlice';
-import { useGetDocumentsQuery } from './documentsApiSlice';
+import { selectAllDocuments } from './documentSlice';
+import { useGetDocumentsQuery } from './documentSlice';
 
 import ListItemText from '@mui/material/ListItemText';
 import ListItemButton from '@mui/material/ListItemButton';
+
+import { styled } from '@mui/system';
+
+const DrawerItemButton = styled(ListItemButton)({
+    margin: '5px 18px',
+    borderRadius: '6px',
+    padding: '4px 12px 4px 8px'
+  })
 
 
 const DocumentBar = () => {
@@ -28,7 +36,7 @@ const DocumentBar = () => {
     } else if (isSuccess) {
         
         content = orderedDocuments.map((doc, idx) => (
-            <ListItemButton 
+            <DrawerItemButton 
                 key={doc.id}
                 component={Link}
                 to={'/' + doc.id}
@@ -44,7 +52,7 @@ const DocumentBar = () => {
                 textOverflow: 'ellipsis'
                 }}
             />
-            </ListItemButton>
+            </DrawerItemButton>
         ))
     } else if (isError) {
         content = <p>{error}</p>;

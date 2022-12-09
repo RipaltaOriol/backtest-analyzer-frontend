@@ -91,7 +91,7 @@ const Help = () => {
               Transform your data into a CSV format. If you are using Excel you can easily transform you data into CSV following these steps:
             </Typography>
             <BoxPaper sx={{ my: 1.5 }}>
-              <Typography sx={{ fontSize: '14px' }}>File
+              <Typography sx={{ fontSize: '14px', display: 'flex' }}>File
                 <KeyboardArrowRightIcon />
                 Save As
                 <KeyboardArrowRightIcon />

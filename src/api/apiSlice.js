@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { setCredentials, logOut } from '../features/auth/authSlice'
 
 const baseQuery = fetchBaseQuery({
-    baseUrl: 'https://backtest-analyzer-api.herokuapp.com/',
+    baseUrl: 'http://127.0.0.1:5000/',
     credentials: 'include',
     prepareHeaders: (headers, { getState, endpoint }) => {
         const token = getState().auth.token

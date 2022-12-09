@@ -1,5 +1,4 @@
 import { Line } from 'react-chartjs-2';
-import { Chart as ChartJS } from "chart.js/auto";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 

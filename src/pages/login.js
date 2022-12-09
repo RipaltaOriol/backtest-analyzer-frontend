@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useLocation } from 'react-router-dom';
 
@@ -33,13 +33,6 @@ const Login = () => {
 
   const [login] = useLoginMutation();
 
-  useEffect(() => {
-    if (msg !== 'Successfully logged out!') {
-      dispatch(setLoginMsg({ msg: '' }));
-    }
-    
-  }, [email, password])
-
   // Handles the login logic
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -51,6 +44,7 @@ const Login = () => {
       }))
       setEmail('')
       setPassword('')
+      setIsError(false)
       dispatch(setLoginMsg({ msg: 'Successfully logged in!' }))
       navigate(from, { replace: true })
     } catch (err) {

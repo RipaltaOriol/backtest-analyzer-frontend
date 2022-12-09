@@ -49,7 +49,7 @@ const BarGraph = ({ setupId }) => {
         datasets: [],
     };
 
-    const { data, isSuccess, isLoading, isError } = useGetGraphQuery({ setupId, type: 'bar' })
+    const { data, isSuccess } = useGetGraphQuery({ setupId, type: 'bar' })
 
     if (isSuccess) {
         barData.labels = data?.dataLabels;

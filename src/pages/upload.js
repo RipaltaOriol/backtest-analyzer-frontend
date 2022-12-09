@@ -140,7 +140,7 @@ const Upload = ({ open, onClose }) => {
               </Button>
             </label>
             <Typography variant='body2' sx={{ mt: .5}}>
-              {fileName == "Choose File" ? "" : fileName || "" }
+              {fileName === "Choose File" ? "" : fileName || "" }
             </Typography>
           </Box>
           {/* Progress Bar */}

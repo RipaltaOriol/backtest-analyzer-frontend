@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { selectAllDocuments } from './documentSlice';
 import {
@@ -77,7 +77,6 @@ const DocumentSource = styled(Typography)({
 const AllDocuments = () => {
 
     let navigate = useNavigate();
-    const location = useLocation();
     const [openDialog, setOpenDialog] = useState(false);
     const [newName, setNewName] = useState("");
     const [anchorEl, setAnchorEl] = useState(null);

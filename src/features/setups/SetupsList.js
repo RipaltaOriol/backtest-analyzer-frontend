@@ -48,10 +48,8 @@ const SetupsList = () => {
 
     const {
         setupsByDocument,
-        isLoading,
         isSuccess,
         isError,
-        error
       } = useGetSetupsQuery(undefined, {
         selectFromResult: ({ data, isLoading, isError, isSuccess }) => ({
           setupsByDocument: selectSetupsByDocument(data, documentId),

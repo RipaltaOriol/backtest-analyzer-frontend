@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) =>
   }),
 )
 
-const Notes = ({ setupId, notes, isOpened }) => {
+const Notes = ({ setupId, notes }) => {
 
   const classes = useStyles();
   const [setupNotes, setSetupNotes] = useState(notes);
@@ -48,52 +48,50 @@ const Notes = ({ setupId, notes, isOpened }) => {
       }}
     >
       <Typography sx={{ px: 2, py: '8px' }}>Notes</Typography>
-      { isOpened && (
-        <TextField
-          className={classes.inputMultiline}
-          label={null}
-          sx={{
-            '& legend': { display: 'none' },
-            '& fieldset': { top: 0 },
-            '& .MuiOutlinedInput-root': {
-              '& fieldset': {
-                border: "none",
-                borderTop: '1px solid #E5E9EB',
-                borderRadius: '0px 0px 6px 6px',
-              },
-              '&.Mui-focused fieldset': {
-                borderTop: '1px solid #E5E9EB',
-              },
-              '&:hover fieldset': {
-                borderColor: '#E5E9EB'
-              }
+      <TextField
+        className={classes.inputMultiline}
+        label={null}
+        sx={{
+          '& legend': { display: 'none' },
+          '& fieldset': { top: 0 },
+          '& .MuiOutlinedInput-root': {
+            '& fieldset': {
+              border: "none",
+              borderTop: '1px solid #E5E9EB',
+              borderRadius: '0px 0px 6px 6px',
             },
-          }}
-          multiline
-          fullWidth
-          value={setupNotes || ''}
-          rows={14}
-          variant="outlined"
-          onChange={(e) => setSetupNotes(e.target.value)}
-          InputProps={{
-            endAdornment: 
-              notes !== setupNotes ? 
-              (
-                <InputAdornment position="end">
-                  <IconButton
-                    sx={{ mt: 1.5, fontSize: 16 }}
-                    color='primary'
-                    variant='outlined'
-                    onClick={() => handleSaveNote()}
-                  >
-                    Save
-                    <LockOpenOutlinedIcon />
-                  </IconButton>
-                </InputAdornment>
-              ) : <></>
-          }}
-        />
-      )}
+            '&.Mui-focused fieldset': {
+              borderTop: '1px solid #E5E9EB',
+            },
+            '&:hover fieldset': {
+              borderColor: '#E5E9EB'
+            }
+          },
+        }}
+        multiline
+        fullWidth
+        value={setupNotes || ''}
+        rows={14}
+        variant="outlined"
+        onChange={(e) => setSetupNotes(e.target.value)}
+        InputProps={{
+          endAdornment: 
+            notes !== setupNotes ? 
+            (
+              <InputAdornment position="end">
+                <IconButton
+                  sx={{ mt: 1.5, fontSize: 16 }}
+                  color='primary'
+                  variant='outlined'
+                  onClick={() => handleSaveNote()}
+                >
+                  Save
+                  <LockOpenOutlinedIcon />
+                </IconButton>
+              </InputAdornment>
+            ) : <></>
+        }}
+      />
     </Box>
   )
 }

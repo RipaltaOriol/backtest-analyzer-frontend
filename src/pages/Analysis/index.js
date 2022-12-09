@@ -1,11 +1,10 @@
 import "./Analysis.css";
 
 import { useState, useEffect } from "react";
-import { useParams, Link, useLocation } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 import SetupView from "../../features/setups/SetupView";
-import SetupData from "../../features/setups/SetupData";
 import SetupFilter from "../../features/setups/SetupFilter";
 import SetupDropdown from "../../features/setups/SetupDropdown";
 import { selectDefaultSetup, selectSetupsByDocument, selectSetupOnId } from "../../features/setups/setupsSlice";
@@ -21,12 +20,6 @@ import Typography from "@mui/material/Typography";
 import ArrowUpwardRoundedIcon from '@mui/icons-material/ArrowUpwardRounded';
 import ViewColumnRoundedIcon from '@mui/icons-material/ViewColumnRounded';
 import CompareArrowsRoundedIcon from '@mui/icons-material/CompareArrowsRounded';
-import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
-
-import MenuItem from "@mui/material/MenuItem";
-import IconButton from "@mui/material/IconButton";
-import Stack from "@mui/material/Stack";
-
 
 import { styled } from '@mui/system';
 
@@ -39,43 +32,17 @@ const MenuButton = styled(Button)({
   borderRadius: '6px',
 })
 
-const SetupMenuItem = styled(MenuItem)({
-  borderRadius: '6px',
-  '&:hover': {
-      color: '#0E73F6',
-      backgroundColor: '#D7EDFF',
-  },
-})
-
-const Analysis = ({ hahaT = 'Hello' }) => {
-
-  const [anchorEl, setAnchorEl] = useState(null);
-  const open = Boolean(anchorEl);
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
+const Analysis = () => {
 
   const { documentId } = useParams();
-  const location = useLocation();
-  const { setup } = location.state || {};
 
   const [currentSetup, setCurrentSetup] = useState();
-  const [isSetupView, setIsSetupView] = useState(true);
-
 
   // NOTE: handle Errors
   const {
     setupsByDocument,
     defaultSetup,
-    actualSetup,
-    isLoading,
-    isSuccess,
-    isError,
-    error
+    actualSetup
   } = useGetSetupsQuery(undefined, {
     selectFromResult: ({ data, isLoading, isError, isSuccess }) => ({
       setupsByDocument: selectSetupsByDocument(data, documentId),
@@ -191,11 +158,9 @@ const Analysis = ({ hahaT = 'Hello' }) => {
       <Divider />
       <Typography sx={{ my: 0.5 }} variant='h6'>{currentSetup ? currentSetup?.name : defaultSetup?.name}</Typography> */}
 
-      { isSetupView ? (
-        <SetupView setup={actualSetup ? actualSetup : defaultSetup}/>
-      ) : (
-        <SetupData setup={currentSetup ? currentSetup : defaultSetup} />
-      )}
+      <SetupView setup={actualSetup ? actualSetup : defaultSetup}/>
+      {/* <SetupData setup={currentSetup ? currentSetup : defaultSetup} /> */}
+      
       
     </Box>
   );

@@ -16,7 +16,7 @@ let dataPieChart = {}
 
 const SetupData = ({ setup }) => {
 
-    const { data, isSuccess, isError } = useGetChartsQuery({ setupId: setup?.id });
+    const { data, isSuccess } = useGetChartsQuery({ setupId: setup?.id });
 
     if (isSuccess) {
         if (data) {

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 import { useAddFilterSetupMutation } from 'features/setups/setupsSlice';
 
@@ -69,7 +69,7 @@ const SetupFilter = ({ setup }) => {
     const [number, setNumber] = useState('None')
     const [filterOptionIdx, setFilterOptionIdx] = useState(-1);
 
-    const [addFilterSetup, { isLoading }] = useAddFilterSetupMutation()
+    const [addFilterSetup] = useAddFilterSetupMutation()
 
     const open = Boolean(anchorEl);
     const handleClick = (event) => {
@@ -195,7 +195,7 @@ const SetupFilter = ({ setup }) => {
                     size="small"
                     autoFocus={false}
                     value={action}
-                    disabled={filterOptionIdx == -1}
+                    disabled={filterOptionIdx === -1}
                     renderValue={value => (
                         <>
                             <Typography display='inline-block' sx={{ minWidth: 60, color: "#9AA6AC", fontSize: '14px' }}>Action</Typography>
@@ -231,7 +231,7 @@ const SetupFilter = ({ setup }) => {
                         autoFocus={false}
                         multiple
                         value={values}
-                        disabled={filterOptionIdx == -1}
+                        disabled={filterOptionIdx === -1}
                         renderValue={values => (
                             <>
                                 <Typography display='inline-block' sx={{ minWidth: 60, color: "#9AA6AC", fontSize: '14px' }}>Value</Typography>

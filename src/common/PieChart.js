@@ -1,12 +1,14 @@
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js'
 import { Doughnut } from 'react-chartjs-2';
-import { Chart as ChartJS } from "chart.js/auto";
+
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+
+ChartJS.register(ArcElement, Tooltip, Legend);
 
 const PieChart = ({ dataPieChart, title = true }) => {
     let data;
     if (Object.keys(dataPieChart).length !== 0) {
-        console.log(dataPieChart)
         data = {
            labels: dataPieChart.labels,
            datasets: [],

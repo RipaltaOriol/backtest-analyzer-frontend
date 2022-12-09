@@ -1,23 +1,15 @@
-import tableIcons from '../../assets/utils/IconProvider';
-import MissingScreenshot from '../../assets/images/MissingScreenshot.png';
 
 import { useState, useEffect } from 'react'
 
 import Notes from '../../pages/Analysis/Notes'
 import FilterList from "./filters/FilterList";
 
-import { useDownloadPDFFileMutation } from '../../features/pdfs/pdfsSlice';
-
 import Box from "@mui/material/Box";
 import Grid from '@mui/material/Grid';
-import Button from "@mui/material/Button";
 import MaterialTable from "material-table";
-import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
-import InfoIcon from '@mui/icons-material/Info';
-import ButtonGroup from "@mui/material/ButtonGroup";
-import { createStyles, makeStyles } from '@mui/styles'
 
+import tableIcons from '../../assets/utils/IconProvider';
 
 import { useGetChartsQuery } from "../statistics/statisticsApiSlice"
 
@@ -35,37 +27,13 @@ let dataLineChart = {}
 
 let dataPieChart = {}
 
-
-const useStyles = makeStyles((theme) =>
-  createStyles({
-    contianedImage: {
-      width: '100%'
-    },
-    inputMultiline : {
-      height: "100%",
-      "& .MuiInputBase-root": {
-        height: "100%",
-        display: "flex",
-        alignItems: "start"
-      }
-    },
-  }),
-)
-
 const options = { year: 'numeric', month: 'numeric', day: 'numeric' };
 
 let SetupView = ({ setup }) => {
-  const classes = useStyles();
 
-  const [open, setOpen] = useState(false);
-  const [isNotesOpen, setIsNotesOpen] = useState(true)
-  const [isImageOpen, setIsImageOpen] = useState(true)
-  const [isTableOpen, setIsTableOpen] = useState(true)
   const [selectedRow, setSelectedRow] = useState({})
   
-  const [downloadPDFFile] = useDownloadPDFFileMutation()
-
-  const { data, isSuccess, isError } = useGetChartsQuery({ setupId: setup?.id });
+  const { data, isSuccess } = useGetChartsQuery({ setupId: setup?.id });
 
   if (isSuccess) {
     if (data) {
@@ -80,10 +48,6 @@ let SetupView = ({ setup }) => {
   useEffect(() => {
     setSelectedRow({})
   }, [setup?.id])
-
-  // NOTE: where to put them
-  const handleClickOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
 
   // move this other side
   if (setup && setup.state && Object.keys(setup.state).length !== 0) {
@@ -169,7 +133,7 @@ let SetupView = ({ setup }) => {
               <SimpleTable id={setup?.id} />
           </Grid>
           <Grid item xs={6}>
-            <Notes setupId={setup?.id} notes={setup?.notes} isOpened={isNotesOpen} />
+            <Notes setupId={setup?.id} notes={setup?.notes} />
           </Grid>
           <Grid item xs={12} sx={{ width: '1200px'}}>
             <MaterialTable

@@ -179,8 +179,6 @@ const AllDocuments = () => {
         content = <p>{error}</p>;
     }
 
-    console.log(content);
-
     return (
         <Box>
             <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>

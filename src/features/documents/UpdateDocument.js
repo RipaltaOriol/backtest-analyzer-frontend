@@ -80,7 +80,6 @@ const UpdateDocument = () => {
     }
 
     const handleDocumentUpdate = async (method) => {
-        console.log(rowValues)
         updateDocument({ id: documentId, method, data: rowValues })
       
     }

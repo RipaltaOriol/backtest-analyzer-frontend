@@ -13,7 +13,6 @@ import HomeBar from './common/HomeBar';
 import RequireAuth from './common/RequireAuth';
 import PersistLogin from './common/PersistLogin';
 
-import SetupsList from './features/setups/SetupsList';
 import AllSetups from './features/setups/AllSetups';
 import SetupsCompare from './features/setups/SetupsCompare';
 import AllDocuments from './features/documents/AllDocuments';
@@ -42,7 +41,6 @@ function App() {
                 <Route path="files/update/:documentId" element={<UpdateDocument />} />
                 <Route path="setups" element={<AllSetups />} />
                 <Route path="help" element={<Help />} />
-                <Route path=":documentId/setups" element={<SetupsList />} />
                 <Route path=":documentId/compare" element={<SetupsCompare />} />
                 <Route path=":documentId" element={<Analysis />} />
               </Route>

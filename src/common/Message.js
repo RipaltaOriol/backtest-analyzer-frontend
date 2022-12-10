@@ -5,7 +5,7 @@ import IconButton from '@mui/material/IconButton';
 import Collapse from '@mui/material/Collapse';
 import CloseIcon from '@mui/icons-material/Close';
 
-const Message = ({ message, isError, sx }) => {
+const Message = ({ message, setMessage, isError, sx }) => {
 
   const [open, setOpen] = useState(false)
   const alertType = isError ? 'error' : 'success'
@@ -25,6 +25,7 @@ const Message = ({ message, isError, sx }) => {
             size="small"
             onClick={() => {
               setOpen(false)
+              setMessage('')
             }}
           >
             <CloseIcon fontSize="inherit" />

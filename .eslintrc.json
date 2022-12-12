@@ -1,0 +1,14 @@
+{
+    "env": {
+        "browser": true
+    },
+    "extends": [
+        "react-app",
+        "react-app/jest",
+        "prettier"
+    ],
+    "rules": {
+        // "semi": "warn",
+        // "quotes": ["warn", "double"]
+    }
+}

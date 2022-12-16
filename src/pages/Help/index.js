@@ -9,7 +9,6 @@ import LogoTitle from '../../common/LogoTitle';
 import YoutubeEmbed from '../../common/YoutubeEmbed';
 
 import Box from '@mui/material/Box';
-import Paper from '@mui/material/Paper';
 import Divider from "@mui/material/Divider";
 import Toolbar from '@mui/material/Toolbar';
 import Container from '@mui/material/Container';
@@ -17,14 +16,6 @@ import Typography from '@mui/material/Typography';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 
 import { styled } from '@mui/system';
-import { makeStyles } from '@mui/styles';
-
-const useStyles = makeStyles({
-  logoBacktest: {
-      color: "#0E73F6",
-      fontSize: '18px'
-  }
-})
 
 const BoxPaper = styled(Box)({
   width: 'auto',
@@ -36,7 +27,6 @@ const BoxPaper = styled(Box)({
 
 const Help = () => {
 
-  const classes = useStyles();
   const location = useLocation();
 
   return (
@@ -101,7 +91,8 @@ const Help = () => {
               Transform your data into a CSV format. If you are using Excel you can easily transform you data into CSV following these steps:
             </Typography>
             <BoxPaper sx={{ my: 1.5 }}>
-              <Typography sx={{ fontSize: '14px' }}>File
+              <Typography sx={{ fontSize: '14px', display: 'flex' }}>
+                File
                 <KeyboardArrowRightIcon />
                 Save As
                 <KeyboardArrowRightIcon />

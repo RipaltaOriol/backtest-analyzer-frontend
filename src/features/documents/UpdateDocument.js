@@ -35,19 +35,10 @@ const UpdateDocument = () => {
 
     const document = useSelector((state) => selectDocumentById(state, documentId));
 
-    const {
-        data,
-        isLoading,
-        isSuccess,
-        isError,
-        error
-    } = useGetDocumentColumnsQuery({ documentId })
+    const { data } = useGetDocumentColumnsQuery({ documentId })
 
     const {
-        data: documentObj,
-        isLoading: isDocumentTableLoading,
-        isSuccess: isDocumentTableSuccess,
-        refetch
+        data: documentObj
     } = useGetDocumentQuery({ documentId })
 
     
@@ -89,7 +80,6 @@ const UpdateDocument = () => {
     }
 
     const handleDocumentUpdate = async (method) => {
-        console.log(rowValues)
         updateDocument({ id: documentId, method, data: rowValues })
       
     }
@@ -124,7 +114,7 @@ const UpdateDocument = () => {
                                         label={column.name}
                                         type={column.type}
                                         variant="outlined"
-                                        value={rowValues?.[column.id] == 0 ? 0 : rowValues[column.id] || ""}
+                                        value={rowValues?.[column.id] === 0 ? 0 : rowValues[column.id] || ""}
                                         onChange={handleChange(column.id)}
                                         size="small"
                                         step={0.5}

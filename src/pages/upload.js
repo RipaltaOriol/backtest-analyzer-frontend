@@ -30,6 +30,14 @@ const Upload = ({ open, onClose }) => {
 
   const [uploadDocument, { isLoading: isUpdating }] = useUploadDocumentMutation()
 
+  const closeDialog = () => {
+    setMsg('');
+    setFile('');
+    setFileName('Choose File');
+    setFileSource('default');
+    onClose();
+  }
+
   const onChange = (e) => {
     if (e.target.files.length > 0) {
       setFile(e.target.files[0])
@@ -84,7 +92,7 @@ const Upload = ({ open, onClose }) => {
   }
 
   return (
-    <Dialog onClose={onClose} open={open} maxWidth="sm" fullWidth={true}>
+    <Dialog onClose={closeDialog} open={open} maxWidth="sm" fullWidth={true}>
       <DialogTitle sx={{ color: 'inherit' }}>
         <Typography
           align="center"
@@ -101,7 +109,7 @@ const Upload = ({ open, onClose }) => {
           alignItems: 'center'
         }}
       >
-        {msg ? <Message message={msg} isError={isError} sx={{ mt: 0 }} /> : null}
+        {msg ? <Message message={msg} setMessage={setMsg} isError={isError} sx={{ mt: 0 }} /> : null}
         <p>{isUpdating}</p>
         <UploadFileRoundedIcon sx={{ fontSize: 50 }} color="primary" />
         <form onSubmit={onSubmit}>
@@ -140,7 +148,7 @@ const Upload = ({ open, onClose }) => {
               </Button>
             </label>
             <Typography variant='body2' sx={{ mt: .5}}>
-              {fileName == "Choose File" ? "" : fileName || "" }
+              {fileName === "Choose File" ? "" : fileName || "" }
             </Typography>
           </Box>
           {/* Progress Bar */}

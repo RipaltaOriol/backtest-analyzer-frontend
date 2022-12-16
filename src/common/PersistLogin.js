@@ -10,7 +10,7 @@ const PersistLogin = () => {
   const token = useSelector(selectCurrentToken)
 
   const [isWorking, setIsWorking] = useState(true);
-  const [refreshToken, {isLoading}] = useRefreshTokenMutation()
+  const [refreshToken] = useRefreshTokenMutation()
 
   useEffect(() => {
     let isMounted = true;

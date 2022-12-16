@@ -65,7 +65,7 @@ const AddSetupDialog = ({ openAddDialog, handleAddDialogClose }) => {
     }
 
     const handleAddSetup = () => {
-        if (document?.id === undefined || name == "") return
+        if (document?.id === undefined || name === "") return
         addSetups({ document: document.id, name})
         setName("")
         setDocument(null)

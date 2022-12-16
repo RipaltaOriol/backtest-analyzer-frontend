@@ -1,142 +1,139 @@
-import "./Analysis.css";
-
-import { useState, useEffect } from "react";
-import { useParams, Link, useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { Link, useParams } from "react-router-dom";
 
-import SetupView from "../../features/setups/SetupView";
-import SetupData from "../../features/setups/SetupData";
-import SetupFilter from "../../features/setups/SetupFilter";
-import SetupDropdown from "../../features/setups/SetupDropdown";
-import { selectDefaultSetup, selectSetupsByDocument, selectSetupOnId } from "../../features/setups/setupsSlice";
-import { useGetSetupsQuery } from "../../features/setups/setupsSlice";
-import { useDownloadPDFFileMutation } from '../../features/pdfs/pdfsSlice';
-import { selectDocumentById } from "../../features/documents/documentSlice";
-
+import ArrowUpwardRoundedIcon from "@mui/icons-material/ArrowUpwardRounded";
+import CompareArrowsRoundedIcon from "@mui/icons-material/CompareArrowsRounded";
+import ViewColumnRoundedIcon from "@mui/icons-material/ViewColumnRounded";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
+import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
+import { styled } from "@mui/system";
 
-import ArrowUpwardRoundedIcon from '@mui/icons-material/ArrowUpwardRounded';
-import ViewColumnRoundedIcon from '@mui/icons-material/ViewColumnRounded';
-import CompareArrowsRoundedIcon from '@mui/icons-material/CompareArrowsRounded';
-import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
-
-import MenuItem from "@mui/material/MenuItem";
-import IconButton from "@mui/material/IconButton";
-import Stack from "@mui/material/Stack";
-
-
-import { styled } from '@mui/system';
+import { selectDocumentById } from "../../features/documents/documentSlice";
+import { useDownloadPDFFileMutation } from "../../features/pdfs/pdfsSlice";
+import SetupDropdown from "../../features/setups/SetupDropdown";
+import SetupFilter from "../../features/setups/SetupFilter";
+import SetupView from "../../features/setups/SetupView";
+import {
+    selectDefaultSetup,
+    selectSetupOnId,
+    selectSetupsByDocument,
+} from "../../features/setups/setupsSlice";
+import { useGetSetupsQuery } from "../../features/setups/setupsSlice";
+import "./Analysis.css";
 
 const MenuButton = styled(Button)({
-  color: '#252C32',
-  backgroundColor: "#fff",
-  border: '1px solid #DDE2E4',
-  padding: '4px 12px',
-  textTransform: 'none',
-  borderRadius: '6px',
-})
+    color: "#252C32",
+    backgroundColor: "#fff",
+    border: "1px solid #DDE2E4",
+    padding: "4px 12px",
+    textTransform: "none",
+    borderRadius: "6px",
+});
 
-const SetupMenuItem = styled(MenuItem)({
-  borderRadius: '6px',
-  '&:hover': {
-      color: '#0E73F6',
-      backgroundColor: '#D7EDFF',
-  },
-})
+const Analysis = () => {
+    const { documentId } = useParams();
 
-const Analysis = ({ hahaT = 'Hello' }) => {
+    const [currentSetup, setCurrentSetup] = useState();
 
-  const [anchorEl, setAnchorEl] = useState(null);
-  const open = Boolean(anchorEl);
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
+    // NOTE: handle Errors
+    const { setupsByDocument, defaultSetup, actualSetup } = useGetSetupsQuery(
+        undefined,
+        {
+            selectFromResult: ({ data, isLoading, isError, isSuccess }) => ({
+                setupsByDocument: selectSetupsByDocument(data, documentId),
+                defaultSetup: selectDefaultSetup(data, documentId),
+                actualSetup: selectSetupOnId(data, currentSetup?.id),
+                isLoading,
+                isError,
+                isSuccess,
+            }),
+        }
+    );
 
+    const [downloadPDFFile] = useDownloadPDFFileMutation();
 
-  const { documentId } = useParams();
-  const location = useLocation();
-  const { setup } = location.state || {};
+    const document = useSelector((state) =>
+        selectDocumentById(state, documentId)
+    );
 
-  const [currentSetup, setCurrentSetup] = useState();
-  const [isSetupView, setIsSetupView] = useState(true);
+    useEffect(() => {}, [currentSetup]);
 
-
-  // NOTE: handle Errors
-  const {
-    setupsByDocument,
-    defaultSetup,
-    actualSetup,
-    isLoading,
-    isSuccess,
-    isError,
-    error
-  } = useGetSetupsQuery(undefined, {
-    selectFromResult: ({ data, isLoading, isError, isSuccess }) => ({
-      setupsByDocument: selectSetupsByDocument(data, documentId),
-      defaultSetup: selectDefaultSetup(data, documentId),
-      actualSetup: selectSetupOnId(data, currentSetup?.id),
-      isLoading,
-      isError,
-      isSuccess,
-    }),
-  })
-
-  const [downloadPDFFile] = useDownloadPDFFileMutation()
-
-  const document = useSelector((state) => selectDocumentById(state, documentId));
-
-  useEffect(() => {}, [currentSetup])
-
-  return (
-    <Box>
-
-      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <Typography variant="h5">
-          {document ? document?.name : 'Loading'}
-        </Typography>
+    return (
         <Box>
-          <MenuButton
-            color='secondary'
-            sx={{ ml: 1 }}
-            startIcon={<ArrowUpwardRoundedIcon
-            sx={{ color: "#5B6871" }} />}
-            onClick={() => downloadPDFFile({setupId: currentSetup?.id, name: currentSetup?.name})}
-          >
-            Export
-          </MenuButton>
-          
-          <SetupFilter setup={actualSetup ? actualSetup : defaultSetup} />
-          <Button
-            color='primary'
-            variant='contained'
-            component={Link}
-            to='/setups'
-            sx={{ ml: 1 }}
-            startIcon={<ViewColumnRoundedIcon />}
-          >
-            Manage
-          </Button>
-          <MenuButton
-            color='secondary'
-            sx={{ ml: 1 }}
-            component={Link}
-            to={`/${documentId}/compare`}
-            startIcon={<CompareArrowsRoundedIcon sx={{ color: "#5B6871" }} />}
-          >
-            Compare
-          </MenuButton>
-          <SetupDropdown defaultSetup={defaultSetup} setups={setupsByDocument} changeSetup={setCurrentSetup} />
-        </Box>
-      </Box>
+            <Box
+                sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                }}
+            >
+                <Typography variant="h5">
+                    {document ? document?.name : "Loading"}
+                </Typography>
+                <Box>
+                    <Tooltip
+                        title="If your table has a lot of columns the PDF might fail to capture them properly"
+                        placement="top"
+                        arrow
+                    >
+                        <MenuButton
+                            color="secondary"
+                            sx={{ ml: 1 }}
+                            startIcon={
+                                <ArrowUpwardRoundedIcon
+                                    sx={{ color: "#5B6871" }}
+                                />
+                            }
+                            onClick={() =>
+                                downloadPDFFile({
+                                    setupId: currentSetup?.id,
+                                    name: currentSetup?.name,
+                                })
+                            }
+                        >
+                            Export
+                        </MenuButton>
+                    </Tooltip>
+                    <SetupFilter
+                        setup={actualSetup ? actualSetup : defaultSetup}
+                    />
+                    <Button
+                        color="primary"
+                        variant="contained"
+                        component={Link}
+                        to="/setups"
+                        sx={{ ml: 1 }}
+                        startIcon={<ViewColumnRoundedIcon />}
+                    >
+                        Manage
+                    </Button>
+                    <MenuButton
+                        color="secondary"
+                        sx={{ ml: 1 }}
+                        component={Link}
+                        to={`/${documentId}/compare`}
+                        startIcon={
+                            <CompareArrowsRoundedIcon
+                                sx={{ color: "#5B6871" }}
+                            />
+                        }
+                    >
+                        Compare
+                    </MenuButton>
+                    <SetupDropdown
+                        defaultSetup={defaultSetup}
+                        setups={setupsByDocument}
+                        changeSetup={setCurrentSetup}
+                    />
+                </Box>
+            </Box>
 
-      <Divider sx={{ my: 2 }} />
-      {/* <Stack>
+            <Divider sx={{ my: 2 }} />
+            {/* <Stack>
         <Box sx={{ display: 'flex', alignItems: 'center', border: '1px solid #DDE2E4', borderRadius: '6px', width: 'fit-content', padding: '4px 4px 4px 12px'}}>
           <Typography>
             Filter
@@ -151,10 +148,10 @@ const Analysis = ({ hahaT = 'Hello' }) => {
         </Box>
       </Stack> */}
 
-      {/* <SetupData setup={currentSetup ? currentSetup : defaultSetup} /> */}
-      {/* <SetupView setup={actualSetup ? actualSetup : defaultSetup}/> */}
+            {/* <SetupData setup={currentSetup ? currentSetup : defaultSetup} /> */}
+            {/* <SetupView setup={actualSetup ? actualSetup : defaultSetup}/> */}
 
-      {/* <Box sx={{ mb: 1, display: "flex", alignItems: "center" }}>
+            {/* <Box sx={{ mb: 1, display: "flex", alignItems: "center" }}>
         <Typography variant="h1" color="primary" sx={{ mr: 2 }}>
           {document ? document?.name : 'Loading'}
         </Typography>
@@ -165,8 +162,8 @@ const Analysis = ({ hahaT = 'Hello' }) => {
         >
           { isSetupView ? 'Charts & Data' : 'General View'}
         </Button> */}
-        {/* setups dropdown */}
-        {/* <Box sx={{ ml: "auto" }}>
+            {/* setups dropdown */}
+            {/* <Box sx={{ ml: "auto" }}>
           <SetupDropdown defaultSetup={defaultSetup} setups={setupsByDocument} changeSetup={setCurrentSetup} />
           <Button
             sx={{ mx: 1 }}
@@ -191,14 +188,10 @@ const Analysis = ({ hahaT = 'Hello' }) => {
       <Divider />
       <Typography sx={{ my: 0.5 }} variant='h6'>{currentSetup ? currentSetup?.name : defaultSetup?.name}</Typography> */}
 
-      { isSetupView ? (
-        <SetupView setup={actualSetup ? actualSetup : defaultSetup}/>
-      ) : (
-        <SetupData setup={currentSetup ? currentSetup : defaultSetup} />
-      )}
-      
-    </Box>
-  );
+            <SetupView setup={actualSetup ? actualSetup : defaultSetup} />
+            {/* <SetupData setup={currentSetup ? currentSetup : defaultSetup} /> */}
+        </Box>
+    );
 };
 
 export default Analysis;

@@ -49,7 +49,7 @@ const ScatterGraph = ({ setupId }) => {
         datasets: [],
     }
 
-    const { data, isSuccess, isLoading, isError } = useGetGraphQuery({ setupId, type: 'scatter' })    
+    const { data, isSuccess } = useGetGraphQuery({ setupId, type: 'scatter' })    
 
     if (isSuccess) {
         let scatterDatasets = []

@@ -44,7 +44,8 @@ let SetupDropdown = ({ defaultSetup, setups, changeSetup }) => {
       setSelectedSetup(defaultSetup?.name);
       changeSetup(defaultSetup)
     }
-  }, [defaultSetup])
+    // if issues appear I might have to comment out changeSetup
+  }, [defaultSetup, changeSetup])
 
   const handleChangeSetup = (id) => {
     const changedSetup = setups.find(setup => setup.id === id)

@@ -1,20 +1,26 @@
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import { makeStyles } from '@mui/styles';
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import { makeStyles } from "@mui/styles";
 
 const useStyles = makeStyles({
-  logoBacktest: {
-      color: "#0E73F6",
-      fontSize: '18px'
-  }
-})
+    logoBacktest: {
+        color: "#0E73F6",
+        fontSize: "18px",
+    },
+});
 
-const LogoTitle = ({ first, second, variant, component, weight, color = null }) => {
-
+const LogoTitle = ({
+    first,
+    second,
+    variant,
+    component,
+    weight,
+    color = null,
+}) => {
     const classes = useStyles();
 
     return (
-        <Box sx={{ display: 'inline-flex'}}>
+        <Box sx={{ display: "inline-flex" }}>
             <Typography
                 variant={variant}
                 component={component}
@@ -32,7 +38,7 @@ const LogoTitle = ({ first, second, variant, component, weight, color = null }) 
                 {second}
             </Typography>
         </Box>
-    )
-}
+    );
+};
 
 export default LogoTitle;

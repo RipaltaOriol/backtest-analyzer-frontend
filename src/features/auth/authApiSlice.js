@@ -1,30 +1,27 @@
-import { apiSlice } from '../../api/apiSlice';
+import { apiSlice } from "../../api/apiSlice";
 
 export const authApiSlice = apiSlice.injectEndpoints({
-    endpoints: builder => ({
+    endpoints: (builder) => ({
         login: builder.mutation({
-            query: credentials => ({
-                url: '/login',
-                method: 'POST',
-                body: { ...credentials }
+            query: (credentials) => ({
+                url: "/login",
+                method: "POST",
+                body: { ...credentials },
             }),
-            invalidatesTags: ['Document', 'Setup', 'Stats', 'Graphs', 'Charts']
+            invalidatesTags: ["Document", "Setup", "Stats", "Graphs", "Charts"],
         }),
         logout: builder.mutation({
             query: () => ({
-                url: '/logout',
-                method: 'POST',
+                url: "/logout",
+                method: "POST",
             }),
-            invalidatesTags: ['Document', 'Setup', 'Stats', 'Graphs', 'Charts']
+            invalidatesTags: ["Document", "Setup", "Stats", "Graphs", "Charts"],
         }),
         refreshToken: builder.mutation({
-            query: () => '/refresh' 
-        })
-    })
-})
+            query: () => "/refresh",
+        }),
+    }),
+});
 
-export const {
-    useLoginMutation,
-    useLogoutMutation,
-    useRefreshTokenMutation
-} = authApiSlice
+export const { useLoginMutation, useLogoutMutation, useRefreshTokenMutation } =
+    authApiSlice;

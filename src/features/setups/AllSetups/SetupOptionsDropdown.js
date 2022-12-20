@@ -1,19 +1,18 @@
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
-import DriveFileRenameOutlineRoundedIcon from '@mui/icons-material/DriveFileRenameOutlineRounded';
-
-import { styled } from '@mui/system';
+import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
+import DriveFileRenameOutlineRoundedIcon from "@mui/icons-material/DriveFileRenameOutlineRounded";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import { styled } from "@mui/system";
 
 const DocumentMenuItem = styled(MenuItem)({
-    borderRadius: '6px',
-    '&:hover': {
-        color: '#0E73F6',
-        backgroundColor: '#D7EDFF',
-    }
-})
+    borderRadius: "6px",
+    "&:hover": {
+        color: "#0E73F6",
+        backgroundColor: "#D7EDFF",
+    },
+});
 
 const SetupOptionsDropdown = ({
     open,
@@ -38,13 +37,13 @@ const SetupOptionsDropdown = ({
                 <ListItemText>Rename</ListItemText>
             </DocumentMenuItem>
             <DocumentMenuItem onClick={handleDelete}>
-                <ListItemIcon sx={{ minWidth: '30px !important' }} >
+                <ListItemIcon sx={{ minWidth: "30px !important" }}>
                     <DeleteRoundedIcon fontSize="small" />
                 </ListItemIcon>
                 <ListItemText>Delete</ListItemText>
             </DocumentMenuItem>
         </Menu>
-    )
-}
+    );
+};
 
 export default SetupOptionsDropdown;

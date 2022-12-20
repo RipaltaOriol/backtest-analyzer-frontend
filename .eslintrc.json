@@ -4,7 +4,7 @@
     },
     "extends": ["react-app", "react-app/jest", "prettier"],
     "rules": {
-        "no-unused-vars": ["error", { "args": "all" }]
+        // "no-unused-vars": ["error", { "args": "all" }]
         // "semi": "warn",
         // "quotes": ["warn", "double"]
     }

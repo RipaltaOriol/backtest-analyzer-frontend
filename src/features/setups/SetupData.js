@@ -1,30 +1,27 @@
-import { useGetChartsQuery } from "../statistics/statisticsApiSlice"
+import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid";
 
+import LineChart from "../../common/LineChart";
 import PieChart from "../../common/PieChart";
-import LineChart from '../../common/LineChart';
-import SimpleTable from '../../common/SimpleTable';
+import SimpleTable from "../../common/SimpleTable";
+import BarGraph from "../graphs/BarGraph";
+import ScatterGraph from "../graphs/ScatterGraph";
+import { useGetChartsQuery } from "../statistics/statisticsApiSlice";
 
-import ScatterGraph from '../graphs/ScatterGraph';
-import BarGraph from '../graphs/BarGraph';
+let dataLineChart = {};
 
-import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid';
-
-let dataLineChart = {}
-
-let dataPieChart = {}
+let dataPieChart = {};
 
 const SetupData = ({ setup }) => {
-
     const { data, isSuccess } = useGetChartsQuery({ setupId: setup?.id });
 
     if (isSuccess) {
         if (data) {
-            dataLineChart = data.line
-            dataPieChart = data.pie
+            dataLineChart = data.line;
+            dataPieChart = data.pie;
         }
     }
-   
+
     return (
         <Box>
             <Grid container spacing={2}>
@@ -48,10 +45,8 @@ const SetupData = ({ setup }) => {
                     {setup?.id && <BarGraph setupId={setup?.id} />}
                 </Grid>
             </Grid>
-            
-
         </Box>
-    )
-}
+    );
+};
 
 export default SetupData;

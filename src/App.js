@@ -1,25 +1,22 @@
 // import 'bootstrap/dist/css/bootstrap.min.css';
-import theme from "./assets/utils/theme";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-
-import Home from "./pages/Home";
-import Help from "./pages/Help";
-import Login from "./pages/login";
-import Upload from "./pages/upload";
-
-import Analysis from "./pages/Analysis";
-
-import Layout from "./common/Layout";
-import HomeBar from "./common/HomeBar";
-import RequireAuth from "./common/RequireAuth";
-import PersistLogin from "./common/PersistLogin";
-
-import AllSetups from "./features/setups/AllSetups";
-import SetupsCompare from "./features/setups/SetupsCompare";
-import AllDocuments from "./features/documents/AllDocuments";
-import UpdateDocument from "./features/documents/UpdateDocument";
+import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 
 import { ThemeProvider } from "@mui/material";
+
+import theme from "./assets/utils/theme";
+import HomeBar from "./common/HomeBar";
+import Layout from "./common/Layout";
+import PersistLogin from "./common/PersistLogin";
+import RequireAuth from "./common/RequireAuth";
+import AllDocuments from "./features/documents/AllDocuments";
+import UpdateDocument from "./features/documents/UpdateDocument";
+import AllSetups from "./features/setups/AllSetups";
+import SetupsCompare from "./features/setups/SetupsCompare";
+import Analysis from "./pages/Analysis";
+import Help from "./pages/Help";
+import Home from "./pages/Home";
+import Login from "./pages/login";
+import Upload from "./pages/upload";
 
 function App() {
     return (

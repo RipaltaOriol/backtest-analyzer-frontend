@@ -67,7 +67,6 @@ const UpdateDocument = () => {
     }
 
     const handleChange = (key) => (event) => {
-        const x = "Hello";
         let newValue = event.target.value;
         if (event.target.type === "number") {
             newValue = Number(newValue);

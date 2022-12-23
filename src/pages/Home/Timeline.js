@@ -1,24 +1,23 @@
-import TimelineItem from "./TimelineItem";
+import Box from "@mui/material/Box";
 
-import Box from '@mui/material/Box'
+import TimelineItem from "./TimelineItem";
 
 const timelineData = [
     {
         number: 1,
-        title: 'Create Multiple Instances',
-        text: 'Generate different versions of your backtest data and study them individually',
+        title: "Create Multiple Instances",
+        text: "Generate different versions of your backtest data and study them individually",
     },
     {
         number: 2,
-        title: 'Study your Data',
-        text: 'Utilise all of our tools to study your backtest in the way that best fits your needs',
+        title: "Study your Data",
+        text: "Utilise all of our tools to study your backtest in the way that best fits your needs",
     },
     {
         number: 3,
-        title: 'Improve and Repeat',
-        text: 'Come up with leads for your next backtest and improve your strategy',
+        title: "Improve and Repeat",
+        text: "Come up with leads for your next backtest and improve your strategy",
     },
-    
 ];
 
 const Timeline = () =>

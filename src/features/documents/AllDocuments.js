@@ -1,3 +1,4 @@
+import Message from "common/Message";
 import Upload from "pages/upload";
 import { useState } from "react";
 import { useSelector } from "react-redux";
@@ -74,6 +75,7 @@ const DocumentSource = styled(Typography)({
 const AllDocuments = () => {
     let navigate = useNavigate();
     const [openDialog, setOpenDialog] = useState(false);
+    const [msg, setMsg] = useState("");
     const [newName, setNewName] = useState("");
     const [anchorEl, setAnchorEl] = useState(null);
     const [documentId, setDocumentId] = useState(null);
@@ -130,7 +132,10 @@ const AllDocuments = () => {
 
     const [cloneDocument] = useCloneDocumentMutation();
     const [renameDocument] = useRenameDocumentMutation();
-    const [deleteDocument] = useDeleteDocumentMutation();
+    const [
+        deleteDocument,
+        { data: deleteResponse, isSuccess: isDeleteSuccess, reset },
+    ] = useDeleteDocumentMutation();
 
     let content;
 
@@ -175,6 +180,11 @@ const AllDocuments = () => {
         content = <p>{error}</p>;
     }
 
+    if (isDeleteSuccess) {
+        setMsg(deleteResponse.msg);
+        reset();
+    }
+
     return (
         <Box>
             <Box sx={{ display: "flex", justifyContent: "space-between" }}>
@@ -187,7 +197,10 @@ const AllDocuments = () => {
                     Upload New Document
                 </Button>
             </Box>
-            <Divider sx={{ mt: 2, mb: 4 }} />
+            <Divider sx={{ mt: 2, mb: 3 }} />
+            {msg && (
+                <Message message={msg} setMessage={setMsg} sx={{ my: 1 }} />
+            )}
             <Box sx={{ flexGrow: 1 }}>
                 {content.length > 0 && (
                     <DocumentGrid container>{content}</DocumentGrid>

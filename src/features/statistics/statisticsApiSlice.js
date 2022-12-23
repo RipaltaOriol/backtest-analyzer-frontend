@@ -1,25 +1,22 @@
-import { apiSlice } from '../../api/apiSlice';
+import { apiSlice } from "../../api/apiSlice";
 
 export const statisticsApiSlice = apiSlice.injectEndpoints({
-    endpoints: builder => ({
+    endpoints: (builder) => ({
         getStatistics: builder.query({
             query: ({ setupId }) => ({
                 url: `/setups/${setupId}/stats`,
-                method: 'GET'
+                method: "GET",
             }),
-            providesTags: ['Stats']
+            providesTags: ["Stats"],
         }),
         getCharts: builder.query({
             query: ({ setupId }) => ({
                 url: `/setups/${setupId}/charts`,
-                method: 'GET'
+                method: "GET",
             }),
-            providesTags: ['Graphs']
-        })
-    })
-})
+            providesTags: ["Graphs"],
+        }),
+    }),
+});
 
-export const {
-    useGetStatisticsQuery,
-    useGetChartsQuery,
-} = statisticsApiSlice
+export const { useGetStatisticsQuery, useGetChartsQuery } = statisticsApiSlice;

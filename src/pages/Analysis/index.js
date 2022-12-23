@@ -2,12 +2,14 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
 
+import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import ArrowUpwardRoundedIcon from "@mui/icons-material/ArrowUpwardRounded";
 import CompareArrowsRoundedIcon from "@mui/icons-material/CompareArrowsRounded";
 import ViewColumnRoundedIcon from "@mui/icons-material/ViewColumnRounded";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
+import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { styled } from "@mui/system";
@@ -30,6 +32,15 @@ const MenuButton = styled(Button)({
     backgroundColor: "#fff",
     border: "1px solid #DDE2E4",
     padding: "4px 12px",
+    textTransform: "none",
+    borderRadius: "6px",
+});
+
+const CustomIconMenuButton = styled(IconButton)({
+    color: "#252C32",
+    backgroundColor: "#fff",
+    border: "1px solid #DDE2E4",
+    padding: "4px 4px",
     textTransform: "none",
     borderRadius: "6px",
 });
@@ -129,6 +140,9 @@ const Analysis = () => {
                         setups={setupsByDocument}
                         changeSetup={setCurrentSetup}
                     />
+                    <CustomIconMenuButton sx={{ ml: 1 }}>
+                        <AddRoundedIcon />
+                    </CustomIconMenuButton>
                 </Box>
             </Box>
 

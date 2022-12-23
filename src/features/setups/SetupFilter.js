@@ -165,7 +165,6 @@ const SetupFilter = ({ setup }) => {
             >
                 <Box sx={{ p: "24px" }}>
                     <Typography variant="subtitle2">Setup Filters</Typography>
-                    <Button onClick={() => console.log(column)}>Print</Button>
                     <Typography sx={{ fontSize: "14px" }} gutterBottom>
                         Select from the dropdown to apply filters to your setups
                     </Typography>

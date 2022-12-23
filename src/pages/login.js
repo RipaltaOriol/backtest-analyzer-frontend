@@ -33,7 +33,6 @@ const Login = () => {
     // Handles the login logic
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(process.env);
 
         try {
             const userData = await login({ email, password }).unwrap();

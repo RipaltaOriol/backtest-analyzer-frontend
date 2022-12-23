@@ -12,8 +12,6 @@ export const pdfsSlice = apiSlice.injectEndpoints({
                 extraOptions,
                 baseQuery
             ) => {
-                console.log(setupId);
-                console.log(baseQuery);
                 const result = await baseQuery({
                     url: `/setups/${setupId}/file`,
                     responseHandler: (response) => response.blob(),

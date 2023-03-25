@@ -37,7 +37,11 @@ const DocumentPlaceholder = styled("span")({
     color: "#5B6871",
 });
 
-const AddSetupDialog = ({ openAddDialog, handleAddDialogClose }) => {
+const AddSetupDialog = ({
+    openAddDialog,
+    handleAddDialogClose,
+    documentId = null,
+}) => {
     const [name, setName] = useState("");
     const [document, setDocument] = useState({});
     const [anchorEl, setAnchorEl] = useState(null);
@@ -62,8 +66,15 @@ const AddSetupDialog = ({ openAddDialog, handleAddDialogClose }) => {
     };
 
     const handleAddSetup = () => {
-        if (document?.id === undefined || name === "") return;
-        addSetups({ document: document.id, name });
+        if ((document?.id === undefined && documentId === null) || name === "")
+            return;
+
+        if (documentId !== null) {
+            addSetups({ document: documentId, name });
+        } else {
+            addSetups({ document: document.id, name });
+        }
+
         setName("");
         setDocument(null);
         handleAddDialogClose();
@@ -77,44 +88,50 @@ const AddSetupDialog = ({ openAddDialog, handleAddDialogClose }) => {
                 </Typography>
             </DialogTitle>
             <DialogContent>
-                <DialogContentText sx={{ fontSize: "14px", mb: 1 }}>
-                    Indicate for which document is this setup and what name
-                    should it have:
-                </DialogContentText>
-                <DropdownButton
-                    sx={{ p: 1 }}
-                    variant="text"
-                    onClick={handleClick}
-                >
-                    <DocumentPlaceholder>Document:&nbsp;</DocumentPlaceholder>
-                    {document ? document?.name : "None"}
-                </DropdownButton>
-                <Menu
-                    anchorEl={anchorEl}
-                    open={open}
-                    onClose={handleClose}
-                    autoFocus={false}
-                    anchorOrigin={{
-                        vertical: "bottom",
-                        horizontal: "left",
-                    }}
-                    transformOrigin={{
-                        vertical: "top",
-                        horizontal: "left",
-                    }}
-                >
-                    {orderedDocuments
-                        ? orderedDocuments.map(({ id, name }) => (
-                              <DropdownMenuItem
-                                  onClick={() =>
-                                      handleSelectDocument({ id, name })
-                                  }
-                              >
-                                  {name}
-                              </DropdownMenuItem>
-                          ))
-                        : null}
-                </Menu>
+                {documentId == null && (
+                    <>
+                        <DialogContentText sx={{ fontSize: "14px", mb: 1 }}>
+                            Indicate for which document is this setup and what
+                            name should it have:
+                        </DialogContentText>
+                        <DropdownButton
+                            sx={{ p: 1 }}
+                            variant="text"
+                            onClick={handleClick}
+                        >
+                            <DocumentPlaceholder>
+                                Document:&nbsp;
+                            </DocumentPlaceholder>
+                            {document ? document?.name : "None"}
+                        </DropdownButton>
+                        <Menu
+                            anchorEl={anchorEl}
+                            open={open}
+                            onClose={handleClose}
+                            autoFocus={false}
+                            anchorOrigin={{
+                                vertical: "bottom",
+                                horizontal: "left",
+                            }}
+                            transformOrigin={{
+                                vertical: "top",
+                                horizontal: "left",
+                            }}
+                        >
+                            {orderedDocuments
+                                ? orderedDocuments.map(({ id, name }) => (
+                                      <DropdownMenuItem
+                                          onClick={() =>
+                                              handleSelectDocument({ id, name })
+                                          }
+                                      >
+                                          {name}
+                                      </DropdownMenuItem>
+                                  ))
+                                : null}
+                        </Menu>
+                    </>
+                )}
                 <TextField
                     autoFocus
                     margin="dense"

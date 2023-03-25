@@ -45,24 +45,37 @@ let SetupView = ({ setup }) => {
 
     // move this other side
     if (setup && setup.state && Object.keys(setup.state).length !== 0) {
-        setup.state.schema.fields.forEach((column) => {
+        let setupFields = setup.state.fields;
+
+        const dateColumnsList = Object.keys(setupFields).filter((x) =>
+            x.startsWith(".d_")
+        );
+        console.log(dateColumnsList);
+
+        for (const column in setupFields) {
+            // because RKT uses immer under the hood it doesn't allow to pass the column directly
+            let isHidden = column === "imgs" || column === "note";
             dataColumns.push({
-                title: parseColumnName(column.name),
-                field: column.name,
-                hidden: column.name === "index",
+                title: parseColumnName(column),
+                field: column,
+                dateSetting: { locale: "en-GB" },
+                hidden: isHidden,
             });
-        });
-        setup.state.data.forEach((row, idx) => {
+        }
+
+        let setupData = setup.state.data;
+        for (const rowIndex in setupData) {
             // TODO: index should not be added manually
-            let { index, ...deepRow } = row;
-            deepRow.index = idx;
-            // maybe this could be done in the backend
-            deepRow[".d"] = new Date(deepRow[".d"]).toLocaleDateString(
-                "en-EN",
-                options
-            );
-            dataContents.push(deepRow);
-        });
+            let { ...row } = setupData[rowIndex];
+            row.index = rowIndex;
+            for (let dateColumn of dateColumnsList) {
+                row[dateColumn] = new Date(row[dateColumn]).toLocaleDateString(
+                    "en-EN",
+                    options
+                );
+            }
+            dataContents.push(row);
+        }
     }
 
     return (
@@ -221,7 +234,8 @@ let SetupView = ({ setup }) => {
             <SingleRecordDialog
                 open={open}
                 onClose={() => setOpen(false)}
-                rowRecord={{}}
+                setupId={setup?.id}
+                rowRecord={selectedRow}
             />
         </Box>
     );

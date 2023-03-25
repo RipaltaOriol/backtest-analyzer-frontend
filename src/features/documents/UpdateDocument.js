@@ -1,14 +1,22 @@
+import ImagesCarousel from "common/ImageCarousel";
+import ImagePreviewDialog from "common/ImagePreviewDialog";
+import Message from "common/Message";
+import TipTapEditor, { useTextEditor } from "common/TipTapEditor";
 import MaterialTable from "material-table";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
+import parseColumnName from "utils/parseColumns";
 
+import CloudUploadOutlinedIcon from "@mui/icons-material/CloudUploadOutlined";
 import { Grid } from "@mui/material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
+import InputAdornment from "@mui/material/InputAdornment";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
+import { styled } from "@mui/system";
 
 import { selectDocumentById } from "features/documents/documentSlice";
 import {
@@ -18,16 +26,60 @@ import {
 } from "features/documents/documentSlice";
 
 import tableIcons from "../../assets/utils/IconProvider";
+import "./Documents.css";
 
 const options = { year: "numeric", month: "numeric", day: "numeric" };
 
+const UpdateBox = styled(Box)({
+    width: "auto",
+    borderRadius: "6px",
+    padding: "16px 24px",
+    backgroundColor: "#F6F8F9",
+    border: "1px solid #E5E9EB",
+});
+
+const AddImageBox = styled(Box)({
+    backgroundColor: "#fff",
+    border: "1px solid #E5E9EB",
+    borderRadius: "6px",
+    margin: "20px 0",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    padding: "15px 0",
+});
+
+const LighTextField = styled(TextField)({
+    background: "#F0F1F2",
+    outline: null,
+    borderRadius: "6px",
+    "& .MuiOutlinedInput-root": {
+        "& fieldset": {
+            borderColor: "#E5E9EB",
+        },
+        "&:hover fieldset": {
+            borderColor: "#E5E9EB",
+        },
+        "&.Mui-focused fieldset": {
+            border: "#E5E9EB",
+        },
+    },
+});
+
 const UpdateDocument = () => {
     const { documentId } = useParams();
+    const [imagePreview, setImagePreview] = useState(false);
+    const [imagePreviewUrl, setImagePreviewUrl] = useState("");
+    const [newImageUrl, setNewImageUrl] = useState("");
     const [rowValues, setRowValues] = useState({});
     const [selectedRow, setSelectedRow] = useState({});
+    const [msg, setMsg] = useState("");
+    const [msgStatus, setMsgStatus] = useState(true); // true reflects success, false reflects failure
 
     let columns = [];
     let contents = [];
+
+    const editor = useTextEditor();
 
     const [updateDocument] = useUpdateDocumentMutation();
 
@@ -44,26 +96,35 @@ const UpdateDocument = () => {
         documentObj.state &&
         Object.keys(documentObj.state).length !== 0
     ) {
-        documentObj.state.schema.fields.forEach((header) => {
-            // because RKT uses immer under the hood it doesn't allow to pass the column directly
-            columns.push({
-                title: header.title,
-                field: header.field,
-                hidden: header.title === "index",
-            });
-        });
+        let setupFields = documentObj.state.fields;
 
-        documentObj.state.data.forEach((row, idx) => {
+        const dateColumnsList = Object.keys(setupFields).filter((x) =>
+            x.startsWith(".d_")
+        );
+
+        for (const column in setupFields) {
+            // because RKT uses immer under the hood it doesn't allow to pass the column directly
+            let isHidden = column === "imgs" || column === "note";
+            columns.push({
+                title: parseColumnName(column),
+                field: column,
+                hidden: isHidden,
+            });
+        }
+
+        let setupData = documentObj.state.data;
+        for (const rowIndex in setupData) {
             // TODO: index should not be added manually
-            let { index, ...deepRow } = row;
-            deepRow.index = idx;
-            // maybe this could be done in the backend
-            deepRow[".d"] = new Date(deepRow[".d"]).toLocaleDateString(
-                "en-EN",
-                options
-            );
-            contents.push(deepRow);
-        });
+            let { ...row } = setupData[rowIndex];
+            row.index = rowIndex;
+            for (let dateColumn of dateColumnsList) {
+                row[dateColumn] = new Date(row[dateColumn]).toLocaleDateString(
+                    "en-EN",
+                    options
+                );
+            }
+            contents.push(row);
+        }
     }
 
     const handleChange = (key) => (event) => {
@@ -76,103 +137,219 @@ const UpdateDocument = () => {
     };
 
     const cancelUpdate = () => {
+        editor?.commands.setContent("");
         setSelectedRow({});
         setRowValues({});
     };
 
+    const updateEditor = (note) => {
+        editor?.commands.setContent(note);
+    };
+
     const handleDocumentUpdate = async (method) => {
-        updateDocument({ id: documentId, method, data: rowValues });
+        let res = await updateDocument({
+            id: documentId,
+            method,
+            data: { ...rowValues, note: editor?.getHTML() },
+        });
+        setMsg(res.data.msg);
+        setMsgStatus(res.data.success);
+    };
+
+    const addNewImage = () => {
+        if (rowValues.imgs === undefined) {
+            setRowValues({ ...rowValues, imgs: [newImageUrl] });
+        } else {
+            setRowValues({
+                ...rowValues,
+                imgs: [...rowValues.imgs, newImageUrl],
+            });
+        }
+        setNewImageUrl("");
+    };
+
+    const removeImage = (idx) => {
+        var newImages = [...rowValues.imgs];
+        newImages.splice(idx, 1);
+        setRowValues({
+            ...rowValues,
+            imgs: newImages,
+        });
     };
 
     return (
         <Box sx={{ display: "block", width: "calc(100% - 200px)" }}>
+            {/* Image Preview Component */}
+            <ImagePreviewDialog
+                url={imagePreviewUrl}
+                open={imagePreview}
+                close={() => setImagePreview(false)}
+            />
             <Box>
                 <Typography variant="h5">
                     {document ? document.name : "Loading"}
                 </Typography>
             </Box>
             <Divider sx={{ mt: 2, mb: 2 }} />
+            {msg && (
+                <Message
+                    message={msg}
+                    setMessage={setMsg}
+                    isError={!msgStatus}
+                    sx={{ my: 1 }}
+                />
+            )}
+
             {/* Buttons to add go here */}
-            <Box sx={{ display: "flex", width: "100%", mb: 3 }}>
-                <Box sx={{ flexGrow: 1 }}>
-                    <Typography variant="h6" sx={{ mb: 2 }}>
+            <UpdateBox
+                sx={{
+                    mb: 3,
+                }}
+            >
+                <Box>
+                    <Typography
+                        sx={{ mb: 2, color: "#4094F7", fontWeight: 600 }}
+                    >
                         {Object.keys(selectedRow).length === 0
                             ? "New Item"
                             : "Update Item"}
                     </Typography>
-                    <Box>
-                        <Grid
-                            container
-                            spacing={2}
-                            direction="row"
-                            component="form"
-                            noValidate
-                            autoComplete="off"
-                        >
-                            {/* Have one for ID which cannot be changed */}
-                            {data
-                                ? data.map((column, idx) => (
-                                      <Grid item>
-                                          <TextField
-                                              key={idx}
-                                              label={column.name}
-                                              type={column.type}
-                                              variant="outlined"
-                                              value={
-                                                  rowValues?.[column.id] === 0
-                                                      ? 0
-                                                      : rowValues[column.id] ||
-                                                        ""
-                                              }
-                                              onChange={handleChange(column.id)}
-                                              size="small"
-                                              step={0.5}
-                                          />
-                                      </Grid>
-                                  ))
-                                : null}
+                    <Grid container spacing={2}>
+                        <Grid item xs={7}>
+                            <Grid
+                                container
+                                spacing={2}
+                                direction="row"
+                                component="form"
+                                noValidate
+                                autoComplete="off"
+                            >
+                                {/* Have one for ID which cannot be changed */}
+                                {data
+                                    ? data.map((column, idx) => {
+                                          if (
+                                              column.name !== "note" &&
+                                              column.name !== "imgs"
+                                          ) {
+                                              return (
+                                                  <Grid item>
+                                                      <TextField
+                                                          key={idx}
+                                                          label={column.name}
+                                                          type={column.type}
+                                                          variant="outlined"
+                                                          value={
+                                                              rowValues?.[
+                                                                  column.id
+                                                              ] === 0
+                                                                  ? 0
+                                                                  : rowValues[
+                                                                        column
+                                                                            .id
+                                                                    ] || ""
+                                                          }
+                                                          onChange={handleChange(
+                                                              column.id
+                                                          )}
+                                                          size="small"
+                                                          step={0.5}
+                                                      />
+                                                  </Grid>
+                                              );
+                                          } else {
+                                              return null;
+                                          }
+                                      })
+                                    : null}
+                            </Grid>
                         </Grid>
-                    </Box>
-                </Box>
-                <Box
-                    sx={{
-                        display: "flex",
-                        flexDirection: "column",
-                        justifyContent: "flex-end",
-                    }}
-                >
-                    <Button
-                        variant="contained"
-                        onClick={() => {
-                            handleDocumentUpdate(
-                                Object.keys(selectedRow).length === 0
-                                    ? "add"
-                                    : "update"
-                            );
-                        }}
-                    >
-                        {Object.keys(selectedRow).length === 0
-                            ? "Add"
-                            : "Update"}
-                    </Button>
-                    {Object.keys(selectedRow).length !== 0 && (
+                        <Grid item xs={5}>
+                            <TipTapEditor editor={editor} />
+                            <AddImageBox>
+                                <Typography variant="subtitle3">
+                                    Upload your image
+                                </Typography>
+                                <Typography color="#6E7C87">
+                                    Add url or browse from your computer
+                                </Typography>
+                                <Box
+                                    sx={{
+                                        mt: 2,
+                                        display: "flex",
+                                        alignItems: "center",
+                                    }}
+                                >
+                                    <LighTextField
+                                        placeholder="url link"
+                                        size="small"
+                                        sx={{ mr: 2 }}
+                                        value={newImageUrl}
+                                        onChange={(e) =>
+                                            setNewImageUrl(e.target.value)
+                                        }
+                                        InputProps={{
+                                            startAdornment: (
+                                                <InputAdornment position="start">
+                                                    <CloudUploadOutlinedIcon color="primary" />
+                                                </InputAdornment>
+                                            ),
+                                        }}
+                                    />
+                                    <Button
+                                        variant="contained"
+                                        onClick={addNewImage}
+                                    >
+                                        Submit
+                                    </Button>
+                                </Box>
+                            </AddImageBox>
+                            <ImagesCarousel
+                                images={rowValues?.imgs || []}
+                                setImagePreview={setImagePreview}
+                                setImagePreviewUrl={setImagePreviewUrl}
+                                removeImage={removeImage}
+                            />
+                        </Grid>
+                    </Grid>
+                    <Box sx={{ mt: 2 }}>
                         <Button
                             variant="contained"
-                            sx={{ mt: 1 }}
-                            onClick={() => handleDocumentUpdate("delete")}
+                            onClick={() => {
+                                handleDocumentUpdate(
+                                    Object.keys(selectedRow).length === 0
+                                        ? "add"
+                                        : "update"
+                                );
+                            }}
                         >
-                            Delete
+                            {Object.keys(selectedRow).length === 0
+                                ? "Add"
+                                : "Update"}
                         </Button>
-                    )}
-                    <Button
-                        variant="contained"
-                        sx={{ mt: 1 }}
-                        onClick={() => cancelUpdate()}
-                    >
-                        Cancel
-                    </Button>
+
+                        <Button
+                            color="secondary"
+                            sx={{ ml: 1 }}
+                            onClick={() => cancelUpdate()}
+                        >
+                            Cancel
+                        </Button>
+                        {Object.keys(selectedRow).length !== 0 && (
+                            <Button
+                                color="secondary"
+                                sx={{
+                                    ml: 1,
+                                    color: "#F76659",
+                                    "&:hover": { color: "#F76659" },
+                                }}
+                                onClick={() => handleDocumentUpdate("delete")}
+                            >
+                                Delete
+                            </Button>
+                        )}
+                    </Box>
                 </Box>
-            </Box>
+            </UpdateBox>
             <Box>
                 {documentObj ? (
                     <MaterialTable
@@ -182,6 +359,7 @@ const UpdateDocument = () => {
                         onRowClick={(evt, selectedRow) => {
                             setSelectedRow(selectedRow);
                             setRowValues(selectedRow);
+                            updateEditor(selectedRow?.note);
                         }}
                         options={{
                             padding: "dense",
@@ -199,9 +377,7 @@ const UpdateDocument = () => {
                         }}
                         icons={tableIcons}
                     />
-                ) : (
-                    console.error("nothing")
-                )}
+                ) : null}
             </Box>
             {/* Table goes here */}
         </Box>

@@ -32,7 +32,7 @@ export const documentsApiSlice = apiSlice.injectEndpoints({
                 method: "PUT",
                 body: { method, data },
             }),
-            invalidatesTags: ["DocumentTable"],
+            invalidatesTags: ["DocumentTable", "Setup"], // maybe not invalidate all setups
         }),
         uploadDocument: builder.mutation({
             query: (file) => ({

@@ -1,13 +1,20 @@
+import InstagramIcon from "@mui/icons-material/Instagram";
+import LinkedInIcon from "@mui/icons-material/LinkedIn";
+import YouTubeIcon from "@mui/icons-material/YouTube";
 import Box from "@mui/material/Box";
+import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import { createStyles, makeStyles } from "@mui/styles";
 
 const useStyles = makeStyles((theme) =>
     createStyles({
         footer: {
-            padding: "30px",
-            borderTop: "1px solid rgba(0, 0, 0, 0.2)",
-            color: "rgba(0, 0, 0, 0.8)",
+            padding: "20px 100px",
+            backgroundColor: "#6E7C87",
+            color: "#fff",
+            marginTop: "auto",
+            display: "flex",
+            justifyContent: "space-between",
         },
     })
 );
@@ -16,10 +23,43 @@ const Footer = () => {
     const classes = useStyles();
 
     return (
-        <Box className={classes.footer} sx={{ mt: "auto" }}>
-            <Typography align="center">
-                @2022 Backtest Analyser. All rights reserved.
+        <Box className={classes.footer}>
+            <Typography alignSelf="center">
+                @2022 Backtest Analyser. All Rights Reserved.
             </Typography>
+            <Box display="flex" alignItems="center">
+                <Typography sx={{ mr: 1 }}>Follow Us</Typography>
+                <IconButton
+                    disableRipple
+                    sx={{
+                        "&:hover": {
+                            backgroundColor: "inherit",
+                        },
+                    }}
+                >
+                    <YouTubeIcon sx={{ color: "#fff" }} />
+                </IconButton>
+                <IconButton
+                    disableRipple
+                    sx={{
+                        "&:hover": {
+                            backgroundColor: "inherit",
+                        },
+                    }}
+                >
+                    <InstagramIcon sx={{ color: "#fff" }} />
+                </IconButton>
+                <IconButton
+                    disableRipple
+                    sx={{
+                        "&:hover": {
+                            backgroundColor: "inherit",
+                        },
+                    }}
+                >
+                    <LinkedInIcon sx={{ color: "#fff" }} />
+                </IconButton>
+            </Box>
         </Box>
     );
 };

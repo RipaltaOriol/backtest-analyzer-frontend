@@ -63,7 +63,11 @@ const theme = createTheme({
                 {
                     props: { color: "secondary" },
                     style: {
-                        color: "#fff",
+                        color: "#252C32",
+                        textTransform: "none",
+                        border: "1px solid #DDE2E4",
+                        borderRadius: "6px",
+                        padding: "4px 12px",
                         "&:hover": {
                             color: "inherit",
                             backgroundColor: "#f0f0f0",
@@ -170,6 +174,11 @@ const theme = createTheme({
             fontSize: "28px",
             fontWeight: "400",
         },
+        h2: {
+            color: "#252C32",
+            fontWeight: 600,
+            fontSize: "32px",
+        },
         h3: {
             fontSize: "36px",
         },
@@ -195,6 +204,10 @@ const theme = createTheme({
         subtitle2: {
             fontSize: "14px",
             fontWeight: "800",
+        },
+        subtitle3: {
+            fontWeight: "600",
+            lineHeight: "24px",
         },
         body2: {
             fontSize: "16px",

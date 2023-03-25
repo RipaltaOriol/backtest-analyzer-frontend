@@ -76,9 +76,10 @@ const Notes = ({ setupId, notes }) => {
                         notes !== setupNotes ? (
                             <InputAdornment position="end">
                                 <IconButton
-                                    sx={{ mt: 1.5, fontSize: 16 }}
+                                    sx={{ mt: 4, fontSize: 16 }}
                                     color="primary"
                                     variant="outlined"
+                                    disableRipple
                                     onClick={() => handleSaveNote()}
                                 >
                                     Save

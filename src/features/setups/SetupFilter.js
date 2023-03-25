@@ -45,6 +45,14 @@ const FilterMenuItem = styled(MenuItem)({
         color: "#0E73F6",
         backgroundColor: "#D7EDFF",
     },
+    "&:focus": {
+        color: "inherit",
+        backgroundColor: "inherit",
+    },
+    "&:hover:focus": {
+        color: "#0E73F6",
+        backgroundColor: "#D7EDFF",
+    },
 });
 
 const FilterMenuItemMultiple = styled(ListItemText)({
@@ -75,20 +83,7 @@ const SetupFilter = ({ setup }) => {
     const handleClose = () => {
         setAnchorEl(null);
     };
-    //   const [selectedSetup, setSelectedSetup] = useState(defaultSetup?.name || '');
 
-    //   useEffect(() => {
-    //     if (defaultSetup) {
-    //       setSelectedSetup(defaultSetup?.name);
-    //       changeSetup(defaultSetup)
-    //     }
-    //   }, [defaultSetup])
-
-    //   const handleChangeSetup = (id) => {
-    //     const changedSetup = setups.find(setup => setup.id === id)
-    //     setSelectedSetup(changedSetup?.name)
-    //     changeSetup(changedSetup)
-    //   }
     const handleValueChange = (event) => {
         const {
             target: { value },
@@ -163,14 +158,26 @@ const SetupFilter = ({ setup }) => {
                     horizontal: "right",
                 }}
             >
-                <Box sx={{ p: "24px" }}>
+                <Box
+                    sx={(theme) => ({
+                        p: "24px",
+                        [theme.breakpoints.up("sm")]: {
+                            width: "400px",
+                        },
+                        [theme.breakpoints.up("md")]: {
+                            width: "500px",
+                        },
+                        [theme.breakpoints.up("lg")]: {
+                            width: "700px",
+                        },
+                    })}
+                >
                     <Typography variant="subtitle2">Setup Filters</Typography>
                     <Typography sx={{ fontSize: "14px" }} gutterBottom>
                         Select from the dropdown to apply filters to your setups
                     </Typography>
                     <Select
                         size="small"
-                        autoFocus={false}
                         value={column}
                         renderValue={(value) => (
                             <>
@@ -195,11 +202,11 @@ const SetupFilter = ({ setup }) => {
                         onChange={(e, child) => {
                             setColumn(e.target.value);
                             setFilterOptionIdx(child.props.id);
+                            setAction([null, "None"]);
+                            setNumber("None");
+                            setValues([]);
                         }}
                         label={null}
-                        MenuListProps={{
-                            select: { "&:focus": { borderColor: "red" } },
-                        }}
                         sx={{
                             my: 1,
                             "& legend": { display: "none" },
@@ -415,51 +422,23 @@ const SetupFilter = ({ setup }) => {
                         />
                     )}
 
-                    {/* <Select
-                    size="small"
-                    value={age}
-                    renderValue={value => (
-                        <>
-                            <Typography display='inline-block' sx={{ minWidth: 60, color: "#9AA6AC", fontSize: '14px' }}>Value</Typography>
-                            <Typography display='inline' sx={{ fontSize: '14px' }}>{value}</Typography>
-                        </>
-                    )}
-                    onChange={handleChange}
-                    label={null}
-                    MenuListProps={{ select: { '&:focus': { borderColor: 'red'}}}}
-                    sx={{
-                        my: 1, '& legend': { display: 'none' }, '& fieldset': { top: 0 }, width: '100%',
-                        '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                            borderColor: 'inherit',
-                            borderWidth: '1px'
-                        },
-                    }}
-                    InputLabelProps={{shrink: false}}
-                    IconComponent={(props) => (<KeyboardArrowDownRoundedIcon {...props} />)}
-                >
-                    <FilterMenuItem value={10}>Ten</FilterMenuItem>
-                    <FilterMenuItem value={20}>Twenty</FilterMenuItem>
-                    <FilterMenuItem value={30}>Thirty</FilterMenuItem>
-                </Select> */}
-                    <Box
-                        display="flex"
-                        justifyContent="center"
-                        alignItems="flex-end"
-                    >
-                        <Button variant="text" onClick={handleClose}>
+                    <Box display="flex" justifyContent="center" sx={{ mt: 1 }}>
+                        <Button
+                            variant="text"
+                            onClick={handleClose}
+                            sx={{ mx: 1 }}
+                        >
                             Cancel
                         </Button>
-                        <Button variant="contained" onClick={handleApply}>
+                        <Button
+                            variant="contained"
+                            onClick={handleApply}
+                            sx={{ mx: 1 }}
+                        >
                             Apply
                         </Button>
                     </Box>
                 </Box>
-                {/* {setups.map((setup) =>(
-            <SetupMenuItem onClick={() => {
-                handleClose()
-                handleChangeSetup(setup.id)
-            }}>{setup.name}</SetupMenuItem>
-            ))} */}
             </Menu>
         </>
     );

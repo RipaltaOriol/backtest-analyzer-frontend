@@ -1,20 +1,29 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Container from "@mui/material/Container";
+import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
+import { styled } from "@mui/material/styles";
 
+import LoginSketch from "../assets/svg/login-sketch.svg";
 import Footer from "../common/Footer";
 import Message from "../common/Message";
 import { useLoginMutation } from "../features/auth/authApiSlice";
 import { setCredentials } from "../features/auth/authSlice";
 import { setLoginMsg } from "../features/messages/messagesSlice";
 import { selectLoginMsg } from "../features/messages/messagesSlice";
+import "./Login.css";
+
+const ContainerGrid = styled(Grid)({
+    border: "1px solid #E5E9EB",
+    boxShadow: "0px 4px 35px rgba(91, 104, 113, 0.12)",
+    borderRadius: "12px",
+});
 
 const Login = () => {
     const location = useLocation();
@@ -23,7 +32,7 @@ const Login = () => {
 
     const from = location.state?.from?.pathname || "/files";
 
-    const msg = useSelector(selectLoginMsg);
+    const message = useSelector(selectLoginMsg);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [isError, setIsError] = useState(false);
@@ -45,18 +54,18 @@ const Login = () => {
             setEmail("");
             setPassword("");
             setIsError(false);
-            dispatch(setLoginMsg({ msg: "Successfully logged in!" }));
+            setMessage("Successfully logged in!");
             navigate(from, { replace: true });
         } catch (err) {
             if (!err?.originalStatus) {
-                dispatch(
-                    setLoginMsg({
-                        msg: err?.data?.msg || "Something went wrong",
-                    })
-                );
+                setMessage(err?.data?.msg || "Something went wrong");
                 setIsError(true);
             }
         }
+    };
+
+    const setMessage = (newMessage) => {
+        dispatch(setLoginMsg({ msg: newMessage }));
     };
 
     return (
@@ -67,54 +76,106 @@ const Login = () => {
                 minHeight: "100vh",
             }}
         >
-            <Container sx={{ my: 5 }}>
-                <Toolbar />
-                <Box sx={{ maxWidth: "400px", mx: "auto" }}>
-                    <Typography
-                        sx={{ mb: 2 }}
-                        variant="h5"
-                        component="h1"
-                        color="primary"
+            <Toolbar />
+
+            <Box sx={{ m: 5 }}>
+                <ContainerGrid container sx={{ height: "60vh" }}>
+                    <Grid
+                        item
+                        xs={6}
+                        sx={{
+                            backgroundColor: "#F6F8F9",
+                            borderRadius: "12px",
+                            px: 10,
+                            height: "100%",
+                            display: "flex",
+                            flexDirection: "column",
+                            justifyContent: "center",
+                            alignItems: "center",
+                        }}
                     >
-                        Log in
-                    </Typography>
-                    {msg && (
-                        <Message
-                            message={msg}
-                            isError={isError}
-                            sx={{ mb: 2 }}
-                        />
-                    )}
-                    <form noValidate autoComplete="off" onSubmit={handleSubmit}>
-                        <TextField
-                            sx={{ mb: 2 }}
-                            label="Email"
-                            variant="standard"
-                            fullWidth
-                            required
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                        />
-                        <TextField
-                            sx={{ mb: 2 }}
-                            type="password"
-                            label="Password"
-                            variant="standard"
-                            fullWidth
-                            required
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                        />
-                        <Button
-                            type="submit"
-                            variant="contained"
-                            color="primary"
+                        <Typography variant="h2">Welcome</Typography>
+                        <Typography
+                            sx={{
+                                color: "#84919A",
+                                textAlign: "center",
+                                mb: 5,
+                            }}
                         >
-                            Sign In
-                        </Button>
-                    </form>
-                </Box>
-            </Container>
+                            Backtest Analyser is the tool you need to so start
+                            centralizing your data analysis and keep track of
+                            your strategy
+                        </Typography>
+                        <img src={LoginSketch} alt="login sketch" />
+                    </Grid>
+                    <Grid
+                        item
+                        xs={6}
+                        sx={{
+                            px: 10,
+                            height: "100%",
+                            display: "flex",
+                            flexDirection: "column",
+                            justifyContent: "center",
+                            alignItems: "center",
+                        }}
+                    >
+                        <Box>
+                            <Typography
+                                sx={{ mb: 2 }}
+                                variant="h4"
+                                component="h1"
+                            >
+                                Log In
+                            </Typography>
+                            {message && (
+                                <Message
+                                    message={message}
+                                    setMessage={setMessage}
+                                    isError={isError}
+                                    sx={{ mb: 3 }}
+                                />
+                            )}
+                            <form
+                                noValidate
+                                autoComplete="off"
+                                onSubmit={handleSubmit}
+                            >
+                                <TextField
+                                    sx={{ mb: 2 }}
+                                    label="Email"
+                                    fullWidth
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                />
+                                <TextField
+                                    sx={{ mb: 2 }}
+                                    type="password"
+                                    label="Password"
+                                    fullWidth
+                                    value={password}
+                                    onChange={(e) =>
+                                        setPassword(e.target.value)
+                                    }
+                                />
+
+                                <Button
+                                    type="submit"
+                                    variant="contained"
+                                    color="primary"
+                                    sx={{ mb: 2 }}
+                                    fullWidth
+                                >
+                                    Sign In
+                                </Button>
+                                <Link to="" className="forgot-password-link">
+                                    Forgot Password?
+                                </Link>
+                            </form>
+                        </Box>
+                    </Grid>
+                </ContainerGrid>
+            </Box>
             <Footer />
         </Box>
     );

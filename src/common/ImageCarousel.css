@@ -1,0 +1,44 @@
+.swiper-wrapper {
+    align-items: center; /* add this will all relevant prefixes */
+}
+
+.carousel-img {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    max-height: 300px;
+}
+
+.carousel-fade {
+    display: none;
+    opacity: 70%;
+}
+
+.carousel-hover {
+    display: none;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    bottom: 0px;
+    left: 0px;
+    z-index: 1;
+}
+
+.carousel-img:hover .carousel-fade {
+    display: block;
+}
+
+.carousel-img:hover .carousel-clear {
+    /* display: none; */
+    opacity: 0.5;
+}
+
+.carousel-img:hover .carousel-hover {
+    display: block;
+}
+
+.custom-carousel-pagination {
+    width: auto;
+    margin-top: 2px;
+    margin-right: 25px;
+}

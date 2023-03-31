@@ -224,7 +224,7 @@ const UpdateDocument = () => {
                                 noValidate
                                 autoComplete="off"
                             >
-                                {/* Have one for ID which cannot be changed */}
+                                {/* have one for ID which cannot be changed */}
                                 {data
                                     ? data.map((column, idx) => {
                                           if (

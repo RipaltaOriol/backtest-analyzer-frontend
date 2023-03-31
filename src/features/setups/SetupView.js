@@ -80,49 +80,8 @@ let SetupView = ({ setup }) => {
 
     return (
         <Box>
-            {/* <Box
-        sx={{
-          mb: 2,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-      >
-        <ButtonGroup variant="contained">
-          <Button onClick={() => setIsTableOpen(!isTableOpen)}>Toggle Tables</Button>
-          <Button onClick={() => setIsNotesOpen(!isNotesOpen)}>Toggle Notes</Button>
-          <Button onClick={() => setIsImageOpen(!isImageOpen)}>Toggle Images</Button>
-        </ButtonGroup>
-        <ButtonGroup variant="contained">
-          <Button onClick={handleClickOpen}>Filter</Button>
-          <Tooltip
-            title="If your table has a lot of columns the PDF might fail to capture them properly"
-            placement="bottom-end"
-            arrow
-          >
-            <Button
-              endIcon={<InfoIcon />}
-              onClick={() => downloadPDFFile({setupId: setup?.id, name: setup?.name})}
-            >
-              Export</Button>
-          </Tooltip>
-        </ButtonGroup>
-      </Box> */}
             <FilterList setupId={setup?.id} filters={setup?.filters} />
-            {/* <Grid container spacing={2} sx={{ mb: 2 }}>
-        <Grid item xs={5}>
-          <Notes setupId={setup?.id} notes={setup?.notes} isOpened={isNotesOpen} />
-        </Grid>
-        <Grid item xs={7}>
-          { isImageOpen && (
-            <img
-              className={classes.contianedImage}
-              src={selectedRow['.s'] || MissingScreenshot}
-              alt="Trade screenshot"
-            />
-          )}
-        </Grid>
-      </Grid> */}
+
             <Grid container spacing={2}>
                 <Grid item xs={8}>
                     <LineChart dataLineChart={dataLineChart} />
@@ -179,57 +138,7 @@ let SetupView = ({ setup }) => {
                     />
                 </Grid>
             </Grid>
-            {/* <Grid container spacing={2}>
-          <Grid item xs={6}>
-              <LineChart dataLineChart={dataLineChart} />
-          </Grid>
-          <Grid item xs={6}>
-              <SimpleTable id={setup?.id} />
-          </Grid>
-      </Grid> */}
-            {/* <Grid container spacing={2} sx={{ mt: 2 }}>
-          <Grid item xs={2}>
-              <PieChart dataPieChart={dataPieChart} />
-          </Grid>
-          <Grid item xs={6}>
-              {setup?.id && <ScatterGraph setupId={setup?.id} />}
-          </Grid>
-          <Grid item xs={6}>
-              {setup?.id && <BarGraph setupId={setup?.id} />}
-          </Grid>
-        </Grid> */}
 
-            {/* { isTableOpen && (
-        <MaterialTable
-          title='Data'
-          columns={dataColumns}
-          data={dataContents}
-          editable={{
-            onRowAdd: newData => {
-              console.log(newData)
-            }
-              // new Promise((resolve, reject) => {
-              //   setTimeout(() => {
-              //     setData([...data, newData]);
-              //     resolve();
-              //   }, 1000)
-              // })
-          }}
-          onRowClick={(evt, selectedRow) => {
-            setSelectedRow(selectedRow)
-          }}
-          options={{
-            rowStyle: (rowData) => ({
-              backgroundColor:
-                selectedRow?.index === rowData?.index ? "#0d6efd" : "#fff",
-              color:
-                selectedRow?.index === rowData?.index ? "#fff" : "#000",
-            }),
-            
-          }}
-          icons={tableIcons}
-        />
-      )} */}
             {/* popup to display a trade */}
             <SingleRecordDialog
                 open={open}

@@ -204,7 +204,7 @@ function SingleRecordDialog({ open, onClose, setupId, rowRecord }) {
                             sx={{ my: 1 }}
                         />
                     )}
-                    {/* Have this header not scrollabel */}
+                    {/* have this header not scrollabel */}
                     <Grid container spacing={3}>
                         <Grid item xs={6} sx={{ mb: 1 }}>
                             {/* General Info */}
@@ -278,11 +278,6 @@ function SingleRecordDialog({ open, onClose, setupId, rowRecord }) {
                                 editor={editor}
                                 sx={{ height: "100%" }}
                             />
-                            {/* <HighlightBox sx={{ p: 2 }}>
-                                <Typography>
-                                    {rowRecord?.note ?? "NA"}
-                                </Typography>
-                            </HighlightBox> */}
                         </Grid>
                     </Grid>
                     <Grid container spacing={3}>

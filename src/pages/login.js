@@ -79,14 +79,14 @@ const Login = () => {
             <Toolbar />
 
             <Box sx={{ m: 5 }}>
-                <ContainerGrid container sx={{ height: "60vh" }}>
+                <ContainerGrid container>
                     <Grid
                         item
                         xs={6}
                         sx={{
                             backgroundColor: "#F6F8F9",
                             borderRadius: "12px",
-                            px: 10,
+                            p: 10,
                             height: "100%",
                             display: "flex",
                             flexDirection: "column",
@@ -112,7 +112,7 @@ const Login = () => {
                         item
                         xs={6}
                         sx={{
-                            px: 10,
+                            p: 10,
                             height: "100%",
                             display: "flex",
                             flexDirection: "column",

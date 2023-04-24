@@ -23,10 +23,10 @@ function App() {
         <ThemeProvider theme={theme}>
             <Router>
                 <Routes>
+                    <Route path="/" exact element={<Home />} />
                     <Route element={<HomeBar />}>
                         <Route path="/login" element={<Login />} />
                         <Route path="/guide" element={<Help />} />
-                        <Route path="/" exact element={<Home />} />
                     </Route>
 
                     <Route element={<PersistLogin />}>

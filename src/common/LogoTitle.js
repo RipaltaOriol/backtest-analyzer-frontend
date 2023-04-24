@@ -4,7 +4,6 @@ import { makeStyles } from "@mui/styles";
 
 const useStyles = makeStyles({
     logoBacktest: {
-        color: "#0E73F6",
         fontSize: "18px",
     },
 });
@@ -15,6 +14,7 @@ const LogoTitle = ({
     variant,
     component,
     weight,
+    firstColor = "#0E73F6",
     color = null,
 }) => {
     const classes = useStyles();
@@ -25,7 +25,7 @@ const LogoTitle = ({
                 variant={variant}
                 component={component}
                 className={classes.logoBacktest}
-                sx={{ fontWeight: weight }}
+                sx={{ fontWeight: weight, color: firstColor }}
             >
                 {first}
             </Typography>

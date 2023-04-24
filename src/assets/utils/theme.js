@@ -171,8 +171,11 @@ const theme = createTheme({
         fontWeightMedium: "500",
         fontWeightBold: "700",
         h1: {
-            fontSize: "28px",
-            fontWeight: "400",
+            color: "#fff",
+            fontSize: "3.5rem",
+            fontWeight: "700",
+            lineHeight: "64px",
+            letterSpacing: "-0.02em",
         },
         h2: {
             color: "#252C32",
@@ -183,9 +186,8 @@ const theme = createTheme({
             fontSize: "36px",
         },
         h4: {
-            fontSize: "24px",
+            fontSize: "1.5rem",
             fontWeight: "600",
-            lineHeight: "24px",
         },
         h5: {
             color: "#5B6871",

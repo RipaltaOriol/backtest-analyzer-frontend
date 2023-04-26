@@ -1,3 +1,5 @@
+import parseColumnName from "utils/parseColumns";
+
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -27,7 +29,9 @@ const SimpleTable = ({ id }) => {
             for (const prop in data[0]) {
                 if (prop !== "stat") {
                     tableRows.push(
-                        <TableCell align="center">{prop}</TableCell>
+                        <TableCell align="center">
+                            {parseColumnName(prop)}
+                        </TableCell>
                     );
                 }
             }

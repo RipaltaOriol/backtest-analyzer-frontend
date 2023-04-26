@@ -2,22 +2,22 @@ function parseColumnName(name) {
     if (name === "index") {
         return "Index";
     } else if (
-        name.startsWith(".r_") ||
-        name.startsWith(".m_") ||
-        name.startsWith(".d_")
+        name.startsWith("col_r_") ||
+        name.startsWith("col_m_") ||
+        name.startsWith("col_d_")
     ) {
-        return name.substring(3);
-    } else if (name === ".p") {
+        return name.substring(6);
+    } else if (name === "col_p") {
         return "Pair";
-    } else if (name === ".s") {
+    } else if (name === "col_s") {
         return "Screenshot";
-    } else if (name === ".o") {
+    } else if (name === "col_o") {
         return "Open";
-    } else if (name === ".c") {
+    } else if (name === "col_c") {
         return "Close";
-    } else if (name === ".tp") {
+    } else if (name === "col_tp") {
         return "Take Profit";
-    } else if (name === ".sl") {
+    } else if (name === "col_sl") {
         return "Stop Loss";
     }
     return name;

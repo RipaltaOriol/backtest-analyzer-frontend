@@ -80,11 +80,16 @@ function isMetric(metric) {
         metric === "tableData" ||
         metric === "note" ||
         metric === "imgs" ||
-        metric === "index"
+        metric === "index" ||
+        metric === "rowId"
     ) {
         return false;
     }
     return true;
+}
+
+function isResultColumn(column) {
+    return column.startsWith("col_r");
 }
 
 function SingleRecordDialog({ open, onClose, setupId, rowRecord }) {
@@ -213,19 +218,19 @@ function SingleRecordDialog({ open, onClose, setupId, rowRecord }) {
                                     <FieldText>
                                         Entry
                                         <HighlightText>
-                                            {rowRecord?.entry ?? "NA"}
+                                            {rowRecord?.col_o ?? "NA"}
                                         </HighlightText>
                                     </FieldText>
                                     <FieldText>
                                         SL
                                         <HighlightText>
-                                            {rowRecord?.sl ?? "NA"}
+                                            {rowRecord?.col_sl ?? "NA"}
                                         </HighlightText>
                                     </FieldText>
                                     <FieldText>
                                         TP
                                         <HighlightText>
-                                            {rowRecord?.tp ?? "NA"}
+                                            {rowRecord?.col_tp ?? "NA"}
                                         </HighlightText>
                                     </FieldText>
                                 </Box>
@@ -233,15 +238,28 @@ function SingleRecordDialog({ open, onClose, setupId, rowRecord }) {
                                     <FieldText>
                                         Risk Reward
                                         <HighlightText>
-                                            {rowRecord[".m_RRR"] ?? "NA"}
+                                            {rowRecord?.col_m_RRR ?? "NA"}
                                         </HighlightText>
                                     </FieldText>
-                                    <FieldText>
-                                        Result
-                                        <HighlightText>
-                                            {rowRecord[".m_RRR"] ?? "NA"}
-                                        </HighlightText>
-                                    </FieldText>
+                                    {rowRecord &&
+                                        Object.entries(rowRecord).map(
+                                            ([key, value], idx) => {
+                                                if (isResultColumn(key)) {
+                                                    return (
+                                                        <FieldText key={idx}>
+                                                            {parseColumnName(
+                                                                key
+                                                            )}
+                                                            <HighlightText>
+                                                                {/* todo: change this */}
+                                                                {value}
+                                                            </HighlightText>
+                                                        </FieldText>
+                                                    );
+                                                }
+                                                return null;
+                                            }
+                                        )}
                                 </Box>
                             </HighlightBox>
                             {/* Other Info */}
@@ -255,7 +273,15 @@ function SingleRecordDialog({ open, onClose, setupId, rowRecord }) {
                                             if (isMetric(key)) {
                                                 return (
                                                     <Grid item xs={6}>
-                                                        <FieldText>
+                                                        {/* have this props in case a word is very large and cannot be wrapped */}
+                                                        <FieldText
+                                                            sx={{
+                                                                overflow:
+                                                                    "hidden",
+                                                                textOverflow:
+                                                                    "ellipsis",
+                                                            }}
+                                                        >
                                                             {parseColumnName(
                                                                 key
                                                             )}

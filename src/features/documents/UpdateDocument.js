@@ -2,7 +2,6 @@ import ImagesCarousel from "common/ImageCarousel";
 import ImagePreviewDialog from "common/ImagePreviewDialog";
 import Message from "common/Message";
 import TipTapEditor, { useTextEditor } from "common/TipTapEditor";
-import MaterialTable from "material-table";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
@@ -18,6 +17,7 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { styled } from "@mui/system";
 
+import DocumentTable from "features/documents/DocumentTable";
 import { selectDocumentById } from "features/documents/documentSlice";
 import {
     useGetDocumentColumnsQuery,
@@ -25,7 +25,6 @@ import {
     useUpdateDocumentMutation,
 } from "features/documents/documentSlice";
 
-import tableIcons from "../../assets/utils/IconProvider";
 import "./Documents.css";
 
 const options = { year: "numeric", month: "numeric", day: "numeric" };
@@ -351,35 +350,13 @@ const UpdateDocument = () => {
                 </Box>
             </UpdateBox>
             <Box>
-                {documentObj ? (
-                    <MaterialTable
-                        title={<Typography>Data</Typography>}
-                        columns={columns}
-                        data={contents}
-                        onRowClick={(evt, selectedRow) => {
-                            setSelectedRow(selectedRow);
-                            setRowValues(selectedRow);
-                            updateEditor(selectedRow?.note);
-                        }}
-                        options={{
-                            padding: "dense",
-                            pageSize: 10,
-                            rowStyle: (rowData) => ({
-                                fontSize: 14,
-                                backgroundColor:
-                                    selectedRow?.index === rowData?.index
-                                        ? "#D7EDFF"
-                                        : "#fff",
-                            }),
-                            headerStyle: {
-                                whiteSpace: "nowrap",
-                            },
-                        }}
-                        icons={tableIcons}
-                    />
-                ) : null}
+                <DocumentTable
+                    setup={documentObj}
+                    setSelectedRow={setSelectedRow}
+                    setRowValues={setRowValues}
+                    updateEditor={updateEditor}
+                />
             </Box>
-            {/* Table goes here */}
         </Box>
     );
 };

@@ -164,11 +164,4 @@ const Day = ({ day, rowIdx, cellIdx }) => {
     );
 };
 
-// Action plan
-// CHANGE OF PLANS - YOU MIGHT WANT TO USE REACT BIGT CALENDAR
-// 1. Headers
-// 2. Context (do later to change month)
-// 3. Showing eventss
-// what did it mean 1/5?
-
 export default Day;

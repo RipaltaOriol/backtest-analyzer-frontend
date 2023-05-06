@@ -4,6 +4,7 @@ import { Link, useParams } from "react-router-dom";
 
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import ArrowUpwardRoundedIcon from "@mui/icons-material/ArrowUpwardRounded";
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import CompareArrowsRoundedIcon from "@mui/icons-material/CompareArrowsRounded";
 import ViewColumnRoundedIcon from "@mui/icons-material/ViewColumnRounded";
 import Box from "@mui/material/Box";
@@ -45,6 +46,9 @@ const CustomIconMenuButton = styled(IconButton)({
     padding: "4px 4px",
     textTransform: "none",
     borderRadius: "6px",
+    "& .MuiTouchRipple-root .MuiTouchRipple-child": {
+        borderRadius: "6px",
+    },
 });
 
 const Analysis = () => {
@@ -129,6 +133,14 @@ const Analysis = () => {
                     >
                         Manage
                     </Button>
+                    <CustomIconMenuButton
+                        aria-label="calendar"
+                        component={Link}
+                        to={`/${documentId}/calendar`}
+                        sx={{ ml: 1 }}
+                    >
+                        <CalendarMonthIcon color="primary" />
+                    </CustomIconMenuButton>
                     <MenuButton
                         color="secondary"
                         sx={{ ml: 1 }}

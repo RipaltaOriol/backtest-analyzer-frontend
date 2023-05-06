@@ -11,6 +11,7 @@ import RequireAuth from "./common/RequireAuth";
 import AllDocuments from "./features/documents/AllDocuments";
 import UpdateDocument from "./features/documents/UpdateDocument";
 import AllSetups from "./features/setups/AllSetups";
+import SetupCalendar from "./features/setups/SetupCalendar";
 import SetupsCompare from "./features/setups/SetupsCompare";
 import Analysis from "./pages/Analysis";
 import Help from "./pages/Help";
@@ -46,6 +47,10 @@ function App() {
                                 <Route
                                     path=":documentId/compare"
                                     element={<SetupsCompare />}
+                                />
+                                <Route
+                                    path=":documentId/calendar"
+                                    element={<SetupCalendar />}
                                 />
                                 <Route
                                     path=":documentId"

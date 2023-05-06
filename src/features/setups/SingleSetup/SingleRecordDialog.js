@@ -22,6 +22,7 @@ import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { styled } from "@mui/system";
 
+import { useUpdateDocumentMutation } from "features/documents/documentSlice";
 import { useUpdateRowNoteSetupMutation } from "features/setups/setupsSlice";
 
 const FieldText = styled(Typography)({
@@ -92,7 +93,14 @@ function isResultColumn(column) {
     return column.startsWith("col_r");
 }
 
-function SingleRecordDialog({ open, onClose, setupId, rowRecord }) {
+function SingleRecordDialog({
+    open,
+    onClose,
+    setupId,
+    rowRecord,
+    isSetup = true,
+}) {
+    // TODO: change setupId to something like itemId
     const [imagePreview, setImagePreview] = useState(false);
     const [isSync, setIsSync] = useState(false);
     const [imagePreviewUrl, setImagePreviewUrl] = useState("");
@@ -102,6 +110,7 @@ function SingleRecordDialog({ open, onClose, setupId, rowRecord }) {
     const [msgStatus, setMsgStatus] = useState(true); // true reflects success, false reflects failure
 
     const [updateRowNoteSetup] = useUpdateRowNoteSetupMutation();
+    const [updateDocument] = useUpdateDocumentMutation();
 
     const handleChange = (event) => {
         setIsSync(event.target.checked);
@@ -114,15 +123,32 @@ function SingleRecordDialog({ open, onClose, setupId, rowRecord }) {
     let editor = useTextEditor(rowRecord?.note);
 
     const handleSave = async () => {
-        let res = await updateRowNoteSetup({
-            setupId,
-            rowId: rowRecord.index,
-            note: editor?.getHTML(),
-            images,
-            isSync,
-        });
-        setMsg(res.data.msg);
-        setMsgStatus(res.data.success);
+        let res = null;
+        if (isSetup) {
+            res = await updateRowNoteSetup({
+                setupId,
+                rowId: rowRecord.index,
+                note: editor?.getHTML(),
+                images,
+                isSync,
+            });
+        } else {
+            let data = {
+                ...rowRecord,
+                note: editor?.getHTML(),
+                imgs: images,
+                rowId: rowRecord.index,
+            };
+            delete data["index"];
+            res = await updateDocument({
+                id: setupId,
+                method: "update",
+                data,
+            });
+        }
+
+        setMsg(res?.data.msg);
+        setMsgStatus(res?.data.success);
     };
 
     const addNewImage = () => {
@@ -180,24 +206,26 @@ function SingleRecordDialog({ open, onClose, setupId, rowRecord }) {
                             p: 0,
                         }}
                     >
-                        Trade in {rowRecord[".p"]}
+                        Trade in {rowRecord["col_p"]?.toUpperCase() || ""}
                     </DialogTitle>
-                    <Tooltip
-                        sx={{ maxWidth: 300 }}
-                        title="Sync this changes with parent document"
-                        placement="right"
-                        arrow
-                    >
-                        <FormControlLabel
-                            control={
-                                <Switch
-                                    checked={isSync}
-                                    onChange={handleChange}
-                                />
-                            }
-                            label="Sync"
-                        />
-                    </Tooltip>
+                    {isSetup && (
+                        <Tooltip
+                            sx={{ maxWidth: 300 }}
+                            title="Sync this changes with parent document"
+                            placement="right"
+                            arrow
+                        >
+                            <FormControlLabel
+                                control={
+                                    <Switch
+                                        checked={isSync}
+                                        onChange={handleChange}
+                                    />
+                                }
+                                label="Sync"
+                            />
+                        </Tooltip>
+                    )}
                 </Box>
 
                 <DialogContent sx={{ p: 4, pt: msg ? 1 : 4 }}>

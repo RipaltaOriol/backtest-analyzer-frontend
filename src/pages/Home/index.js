@@ -2,12 +2,10 @@ import GraphUpIcon from "assets/svg/graph_up.svg";
 import LogoIcon from "assets/svg/layers-triple.svg";
 import MultipleUsersIcon from "assets/svg/multiple_users.svg";
 import RoundedStatsIcon from "assets/svg/rounded_stats.svg";
-import Main from "assets/svg/section1_main.svg";
 import LogoTitle from "common/LogoTitle";
-import { Link, Outlet } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import ArrowForwardIosRoundedIcon from "@mui/icons-material/ArrowForwardIosRounded";
-import HelpIcon from "@mui/icons-material/Help";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -114,7 +112,7 @@ const useStyles = makeStyles({
 
 const HomeAppbar = (props) => {
     const classes = useStyles();
-    const { children, window } = props;
+    const { window } = props;
 
     const trigger = useScrollTrigger({
         disableHysteresis: true,
@@ -342,6 +340,7 @@ const Home = (props) => {
                                 <img
                                     src={MultipleUsersIcon}
                                     className="workflow-grid-icons"
+                                    alt="workflow-user-icons"
                                 />
                                 <Typography
                                     variant="h4"
@@ -376,6 +375,7 @@ const Home = (props) => {
                                 <img
                                     src={RoundedStatsIcon}
                                     className="workflow-grid-icons"
+                                    alt="workflow-rounded-stats-icons"
                                 />
                                 <Typography
                                     variant="h4"
@@ -412,6 +412,7 @@ const Home = (props) => {
                                 <img
                                     src={GraphUpIcon}
                                     className="workflow-grid-icons"
+                                    alt="workflow-graph-up-icons"
                                 />
                                 <Typography
                                     variant="h4"

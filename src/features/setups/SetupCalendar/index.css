@@ -1,0 +1,65 @@
+.calendar-grid {
+    border-bottom: 1px solid grey;
+    border-right: 1px solid grey;
+}
+
+.calendar-grid-top {
+    border-top: 1px solid grey;
+}
+
+.calendar-grid-left {
+    border-left: 1px solid grey;
+}
+
+.calendar-day-text {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+}
+
+.not-current-month {
+    background-color: rgb(225, 225, 225) !important;
+}
+
+.current-day {
+    color: #0e73f6;
+    background-color: #d7edff;
+    border-radius: 5px;
+}
+
+.border-top-left {
+    border-top-left-radius: 5px;
+}
+
+.border-top-right {
+    border-top-right-radius: 5px;
+}
+
+.border-bottom-left {
+    border-bottom-left-radius: 5px;
+}
+
+.border-bottom-right {
+    border-bottom-right-radius: 5px;
+}
+
+.trade {
+    border-radius: 5px;
+}
+
+.trade-loss {
+    background-color: #ffbfbf;
+    color: black;
+}
+
+.trade-win {
+    background-color: #c4f5c4;
+    color: black;
+}
+
+.trade-be {
+    background-color: #ffe9cc;
+    color: black;
+}

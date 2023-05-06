@@ -1,6 +1,5 @@
 import { Link, Outlet } from "react-router-dom";
 
-import HelpIcon from "@mui/icons-material/Help";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";

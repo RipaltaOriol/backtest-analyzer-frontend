@@ -22,7 +22,12 @@ let SetupView = ({ setup }) => {
     const [open, setOpen] = useState(false);
     const [selectedRow, setSelectedRow] = useState({});
 
-    const { data, isSuccess } = useGetChartsQuery({ setupId: setup?.id });
+    const { data, isSuccess } = useGetChartsQuery(
+        {
+            setupId: setup?.id,
+        },
+        { skip: !setup?.id }
+    );
 
     if (isSuccess) {
         if (data) {
@@ -61,7 +66,7 @@ let SetupView = ({ setup }) => {
                     {setup?.id && <ScatterGraph setupId={setup?.id} />}
                 </Grid>
                 <Grid item xs={6}>
-                    <SimpleTable id={setup?.id} />
+                    {setup?.id && <SimpleTable id={setup?.id} />}
                 </Grid>
                 <Grid item xs={6}>
                     <Notes setupId={setup?.id} notes={setup?.notes} />

@@ -1,9 +1,8 @@
 import { useRef } from "react";
 import { A11y, Navigation, Pagination, Scrollbar } from "swiper";
-import "swiper/modules/navigation/navigation.min.css";
-// Import Swiper styles
-// import "swiper/css";
-import "swiper/modules/pagination/pagination.min.css";
+// import Swiper styles
+import "swiper/css/navigation";
+import "swiper/css/pagination";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/swiper.min.css";
 

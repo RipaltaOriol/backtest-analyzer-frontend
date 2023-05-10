@@ -16,13 +16,14 @@ img {
     background-image: url(../../assets/svg/section1_background.svg);
     background-repeat: no-repeat;
     background-size: cover;
-    background-position: bottom;
+    background-position: center center;
 }
 
 #section-2 {
     background-image: url(../../assets/svg/section2_background.svg);
     background-repeat: no-repeat;
     background-size: cover;
+    background-position: center center;
 }
 
 .span-buble {
@@ -34,41 +35,41 @@ img {
     line-height: 16px;
     /* identical to box height, or 114% */
     letter-spacing: -0.01em;
-    color: #2B61FF;
+    color: #2b61ff;
 }
 
 .h2-subtitle {
-    font-weight: 700!important;
-    font-size: 2.5rem!important;
-    line-height: 48px!important;
+    font-weight: 700 !important;
+    font-size: 2.5rem !important;
+    line-height: 48px !important;
     /* identical to box height, or 120% */
-    letter-spacing: -0.01em!important;
-    color: #252C32;
+    letter-spacing: -0.01em !important;
+    color: #252c32;
 }
 
 .h4-subtitle {
-    font-weight: 500!important;
-    font-size: 1.25rem!important;
-    line-height: 156%!important;
+    font-weight: 500 !important;
+    font-size: 1.25rem !important;
+    line-height: 156% !important;
     /* or 31px */
-    letter-spacing: -0.02em!important;
+    letter-spacing: -0.02em !important;
     color: #fff;
 }
 
 .h5-placeholder {
-    font-size: 1.25rem!important;
-    line-height: 125%!important;
+    font-size: 1.25rem !important;
+    line-height: 125% !important;
     /* identical to box height, or 25px */
-    letter-spacing: -0.02em!important;
+    letter-spacing: -0.02em !important;
 }
 
 .blue-highlights {
-    color: #2B61FF;
+    color: #2b61ff;
 }
 
 .workflow-grid-icons {
     width: 80px;
     height: 54px;
     position: relative;
-    left: -1.5rem
+    left: -1.5rem;
 }

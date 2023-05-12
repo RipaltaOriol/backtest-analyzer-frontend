@@ -11,7 +11,6 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import Divider from "@mui/material/Divider";
-import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
@@ -28,11 +27,12 @@ import FAQ from "./FAQ";
 import "./Home.css";
 
 // TODO: is this paper necessary?
-const Item = styled(Paper)({
+const Item = styled(Box)({
     display: "flex",
     flexDirection: "column",
     background: "#FFFFFF",
     borderRadius: "12px",
+    border: "1px solid #E1E4E8",
 });
 
 const OrangeButton = styled(Button)({
@@ -246,63 +246,60 @@ const Home = (props) => {
                             <span className="blue-highlights">Features</span>
                         </Typography>
                     </Box>
-                    <Grid container spacing={2}>
-                        <Grid item xs={4}>
-                            <Item sx={{ p: 3 }}>
-                                <Typography variant="h4">1. Filter</Typography>
-                                <Box sx={{ my: 1.5 }}>
-                                    <img src={HomeFilter} alt="Change" />
-                                </Box>
-                                <Typography sx={{ mb: 2 }}>
-                                    Dive deep into your data and isolate
-                                    different metrics to differentiate what is
-                                    working from what is not.
-                                </Typography>
-                                <Typography>
-                                    Apply differentent layers and generate
-                                    multiple scenario to generat leads.
-                                </Typography>
-                            </Item>
-                        </Grid>
-                        <Grid item xs={4}>
-                            <Item sx={{ p: 3 }}>
-                                <Typography variant="h4">2. Observe</Typography>
-                                <Box sx={{ my: 1.5 }}>
-                                    <img src={HomeObserve} alt="Change" />
-                                </Box>
-                                <Typography sx={{ mb: 2 }}>
-                                    Use our representative tables to observe
-                                    what is your data and find what you are
-                                    looking for.
-                                </Typography>
-                                <Typography>
-                                    Write custom notes to record your thought
-                                    process and keep track of what you are
-                                    looking for.
-                                </Typography>
-                            </Item>
-                        </Grid>
-                        <Grid item xs={4}>
-                            <Item sx={{ p: 3 }}>
-                                <Typography variant="h4">
-                                    3. Visualise
-                                </Typography>
-                                <Box sx={{ my: 1.5 }}>
-                                    <img src={HomeVisualise} alt="Change" />
-                                </Box>
-                                <Typography sx={{ mb: 2 }}>
-                                    Be able to visualise your data through our
-                                    graphs and get a better sense of what your
-                                    data looks like.
-                                </Typography>
-                                <Typography>
-                                    If you also have screenshots of your trades
-                                    we offer image embeding to look at them as
-                                    you work on your data.
-                                </Typography>
-                            </Item>
-                        </Grid>
-                    </Grid>
+                    <Box
+                        sx={{
+                            display: "grid",
+                            gridTemplateColumns: "repeat(3, 1fr)",
+                            gap: 2,
+                        }}
+                    >
+                        <Item sx={{ p: 3 }}>
+                            <Typography variant="h4">1. Filter</Typography>
+                            <Box sx={{ my: 1.5 }}>
+                                <img src={HomeFilter} alt="Change" />
+                            </Box>
+                            <Typography sx={{ mb: 2 }}>
+                                Dive deep into your data and isolate different
+                                metrics to differentiate what is working from
+                                what is not.
+                            </Typography>
+                            <Typography>
+                                Apply differentent layers and generate multiple
+                                scenario to generat leads.
+                            </Typography>
+                        </Item>
+                        <Item sx={{ p: 3 }}>
+                            <Typography variant="h4">2. Observe</Typography>
+                            <Box sx={{ my: 1.5 }}>
+                                <img src={HomeObserve} alt="Change" />
+                            </Box>
+                            <Typography sx={{ mb: 2 }}>
+                                Use our representative tables to observe what is
+                                your data and find what you are looking for.
+                            </Typography>
+                            <Typography>
+                                Write custom notes to record your thought
+                                process and keep track of what you are looking
+                                for.
+                            </Typography>
+                        </Item>
+                        <Item sx={{ p: 3 }}>
+                            <Typography variant="h4">3. Visualise</Typography>
+                            <Box sx={{ my: 1.5 }}>
+                                <img src={HomeVisualise} alt="Change" />
+                            </Box>
+                            <Typography sx={{ mb: 2 }}>
+                                Be able to visualise your data through our
+                                graphs and get a better sense of what your data
+                                looks like.
+                            </Typography>
+                            <Typography>
+                                If you also have screenshots of your trades we
+                                offer image embeding to look at them as you work
+                                on your data.
+                            </Typography>
+                        </Item>
+                    </Box>
                 </Container>
             </Box>
 
@@ -327,116 +324,114 @@ const Home = (props) => {
                             <span className="blue-highlights">Workflow</span>
                         </Typography>
                     </Box>
-                    <Grid container spacing={2}>
+                    <Box
+                        sx={{
+                            display: "grid",
+                            gridTemplateColumns: "repeat(3, 1fr)",
+                            gap: 2,
+                        }}
+                    >
                         {/* TODO: missing height 100% - upgrading MUI v5.0 contains a better way */}
-                        <Grid item xs={4}>
-                            <Box
-                                sx={{
-                                    border: "1px solid #E1E4E8",
-                                    borderRadius: "12px",
-                                    p: 3,
-                                }}
+                        <Box
+                            sx={{
+                                border: "1px solid #E1E4E8",
+                                borderRadius: "12px",
+                                p: 3,
+                            }}
+                        >
+                            <img
+                                src={MultipleUsersIcon}
+                                className="workflow-grid-icons"
+                                alt="workflow-user-icons"
+                            />
+                            <Typography
+                                variant="h4"
+                                sx={{ fontSize: "1.8rem", my: 2 }}
                             >
-                                <img
-                                    src={MultipleUsersIcon}
-                                    className="workflow-grid-icons"
-                                    alt="workflow-user-icons"
-                                />
-                                <Typography
-                                    variant="h4"
-                                    sx={{ fontSize: "1.8rem", my: 2 }}
-                                >
-                                    Create Multiple Instances
-                                </Typography>
-                                <Typography sx={{ mb: 3 }}>
-                                    Generate different versions of your backtest
-                                    data and study them individually
-                                </Typography>
-                                <LearnButton
-                                    sx={{ px: 1.5 }}
-                                    size="small"
-                                    disableRipple
-                                    endIcon={
-                                        <ArrowForwardIosRoundedIcon fontSize="small" />
-                                    }
-                                >
-                                    Learn More
-                                </LearnButton>
-                            </Box>
-                        </Grid>
-                        <Grid item xs={4}>
-                            <Box
-                                sx={{
-                                    border: "1px solid #E1E4E8",
-                                    borderRadius: "12px",
-                                    p: 3,
-                                }}
+                                Create Multiple Instances
+                            </Typography>
+                            <Typography sx={{ mb: 3 }}>
+                                Generate different versions of your backtest
+                                data and study them individually
+                            </Typography>
+                            <LearnButton
+                                sx={{ px: 1.5 }}
+                                size="small"
+                                disableRipple
+                                endIcon={
+                                    <ArrowForwardIosRoundedIcon fontSize="small" />
+                                }
                             >
-                                <img
-                                    src={RoundedStatsIcon}
-                                    className="workflow-grid-icons"
-                                    alt="workflow-rounded-stats-icons"
-                                />
-                                <Typography
-                                    variant="h4"
-                                    sx={{ fontSize: "1.8rem", my: 2 }}
-                                >
-                                    Study your Data
-                                </Typography>
-                                <Typography sx={{ mb: 3 }}>
-                                    Utilise all of our tools to study your
-                                    backtest in the way that best fits your
-                                    needs
-                                </Typography>
-                                <LearnButton
-                                    sx={{ px: 1.5 }}
-                                    size="small"
-                                    disableRipple
-                                    endIcon={
-                                        <ArrowForwardIosRoundedIcon fontSize="small" />
-                                    }
-                                >
-                                    Learn More
-                                </LearnButton>
-                            </Box>
-                        </Grid>
-                        <Grid item xs={4}>
-                            <Box
-                                sx={{
-                                    border: "1px solid #E1E4E8",
-                                    borderRadius: "12px",
-                                    p: 3,
-                                    height: "100%",
-                                }}
+                                Learn More
+                            </LearnButton>
+                        </Box>
+                        <Box
+                            sx={{
+                                border: "1px solid #E1E4E8",
+                                borderRadius: "12px",
+                                p: 3,
+                            }}
+                        >
+                            <img
+                                src={RoundedStatsIcon}
+                                className="workflow-grid-icons"
+                                alt="workflow-rounded-stats-icons"
+                            />
+                            <Typography
+                                variant="h4"
+                                sx={{ fontSize: "1.8rem", my: 2 }}
                             >
-                                <img
-                                    src={GraphUpIcon}
-                                    className="workflow-grid-icons"
-                                    alt="workflow-graph-up-icons"
-                                />
-                                <Typography
-                                    variant="h4"
-                                    sx={{ fontSize: "1.8rem", my: 2 }}
-                                >
-                                    Improve and Repeat
-                                </Typography>
-                                <Typography sx={{ mb: 3 }}>
-                                    Come up with leads for your next backtest
-                                    and improve your strategy
-                                </Typography>
-                                <LearnButton
-                                    sx={{ px: 1.5 }}
-                                    size="small"
-                                    disableRipple
-                                    endIcon={
-                                        <ArrowForwardIosRoundedIcon fontSize="small" />
-                                    }
-                                >
-                                    Learn More
-                                </LearnButton>
-                            </Box>
-                        </Grid>
-                    </Grid>
+                                Study your Data
+                            </Typography>
+                            <Typography sx={{ mb: 3 }}>
+                                Utilise all of our tools to study your backtest
+                                in the way that best fits your needs
+                            </Typography>
+                            <LearnButton
+                                sx={{ px: 1.5 }}
+                                size="small"
+                                disableRipple
+                                endIcon={
+                                    <ArrowForwardIosRoundedIcon fontSize="small" />
+                                }
+                            >
+                                Learn More
+                            </LearnButton>
+                        </Box>
+                        <Box
+                            sx={{
+                                border: "1px solid #E1E4E8",
+                                borderRadius: "12px",
+                                p: 3,
+                            }}
+                        >
+                            <img
+                                src={GraphUpIcon}
+                                className="workflow-grid-icons"
+                                alt="workflow-graph-up-icons"
+                            />
+                            <Typography
+                                variant="h4"
+                                sx={{ fontSize: "1.8rem", my: 2 }}
+                            >
+                                Improve and Repeat
+                            </Typography>
+                            <Typography sx={{ mb: 3 }}>
+                                Come up with leads for your next backtest and
+                                improve your strategy
+                            </Typography>
+                            <LearnButton
+                                sx={{ px: 1.5 }}
+                                size="small"
+                                disableRipple
+                                endIcon={
+                                    <ArrowForwardIosRoundedIcon fontSize="small" />
+                                }
+                            >
+                                Learn More
+                            </LearnButton>
+                        </Box>
+                    </Box>
                 </Container>
             </Box>
 

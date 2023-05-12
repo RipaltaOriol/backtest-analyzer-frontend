@@ -2,6 +2,8 @@
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 
 import { ThemeProvider } from "@mui/material";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 import theme from "./assets/utils/theme";
 import HomeBar from "./common/HomeBar";
@@ -22,45 +24,50 @@ import Upload from "./pages/upload";
 function App() {
     return (
         <ThemeProvider theme={theme}>
-            <Router>
-                <Routes>
-                    <Route path="/" exact element={<Home />} />
-                    <Route element={<HomeBar />}>
-                        <Route path="/login" element={<Login />} />
-                        <Route path="/guide" element={<Help />} />
-                    </Route>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <Router>
+                    <Routes>
+                        <Route path="/" exact element={<Home />} />
+                        <Route element={<HomeBar />}>
+                            <Route path="/login" element={<Login />} />
+                            <Route path="/guide" element={<Help />} />
+                        </Route>
 
-                    <Route element={<PersistLogin />}>
-                        <Route element={<RequireAuth />}>
-                            <Route element={<Layout />}>
-                                <Route path="upload" element={<Upload />} />
-                                <Route
-                                    path="files"
-                                    element={<AllDocuments />}
-                                />
-                                <Route
-                                    path="files/update/:documentId"
-                                    element={<UpdateDocument />}
-                                />
-                                <Route path="setups" element={<AllSetups />} />
-                                <Route path="help" element={<Help />} />
-                                <Route
-                                    path=":documentId/compare"
-                                    element={<SetupsCompare />}
-                                />
-                                <Route
-                                    path=":documentId/calendar"
-                                    element={<SetupCalendar />}
-                                />
-                                <Route
-                                    path=":documentId"
-                                    element={<Analysis />}
-                                />
+                        <Route element={<PersistLogin />}>
+                            <Route element={<RequireAuth />}>
+                                <Route element={<Layout />}>
+                                    <Route path="upload" element={<Upload />} />
+                                    <Route
+                                        path="files"
+                                        element={<AllDocuments />}
+                                    />
+                                    <Route
+                                        path="files/update/:documentId"
+                                        element={<UpdateDocument />}
+                                    />
+                                    <Route
+                                        path="setups"
+                                        element={<AllSetups />}
+                                    />
+                                    <Route path="help" element={<Help />} />
+                                    <Route
+                                        path=":documentId/compare"
+                                        element={<SetupsCompare />}
+                                    />
+                                    <Route
+                                        path=":documentId/calendar"
+                                        element={<SetupCalendar />}
+                                    />
+                                    <Route
+                                        path=":documentId"
+                                        element={<Analysis />}
+                                    />
+                                </Route>
                             </Route>
                         </Route>
-                    </Route>
-                </Routes>
-            </Router>
+                    </Routes>
+                </Router>
+            </LocalizationProvider>
         </ThemeProvider>
     );
 }

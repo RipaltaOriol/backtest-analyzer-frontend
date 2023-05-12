@@ -2,6 +2,7 @@ import ImagesCarousel from "common/ImageCarousel";
 import ImagePreviewDialog from "common/ImagePreviewDialog";
 import Message from "common/Message";
 import TipTapEditor, { useTextEditor } from "common/TipTapEditor";
+import dayjs from "dayjs";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
@@ -16,6 +17,7 @@ import InputAdornment from "@mui/material/InputAdornment";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { styled } from "@mui/system";
+import { DateTimeField } from "@mui/x-date-pickers/DateTimeField";
 
 import DocumentTable from "features/documents/DocumentTable";
 import { selectDocumentById } from "features/documents/documentSlice";
@@ -135,6 +137,10 @@ const UpdateDocument = () => {
         setRowValues({ ...rowValues, [key]: newValue });
     };
 
+    const handleDateTimeChange = (key, newValue) => {
+        setRowValues({ ...rowValues, [key]: newValue.toISOString() });
+    };
+
     const cancelUpdate = () => {
         editor?.commands.setContent("");
         setSelectedRow({});
@@ -175,6 +181,53 @@ const UpdateDocument = () => {
             imgs: newImages,
         });
     };
+
+    function updateDocumentTextField(column, idx) {
+        if (column.name !== "note" && column.name !== "imgs") {
+            if (column.id.startsWith("col_d")) {
+                return (
+                    <Grid item>
+                        <DateTimeField
+                            key={idx}
+                            variant="outlined"
+                            size="small"
+                            value={
+                                rowValues[column.id] == null
+                                    ? null
+                                    : dayjs(rowValues[column.id]) || null
+                            }
+                            onChange={(newValue) =>
+                                handleDateTimeChange(column.id, newValue)
+                            }
+                            label={column.name}
+                            step={0.5}
+                        />
+                    </Grid>
+                );
+            } else {
+                return (
+                    <Grid item>
+                        <TextField
+                            key={idx}
+                            label={column.name}
+                            type={column.type}
+                            variant="outlined"
+                            value={
+                                rowValues?.[column.id] === 0
+                                    ? 0
+                                    : rowValues[column.id] || ""
+                            }
+                            onChange={handleChange(column.id)}
+                            size="small"
+                            step={0.5}
+                        />
+                    </Grid>
+                );
+            }
+        } else {
+            return null;
+        }
+    }
 
     return (
         <Box sx={{ display: "block", width: "calc(100% - 200px)" }}>
@@ -226,38 +279,10 @@ const UpdateDocument = () => {
                                 {/* have one for ID which cannot be changed */}
                                 {data
                                     ? data.map((column, idx) => {
-                                          if (
-                                              column.name !== "note" &&
-                                              column.name !== "imgs"
-                                          ) {
-                                              return (
-                                                  <Grid item>
-                                                      <TextField
-                                                          key={idx}
-                                                          label={column.name}
-                                                          type={column.type}
-                                                          variant="outlined"
-                                                          value={
-                                                              rowValues?.[
-                                                                  column.id
-                                                              ] === 0
-                                                                  ? 0
-                                                                  : rowValues[
-                                                                        column
-                                                                            .id
-                                                                    ] || ""
-                                                          }
-                                                          onChange={handleChange(
-                                                              column.id
-                                                          )}
-                                                          size="small"
-                                                          step={0.5}
-                                                      />
-                                                  </Grid>
-                                              );
-                                          } else {
-                                              return null;
-                                          }
+                                          return updateDocumentTextField(
+                                              column,
+                                              idx
+                                          );
                                       })
                                     : null}
                             </Grid>

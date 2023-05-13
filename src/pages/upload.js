@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { memo, useState } from "react";
 
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import UploadFileRoundedIcon from "@mui/icons-material/UploadFileRounded";
@@ -29,7 +29,7 @@ const UploadBox = styled(Box)({
 });
 
 // TODO: this should be a component not a page
-const Upload = ({ open, onClose }) => {
+const Upload = memo(({ open, onClose }) => {
     const [msg, setMsg] = useState("");
     const [file, setFile] = useState("");
     const [isError, setIsError] = useState(false);
@@ -205,6 +205,6 @@ const Upload = ({ open, onClose }) => {
             </DialogContent>
         </Dialog>
     );
-};
+});
 
 export default Upload;

@@ -7,10 +7,20 @@ import {
     Title,
     Tooltip,
 } from "chart.js";
+import autocolors from "chartjs-plugin-autocolors";
 import { Bar } from "react-chartjs-2";
+import { useDispatch, useSelector } from "react-redux";
 
 import Box from "@mui/material/Box";
+import MenuItem from "@mui/material/MenuItem";
+import Select from "@mui/material/Select";
 import Typography from "@mui/material/Typography";
+import { styled } from "@mui/material/styles";
+
+import {
+    selectCurrentMetric,
+    setCurrentMetric,
+} from "features/graphs/barGraphSlice";
 
 import { useGetGraphQuery } from "./graphsSlice";
 
@@ -20,42 +30,71 @@ ChartJS.register(
     BarElement,
     Title,
     Tooltip,
-    Legend
+    Legend,
+    autocolors
 );
 
-const colors = ["#C479F3", "#38D9B9", "#F39C87", "#59A7FF"];
-
-const options = {
-    scales: {
-        y: {
-            title: {
-                display: true,
-                text: "Result",
-            },
-        },
-        x: {
-            title: {
-                display: true,
-                text: "",
-            },
+const FilterMenuItem = styled(MenuItem)({
+    fontSize: "14px",
+    borderRadius: "6px",
+    "&:hover": {
+        color: "#0E73F6",
+        backgroundColor: "#D7EDFF",
+    },
+    "&:focus": {
+        color: "inherit",
+        backgroundColor: "inherit",
+    },
+    "&.Mui-selected": {
+        "&:focus": {
+            color: "inherit",
+            backgroundColor: "inherit",
         },
     },
-    plugins: {
-        legend: {
-            labels: {
-                usePointStyle: true,
-            },
-        },
+    "&:hover:focus": {
+        color: "#0E73F6",
+        backgroundColor: "#D7EDFF",
     },
-};
+});
 
 const BarGraph = ({ setupId }) => {
+    const dispatch = useDispatch();
+    const currentMetric = useSelector(selectCurrentMetric);
+
+    let options = {
+        scales: {
+            y: {
+                title: {
+                    display: true,
+                    text: "Result",
+                },
+            },
+            x: {
+                title: {
+                    display: true,
+                    text: "",
+                },
+            },
+        },
+        plugins: {
+            legend: {
+                labels: {
+                    usePointStyle: true,
+                },
+            },
+        },
+    };
+
     const barData = {
         labels: [],
         datasets: [],
     };
 
-    const { data, isSuccess } = useGetGraphQuery({ setupId, type: "bar" });
+    const { data, isSuccess } = useGetGraphQuery({
+        setupId,
+        type: "bar",
+        currentMetric: currentMetric,
+    });
 
     if (isSuccess) {
         barData.labels = data?.dataLabels;
@@ -63,19 +102,56 @@ const BarGraph = ({ setupId }) => {
         data?.data.forEach((dataset, idx) => {
             barDatasets.push({
                 ...dataset,
-                backgroundColor: colors[idx % colors.length],
                 barThickness: 30,
             });
         });
         barData.datasets = barDatasets;
-        options.scales.x.title.text = data.labels.axes;
+        options.scales.x.title.text = String(data.labels.axes);
     }
 
     return (
         <Box sx={{ border: "1px solid #E5E9EB", borderRadius: "6px", p: 2 }}>
-            <Typography align="center">
-                {data?.labels?.title || "Loading"}
-            </Typography>
+            <Box
+                sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    position: "relative",
+                    my: 1,
+                }}
+            >
+                <Typography align="center">
+                    {data?.labels?.title || "Loading"}
+                </Typography>
+                <Select
+                    size="small"
+                    value={data?.active_metric || ""}
+                    onChange={(e) =>
+                        dispatch(
+                            setCurrentMetric({ currentMetric: e.target.value })
+                        )
+                    }
+                    sx={{
+                        "& legend": { display: "none" },
+                        "& fieldset": { top: 0 },
+                        "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                            borderColor: "inherit",
+                            borderWidth: "1px",
+                        },
+                        position: "absolute",
+                        right: 0,
+                    }}
+                >
+                    {data
+                        ? data?.metric_list.map(([metric, parsedDate], idx) => (
+                              <FilterMenuItem key={idx} id={idx} value={metric}>
+                                  {parsedDate}
+                              </FilterMenuItem>
+                          ))
+                        : null}
+                </Select>
+            </Box>
+
             <Bar options={options} data={barData} />
         </Box>
     );

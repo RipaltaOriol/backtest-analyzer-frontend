@@ -52,7 +52,16 @@ const SimpleTable = ({ id }) => {
                             {Object.keys(row).reduce((result, cell, idx) => {
                                 if (cell !== "stat") {
                                     result.push(
-                                        <TableCell key={idx} align="center">
+                                        <TableCell
+                                            key={idx}
+                                            align="center"
+                                            sx={{
+                                                color:
+                                                    row[cell] < 0
+                                                        ? "red"
+                                                        : "inherit",
+                                            }}
+                                        >
                                             {row[cell].toFixed(3)}
                                         </TableCell>
                                     );

@@ -4,17 +4,15 @@ import { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 
-import LineChart from "../../common/LineChart";
 import PieChart from "../../common/PieChart";
 import SimpleTable from "../../common/SimpleTable";
 import Notes from "../../pages/Analysis/Notes";
 import BarGraph from "../graphs/BarGraph";
+import LineGraph from "../graphs/LineGraph";
 import ScatterGraph from "../graphs/ScatterGraph";
 import { useGetChartsQuery } from "../statistics/statisticsApiSlice";
 import SingleRecordDialog from "./SingleSetup/SingleRecordDialog";
 import FilterList from "./filters/FilterList";
-
-let dataLineChart = {};
 
 let dataPieChart = {};
 
@@ -31,7 +29,6 @@ let SetupView = ({ setup }) => {
 
     if (isSuccess) {
         if (data) {
-            dataLineChart = data.line;
             dataPieChart = data.pie;
         }
     }
@@ -46,7 +43,7 @@ let SetupView = ({ setup }) => {
 
             <Grid container spacing={2}>
                 <Grid item xs={8}>
-                    <LineChart dataLineChart={dataLineChart} />
+                    {setup?.id && <LineGraph setupId={setup?.id} />}
                 </Grid>
                 <Grid item xs={4}>
                     <Box

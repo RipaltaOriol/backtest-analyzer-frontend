@@ -1,13 +1,15 @@
 import {
+    CategoryScale,
     Chart as ChartJS,
     Legend,
     LineElement,
     LinearScale,
     PointElement,
+    Title,
     Tooltip,
 } from "chart.js";
 import autocolors from "chartjs-plugin-autocolors";
-import { Scatter } from "react-chartjs-2";
+import { Line } from "react-chartjs-2";
 import { useDispatch, useSelector } from "react-redux";
 
 import Box from "@mui/material/Box";
@@ -19,14 +21,16 @@ import { styled } from "@mui/material/styles";
 import {
     selectCurrentMetric,
     setCurrentMetric,
-} from "features/graphs/scatterGraphSlice";
+} from "features/graphs/lineGraphSlice";
 
 import { useGetGraphQuery } from "./graphsSlice";
 
 ChartJS.register(
+    CategoryScale,
     LinearScale,
     PointElement,
     LineElement,
+    Title,
     Tooltip,
     Legend,
     autocolors
@@ -55,25 +59,19 @@ const FilterMenuItem = styled(MenuItem)({
     },
 });
 
-const ScatterGraph = ({ setupId }) => {
+const LineGraph = ({ setupId }) => {
     const dispatch = useDispatch();
     const currentMetric = useSelector(selectCurrentMetric);
 
-    let scatterData = {
-        datasets: [],
-    };
-
-    const options = {
+    let options = {
         scales: {
             y: {
-                beginAtZero: true,
                 title: {
                     display: true,
-                    text: "Result",
+                    text: "Equity",
                 },
             },
             x: {
-                beginAtZero: true,
                 title: {
                     display: true,
                     text: "",
@@ -91,20 +89,25 @@ const ScatterGraph = ({ setupId }) => {
 
     const { data, isSuccess } = useGetGraphQuery({
         setupId,
-        type: "scatter",
+        type: "line",
         currentMetric: currentMetric,
     });
 
+    const lineData = {
+        labels: [],
+        datasets: [],
+    };
     if (isSuccess) {
-        let scatterDatasets = [];
+        lineData.labels = data?.xLabels;
+
+        let lineDatasets = [];
         data?.data.forEach((dataset, idx) => {
-            scatterDatasets.push({
+            lineDatasets.push({
                 ...dataset,
-                pointRadius: 5,
             });
         });
-        scatterData.datasets = scatterDatasets;
-        options.scales.x.title.text = data.labels.axes;
+        lineData.datasets = lineDatasets;
+        options.scales.x.title.text = String(data.labels.axes);
     }
 
     return (
@@ -149,9 +152,10 @@ const ScatterGraph = ({ setupId }) => {
                         : null}
                 </Select>
             </Box>
-            <Scatter options={options} data={scatterData} />
+
+            <Line data={lineData} options={options} />
         </Box>
     );
 };
 
-export default ScatterGraph;
+export default LineGraph;

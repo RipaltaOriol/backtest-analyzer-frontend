@@ -1,6 +1,7 @@
 import dayjs from "dayjs";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
+import { getResultAdornment } from "utils";
 
 import { Typography } from "@mui/material";
 import Box from "@mui/material/Box";
@@ -153,8 +154,11 @@ const Day = ({ day, rowIdx, cellIdx }) => {
                             <Typography>
                                 {trade[PAIR_METRIC].toUpperCase()}
                             </Typography>
-                            <Typography>
-                                {trade[data?.active_metric]}
+                            <Typography
+                                onClick={() => console.log(data?.active_metric)}
+                            >
+                                {trade[data?.active_metric]}{" "}
+                                {getResultAdornment(data?.active_metric)}
                             </Typography>
                         </Box>
                     ))}

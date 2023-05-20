@@ -19,6 +19,7 @@ import Analysis from "./pages/Analysis";
 import Help from "./pages/Help";
 import Home from "./pages/Home";
 import Login from "./pages/login";
+import Settings from "./pages/settings";
 import Upload from "./pages/upload";
 
 function App() {
@@ -61,6 +62,10 @@ function App() {
                                     <Route
                                         path=":documentId"
                                         element={<Analysis />}
+                                    />
+                                    <Route
+                                        path="settings"
+                                        element={<Settings />}
                                     />
                                 </Route>
                             </Route>

@@ -46,6 +46,7 @@ const SimpleTable = ({ id }) => {
                     <TableRow sx={{ fontSize: "14px" }}>{tableRows}</TableRow>
                 </TableHead>
                 <TableBody>
+                    {/* optimise this loop */}
                     {tableData.map((row, idx) => (
                         <TableRow key={idx} hover>
                             <TableCell>{row.stat}</TableCell>

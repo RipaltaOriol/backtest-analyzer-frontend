@@ -5,6 +5,7 @@ import Message from "common/Message";
 import TipTapEditor, { useTextEditor } from "common/TipTapEditor";
 import { EditorView } from "prosemirror-view";
 import { useEffect, useState } from "react";
+import { getResultAdornment } from "utils";
 import parseColumnName from "utils/parseColumns";
 
 import CloudUploadOutlinedIcon from "@mui/icons-material/CloudUploadOutlined";
@@ -90,7 +91,7 @@ function isMetric(metric) {
 }
 
 function isResultColumn(column) {
-    return column.startsWith("col_r");
+    return new RegExp("col_[vpr]_").test(column);
 }
 
 function SingleRecordDialog({
@@ -266,7 +267,7 @@ function SingleRecordDialog({
                                     <FieldText>
                                         Risk Reward
                                         <HighlightText>
-                                            {rowRecord?.col_m_RRR ?? "NA"}
+                                            {rowRecord?.col_rr ?? "NA"}
                                         </HighlightText>
                                     </FieldText>
                                     {rowRecord &&
@@ -278,9 +279,20 @@ function SingleRecordDialog({
                                                             {parseColumnName(
                                                                 key
                                                             )}
-                                                            <HighlightText>
+                                                            <HighlightText
+                                                                onClick={() =>
+                                                                    console.log(
+                                                                        getResultAdornment(
+                                                                            key
+                                                                        )
+                                                                    )
+                                                                }
+                                                            >
                                                                 {/* todo: change this */}
-                                                                {value}
+                                                                {value}{" "}
+                                                                {getResultAdornment(
+                                                                    key
+                                                                )}
                                                             </HighlightText>
                                                         </FieldText>
                                                     );

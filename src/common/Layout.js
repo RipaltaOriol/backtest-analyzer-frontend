@@ -7,6 +7,7 @@ import HelpIcon from "@mui/icons-material/Help";
 import Inventory2RoundedIcon from "@mui/icons-material/Inventory2Rounded";
 import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
 import LogoutIcon from "@mui/icons-material/Logout";
+import SettingsIcon from "@mui/icons-material/Settings";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -95,6 +96,12 @@ const assistance = [
         name: "Help",
         url: "/help",
         icon: <HelpIcon />,
+    },
+    {
+        id: "settings",
+        name: "Settings",
+        url: "/settings",
+        icon: <SettingsIcon />,
     },
 ];
 
@@ -208,8 +215,8 @@ export default function Layout() {
                     </Typography>
                     <DocumentBar />
                 </List>
-                <List sx={{ mt: "auto", mb: 2 }}>
-                    <Divider sx={{ mx: 1 }} />
+                <List sx={{ mt: "auto", mb: 1 }}>
+                    <Divider sx={{ mx: 1, mb: 1 }} />
                     {assistance.map((feat) => (
                         <DrawerItemButton
                             key={feat.name}

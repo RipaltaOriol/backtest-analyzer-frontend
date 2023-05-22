@@ -76,6 +76,10 @@ const LineGraph = ({ setupId }) => {
                     display: true,
                     text: "",
                 },
+                ticks: {
+                    autoSkip: true,
+                    maxRotation: 0,
+                },
             },
         },
         plugins: {

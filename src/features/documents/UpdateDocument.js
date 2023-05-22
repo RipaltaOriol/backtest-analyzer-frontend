@@ -138,7 +138,13 @@ const UpdateDocument = () => {
     };
 
     const handleDateTimeChange = (key, newValue) => {
-        setRowValues({ ...rowValues, [key]: newValue.toISOString() });
+        try {
+            setRowValues({ ...rowValues, [key]: newValue.toISOString() });
+        } catch (err) {
+            if (err instanceof RangeError) {
+                console.log(err);
+            }
+        }
     };
 
     const cancelUpdate = () => {

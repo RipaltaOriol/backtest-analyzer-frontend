@@ -16,6 +16,7 @@ import { selectAllDocuments } from "features/documents/documentSlice";
 import AddSetupDialog from "features/setups/AllSetups/AddSetupDialog";
 import RenameSetupDialog from "features/setups/AllSetups/RenameSetupDialog";
 import SetupOptionsDropdown from "features/setups/AllSetups/SetupOptionsDropdown";
+import { useUpdateSetupsMutation } from "features/setups/setupsSlice";
 import { useDeleteSetupsMutation } from "features/setups/setupsSlice";
 
 const DocumentGrid = styled(Grid)({
@@ -74,9 +75,15 @@ const AllSetups = () => {
         setOpenAddDialog(false);
     };
 
+    const handleDefault = () => {
+        setAnchorEl(null);
+        updateSetups({ setupId, isDefault: true });
+    };
+
     const orderedDocuments = useSelector(selectAllDocuments);
 
     const [deleteSetups] = useDeleteSetupsMutation();
+    const [updateSetups] = useUpdateSetupsMutation();
 
     const populateDocumentSetups = (setups) => {
         return (
@@ -110,7 +117,19 @@ const AllSetups = () => {
                                               sx={{ color: "#84919A" }}
                                           />
                                       </Box>
-                                      <Typography>{setup.name}</Typography>
+                                      <Box>
+                                          <Typography>{setup.name}</Typography>
+                                          {setup.isDefault && (
+                                              <Typography
+                                                  sx={{
+                                                      color: "#84919A",
+                                                      fontSize: "14px",
+                                                  }}
+                                              >
+                                                  Default
+                                              </Typography>
+                                          )}
+                                      </Box>
                                   </Box>
 
                                   <IconButton
@@ -178,6 +197,7 @@ const AllSetups = () => {
                 handleClose={handleClose}
                 handleRenameClose={handleRenameClose}
                 handleDelete={handleDelete}
+                handleDefault={handleDefault}
             />
         </Box>
     );

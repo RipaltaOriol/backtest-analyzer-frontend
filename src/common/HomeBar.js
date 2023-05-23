@@ -1,6 +1,5 @@
 import { Link, Outlet } from "react-router-dom";
 
-import HelpIcon from "@mui/icons-material/Help";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -12,6 +11,7 @@ import LogoIcon from "../assets/svg/layers-triple.svg";
 import LogoTitle from "./LogoTitle";
 
 const LoginButton = styled(Button)({
+    fontSize: "0.875rem",
     color: "#F6F8F9",
     backgroundColor: "#4094F7",
     borderRadius: "6px",
@@ -19,6 +19,8 @@ const LoginButton = styled(Button)({
 });
 
 const GuideButton = styled(Button)({
+    fontSize: "0.875rem",
+    fontWeight: "400",
     color: "#252C32",
     backgroundColor: "#FFFFFF",
     borderRadius: "6px",
@@ -47,7 +49,7 @@ const HomeBar = () => {
 
     return (
         <Box>
-            <AppBar>
+            <AppBar elevation={0} sx={{ py: 1, px: 5 }}>
                 <Toolbar>
                     <Box
                         sx={{ flexGrow: 1, display: "inline-flex" }}
@@ -74,7 +76,6 @@ const HomeBar = () => {
                             component={Link}
                             to="/guide"
                             variant="contained"
-                            startIcon={<HelpIcon sx={{ color: "#84919A" }} />}
                         >
                             Guide
                         </GuideButton>

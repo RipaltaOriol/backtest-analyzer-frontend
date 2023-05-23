@@ -32,7 +32,14 @@ export const documentsApiSlice = apiSlice.injectEndpoints({
                 method: "PUT",
                 body: { method, data },
             }),
-            invalidatesTags: ["DocumentTable", "Setup"], // maybe not invalidate all setups
+            invalidatesTags: [
+                "DocumentTable",
+                "CalendarTable",
+                "Setup",
+                "Stats",
+                "Graphs",
+                "Charts",
+            ], // maybe not invalidate all setups
         }),
         uploadDocument: builder.mutation({
             query: (file) => ({
@@ -75,6 +82,16 @@ export const documentsApiSlice = apiSlice.injectEndpoints({
                 params: metric ? { metric: metric } : null,
             }),
         }),
+        getCalendarTable: builder.query({
+            query: ({ documentId, metric = null, date = null }) => ({
+                url: `/documents/${documentId}/calendar`,
+                params: {
+                    metric: metric ? metric : undefined,
+                    date: date ? date : undefined,
+                },
+            }),
+            providesTags: ["CalendarTable"],
+        }),
     }),
 });
 
@@ -87,6 +104,7 @@ export const {
     useRenameDocumentMutation,
     useDeleteDocumentMutation,
     useCompareDocumentSetupsQuery,
+    useGetCalendarTableQuery,
     useGetDocumentColumnsQuery,
 } = documentsApiSlice;
 

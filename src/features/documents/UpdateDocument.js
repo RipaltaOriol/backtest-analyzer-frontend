@@ -2,7 +2,7 @@ import ImagesCarousel from "common/ImageCarousel";
 import ImagePreviewDialog from "common/ImagePreviewDialog";
 import Message from "common/Message";
 import TipTapEditor, { useTextEditor } from "common/TipTapEditor";
-import MaterialTable from "material-table";
+import dayjs from "dayjs";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
@@ -17,7 +17,9 @@ import InputAdornment from "@mui/material/InputAdornment";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { styled } from "@mui/system";
+import { DateTimeField } from "@mui/x-date-pickers/DateTimeField";
 
+import DocumentTable from "features/documents/DocumentTable";
 import { selectDocumentById } from "features/documents/documentSlice";
 import {
     useGetDocumentColumnsQuery,
@@ -25,7 +27,6 @@ import {
     useUpdateDocumentMutation,
 } from "features/documents/documentSlice";
 
-import tableIcons from "../../assets/utils/IconProvider";
 import "./Documents.css";
 
 const options = { year: "numeric", month: "numeric", day: "numeric" };
@@ -136,6 +137,16 @@ const UpdateDocument = () => {
         setRowValues({ ...rowValues, [key]: newValue });
     };
 
+    const handleDateTimeChange = (key, newValue) => {
+        try {
+            setRowValues({ ...rowValues, [key]: newValue.toISOString() });
+        } catch (err) {
+            if (err instanceof RangeError) {
+                console.log(err);
+            }
+        }
+    };
+
     const cancelUpdate = () => {
         editor?.commands.setContent("");
         setSelectedRow({});
@@ -176,6 +187,53 @@ const UpdateDocument = () => {
             imgs: newImages,
         });
     };
+
+    function updateDocumentTextField(column, idx) {
+        if (column.name !== "note" && column.name !== "imgs") {
+            if (column.id.startsWith("col_d")) {
+                return (
+                    <Grid item>
+                        <DateTimeField
+                            key={idx}
+                            variant="outlined"
+                            size="small"
+                            value={
+                                rowValues[column.id] == null
+                                    ? null
+                                    : dayjs(rowValues[column.id]) || null
+                            }
+                            onChange={(newValue) =>
+                                handleDateTimeChange(column.id, newValue)
+                            }
+                            label={column.name}
+                            step={0.5}
+                        />
+                    </Grid>
+                );
+            } else {
+                return (
+                    <Grid item>
+                        <TextField
+                            key={idx}
+                            label={column.name}
+                            type={column.type}
+                            variant="outlined"
+                            value={
+                                rowValues?.[column.id] === 0
+                                    ? 0
+                                    : rowValues[column.id] || ""
+                            }
+                            onChange={handleChange(column.id)}
+                            size="small"
+                            step={0.5}
+                        />
+                    </Grid>
+                );
+            }
+        } else {
+            return null;
+        }
+    }
 
     return (
         <Box sx={{ display: "block", width: "calc(100% - 200px)" }}>
@@ -224,41 +282,13 @@ const UpdateDocument = () => {
                                 noValidate
                                 autoComplete="off"
                             >
-                                {/* Have one for ID which cannot be changed */}
+                                {/* have one for ID which cannot be changed */}
                                 {data
                                     ? data.map((column, idx) => {
-                                          if (
-                                              column.name !== "note" &&
-                                              column.name !== "imgs"
-                                          ) {
-                                              return (
-                                                  <Grid item>
-                                                      <TextField
-                                                          key={idx}
-                                                          label={column.name}
-                                                          type={column.type}
-                                                          variant="outlined"
-                                                          value={
-                                                              rowValues?.[
-                                                                  column.id
-                                                              ] === 0
-                                                                  ? 0
-                                                                  : rowValues[
-                                                                        column
-                                                                            .id
-                                                                    ] || ""
-                                                          }
-                                                          onChange={handleChange(
-                                                              column.id
-                                                          )}
-                                                          size="small"
-                                                          step={0.5}
-                                                      />
-                                                  </Grid>
-                                              );
-                                          } else {
-                                              return null;
-                                          }
+                                          return updateDocumentTextField(
+                                              column,
+                                              idx
+                                          );
                                       })
                                     : null}
                             </Grid>
@@ -351,35 +381,13 @@ const UpdateDocument = () => {
                 </Box>
             </UpdateBox>
             <Box>
-                {documentObj ? (
-                    <MaterialTable
-                        title={<Typography>Data</Typography>}
-                        columns={columns}
-                        data={contents}
-                        onRowClick={(evt, selectedRow) => {
-                            setSelectedRow(selectedRow);
-                            setRowValues(selectedRow);
-                            updateEditor(selectedRow?.note);
-                        }}
-                        options={{
-                            padding: "dense",
-                            pageSize: 10,
-                            rowStyle: (rowData) => ({
-                                fontSize: 14,
-                                backgroundColor:
-                                    selectedRow?.index === rowData?.index
-                                        ? "#D7EDFF"
-                                        : "#fff",
-                            }),
-                            headerStyle: {
-                                whiteSpace: "nowrap",
-                            },
-                        }}
-                        icons={tableIcons}
-                    />
-                ) : null}
+                <DocumentTable
+                    setup={documentObj}
+                    setSelectedRow={setSelectedRow}
+                    setRowValues={setRowValues}
+                    updateEditor={updateEditor}
+                />
             </Box>
-            {/* Table goes here */}
         </Box>
     );
 };

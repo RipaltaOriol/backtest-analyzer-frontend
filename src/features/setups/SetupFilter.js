@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import FilterAltRoundedIcon from "@mui/icons-material/FilterAltRounded";
 import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
@@ -132,6 +132,14 @@ const SetupFilter = ({ setup }) => {
             console.error("Something went wrong", err);
         }
     };
+
+    useEffect(() => {
+        setColumn([null, "None"]);
+        setAction([null, "None"]);
+        setValues([]);
+        setNumber("None");
+        setFilterOptionIdx(-1);
+    }, [setup?.documentId]);
 
     return (
         <>

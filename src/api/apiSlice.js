@@ -5,6 +5,7 @@ import { logOut, setCredentials } from "../features/auth/authSlice";
 const baseQuery = fetchBaseQuery({
     baseUrl: process.env.REACT_APP_API_URL,
     credentials: "include",
+    mode: "cors",
     prepareHeaders: (headers, { getState, endpoint }) => {
         const token = getState().auth.token;
         if (token && endpoint !== "refresh") {
@@ -51,6 +52,7 @@ export const apiSlice = createApi({
         "Graphs",
         "DocumentTable",
         "Charts",
+        "CalendarTable",
     ],
     endpoints: (builder) => ({}),
 });

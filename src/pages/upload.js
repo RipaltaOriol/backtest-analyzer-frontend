@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { memo, useState } from "react";
 
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import UploadFileRoundedIcon from "@mui/icons-material/UploadFileRounded";
@@ -13,11 +13,23 @@ import LinearProgress from "@mui/material/LinearProgress";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import Typography from "@mui/material/Typography";
+import { styled } from "@mui/system";
 
 import Message from "../common/Message";
 import { useUploadDocumentMutation } from "../features/documents/documentSlice";
 
-const Upload = ({ open, onClose }) => {
+const UploadBox = styled(Box)({
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    background: "#F6F8F9",
+    border: "1px dashed #CBD0D3",
+    borderRadius: "8px",
+});
+
+// TODO: this should be a component not a page
+const Upload = memo(({ open, onClose }) => {
     const [msg, setMsg] = useState("");
     const [file, setFile] = useState("");
     const [isError, setIsError] = useState(false);
@@ -72,6 +84,7 @@ const Upload = ({ open, onClose }) => {
             return true;
         }
 
+        console.log(file.type);
         const data = new FormData();
 
         data.append("file", file);
@@ -97,7 +110,7 @@ const Upload = ({ open, onClose }) => {
         <Dialog
             onClose={closeDialog}
             open={open}
-            maxWidth="sm"
+            maxWidth="xs"
             fullWidth={true}
         >
             <DialogTitle sx={{ color: "inherit" }}>
@@ -105,26 +118,51 @@ const Upload = ({ open, onClose }) => {
                     File Upload
                 </Typography>
             </DialogTitle>
-            <DialogContent
-                sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                }}
-            >
+            <DialogContent>
                 {msg ? (
                     <Message
                         message={msg}
                         setMessage={setMsg}
                         isError={isError}
-                        sx={{ mt: 0 }}
+                        sx={{ mt: 0, mb: 2 }}
                     />
                 ) : null}
-                <p>{isUpdating}</p>
-                <UploadFileRoundedIcon sx={{ fontSize: 50 }} color="primary" />
                 <form onSubmit={onSubmit}>
+                    <UploadBox sx={{ p: 6 }}>
+                        <UploadFileRoundedIcon
+                            sx={{ fontSize: 50, mb: 4 }}
+                            color="primary"
+                        />
+                        <label htmlFor="upload-file">
+                            <input
+                                style={{ display: "none" }}
+                                id="upload-file"
+                                name="upload-file"
+                                type="file"
+                                onChange={onChange}
+                            />
+                            <Button
+                                variant="outlined"
+                                component="span"
+                                startIcon={<FileUploadIcon color="primary" />}
+                                size="small"
+                                sx={{
+                                    borderRadius: "6px",
+                                    fontSize: "14px",
+                                    textTransform: "none",
+                                    background: "#fff",
+                                    color: "#000",
+                                }}
+                            >
+                                Upload File
+                            </Button>
+                        </label>
+                    </UploadBox>
+
                     <Box sx={{ mt: 2 }}>
-                        <FormLabel>File Source:</FormLabel>
+                        <FormLabel sx={{ fontWeight: "600" }}>
+                            File Source:
+                        </FormLabel>
                         <RadioGroup
                             row
                             value={fileSource}
@@ -147,28 +185,7 @@ const Upload = ({ open, onClose }) => {
                                 label="TraginView Paper Trade"
                             />
                         </RadioGroup>
-                        <label htmlFor="upload-file">
-                            <input
-                                style={{ display: "none" }}
-                                id="upload-file"
-                                name="upload-file"
-                                type="file"
-                                onChange={onChange}
-                            />
-                            <Button
-                                variant="outlined"
-                                component="span"
-                                startIcon={<FileUploadIcon />}
-                                size="small"
-                                sx={{
-                                    borderRadius: "6px",
-                                    fontSize: "14px",
-                                    textTransform: "none",
-                                }}
-                            >
-                                Upload File
-                            </Button>
-                        </label>
+
                         <Typography variant="body2" sx={{ mt: 0.5 }}>
                             {fileName === "Choose File" ? "" : fileName || ""}
                         </Typography>
@@ -188,6 +205,6 @@ const Upload = ({ open, onClose }) => {
             </DialogContent>
         </Dialog>
     );
-};
+});
 
 export default Upload;

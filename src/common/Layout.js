@@ -7,10 +7,10 @@ import HelpIcon from "@mui/icons-material/Help";
 import Inventory2RoundedIcon from "@mui/icons-material/Inventory2Rounded";
 import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
 import LogoutIcon from "@mui/icons-material/Logout";
+import SettingsIcon from "@mui/icons-material/Settings";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Container from "@mui/material/Container";
 import Divider from "@mui/material/Divider";
 import Drawer from "@mui/material/Drawer";
 import List from "@mui/material/List";
@@ -58,6 +58,9 @@ const useStyles = makeStyles((theme) =>
                 color: "inherit",
             },
         },
+        content: {
+            width: `calc(100% - ${drawerWidth}px)`,
+        },
         toolbar: theme.mixins.toolbar,
         logoLink: {
             textDecoration: "none",
@@ -93,6 +96,12 @@ const assistance = [
         name: "Help",
         url: "/help",
         icon: <HelpIcon />,
+    },
+    {
+        id: "settings",
+        name: "Settings",
+        url: "/settings",
+        icon: <SettingsIcon />,
     },
 ];
 
@@ -206,8 +215,8 @@ export default function Layout() {
                     </Typography>
                     <DocumentBar />
                 </List>
-                <List sx={{ mt: "auto", mb: 2 }}>
-                    <Divider sx={{ mx: 1 }} />
+                <List sx={{ mt: "auto", mb: 1 }}>
+                    <Divider sx={{ mx: 1, mb: 1 }} />
                     {assistance.map((feat) => (
                         <DrawerItemButton
                             key={feat.name}
@@ -242,13 +251,13 @@ export default function Layout() {
             </Drawer>
 
             {/* main content */}
-            <Container sx={{ my: 3, maxWidth: "100%" }} maxWidth={false}>
+            <Box sx={{ my: 3 }} className={classes.content}>
                 <div className={classes.toolbar}></div>
                 <Box sx={{ mx: 4 }}>
                     <Outlet />
                 </Box>
                 <Upload open={openUpload} onClose={handleUploadClose} />
-            </Container>
+            </Box>
         </Box>
     );
 }

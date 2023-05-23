@@ -1,5 +1,6 @@
 import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
 import DriveFileRenameOutlineRoundedIcon from "@mui/icons-material/DriveFileRenameOutlineRounded";
+import StarIcon from "@mui/icons-material/Star";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Menu from "@mui/material/Menu";
@@ -20,6 +21,7 @@ const SetupOptionsDropdown = ({
     handleClose,
     handleRenameClose,
     handleDelete,
+    handleDefault,
 }) => {
     return (
         <Menu
@@ -41,6 +43,12 @@ const SetupOptionsDropdown = ({
                     <DeleteRoundedIcon fontSize="small" />
                 </ListItemIcon>
                 <ListItemText>Delete</ListItemText>
+            </DocumentMenuItem>
+            <DocumentMenuItem onClick={handleDefault}>
+                <ListItemIcon sx={{ minWidth: "30px !important" }}>
+                    <StarIcon fontSize="small" />
+                </ListItemIcon>
+                <ListItemText>Make Default</ListItemText>
             </DocumentMenuItem>
         </Menu>
     );

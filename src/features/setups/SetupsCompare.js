@@ -9,7 +9,6 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
 import Divider from "@mui/material/Divider";
-import Grid from "@mui/material/Grid";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
@@ -143,23 +142,30 @@ const SetupsCompare = () => {
 
             <Divider sx={{ my: 2 }} />
             {/* the margin top is aesthetic */}
-            <Grid container spacing={2} sx={{ mt: 0.5 }} direction="row">
+            <Box
+                sx={{
+                    display: "grid",
+                    gridTemplateColumns: "repeat(4, 1fr)",
+                    gridAutoRows: "auto",
+                    gap: 2,
+                }}
+            >
                 {/* Missing IDS */}
                 {data
                     ? data.data.map((setup) => (
-                          <Grid item xs={6} lg={4} xl={3}>
-                              <SetupItem>
-                                  <Box
-                                      sx={{
-                                          display: "flex",
-                                          alignItems: "center",
-                                          justifyContent: "space-between",
-                                          px: "16px",
-                                      }}
-                                  >
-                                      <SetupTitle>{setup.name}</SetupTitle>
-                                      {/* Implement in the future */}
-                                      {/* <Button
+                          <SetupItem>
+                              <Box
+                                  sx={{
+                                      display: "flex",
+                                      alignItems: "center",
+                                      justifyContent: "space-between",
+                                      px: "16px",
+                                  }}
+                              >
+                                  <SetupTitle>{setup.name}</SetupTitle>
+
+                                  {/* Implement in the future */}
+                                  {/* <Button
                                         variant='text'
                                         component={Link}
                                         to={`/${documentId}`}
@@ -174,67 +180,65 @@ const SetupsCompare = () => {
                                     >
                                         Go To
                                     </Button> */}
-                                  </Box>
-                                  <List sx={{ px: "16px" }}>
-                                      {setup.filters.map((filter) => (
-                                          <ListItem sx={{ p: 0 }}>
-                                              <ListItemIcon
-                                                  sx={{ minWidth: 0, mr: 1 }}
-                                              >
-                                                  <FilterAltRoundedIcon fontSize="small" />
-                                              </ListItemIcon>
-                                              <ListItemText
-                                                  primary={filter}
-                                                  primaryTypographyProps={{
-                                                      fontSize: "14px",
-                                                  }}
-                                              />
-                                          </ListItem>
-                                      ))}
-                                  </List>
-                                  <Table size="small">
-                                      {/* <TableHead>
-                                        <TableRow>
-                                            <TableCell></TableCell>
-                                            {
-                                                setup.stats.headers.map((header) => <TableCell>{header}</TableCell>)
-                                            }
-                                        </TableRow>
-                                    </TableHead> */}
-                                      <TableBody
-                                          sx={{
-                                              borderTop: "1px solid #E5E9EB",
-                                              borderBottom: "1px solid #E5E9EB",
-                                          }}
-                                      >
-                                          {setup.stats.data.map((row) => (
-                                              <TableRow>
-                                                  {row.map((cell) => (
-                                                      <TableCell>
-                                                          {cell}
-                                                      </TableCell>
-                                                  ))}
-                                              </TableRow>
+                              </Box>
+                              <List sx={{ px: "16px" }}>
+                                  {setup.filters.map((filter) => (
+                                      <ListItem sx={{ p: 0 }}>
+                                          <ListItemIcon
+                                              sx={{ minWidth: 0, mr: 1 }}
+                                          >
+                                              <FilterAltRoundedIcon fontSize="small" />
+                                          </ListItemIcon>
+                                          <ListItemText
+                                              primary={filter}
+                                              primaryTypographyProps={{
+                                                  fontSize: "14px",
+                                              }}
+                                          />
+                                      </ListItem>
+                                  ))}
+                              </List>
+                              <Table size="small">
+                                  {/* <TableHead>
+                                      <TableRow>
+                                          <TableCell></TableCell>
+                                          {setup.stats.headers.map((header) => (
+                                              <TableCell>{header}</TableCell>
                                           ))}
-                                      </TableBody>
-                                  </Table>
-                                  <Box
+                                      </TableRow>
+                                  </TableHead> */}
+
+                                  <TableBody
                                       sx={{
-                                          maxWidth: "50%",
-                                          mx: "auto",
-                                          mt: 2,
+                                          borderTop: "1px solid #E5E9EB",
+                                          borderBottom: "1px solid #E5E9EB",
                                       }}
                                   >
-                                      <PieChart
-                                          dataPieChart={setup.breakdown}
-                                          title={false}
-                                      />
-                                  </Box>
-                              </SetupItem>
-                          </Grid>
+                                      {setup.stats.data.map((row) => (
+                                          <TableRow>
+                                              {row.map((cell) => (
+                                                  <TableCell>{cell}</TableCell>
+                                              ))}
+                                          </TableRow>
+                                      ))}
+                                  </TableBody>
+                              </Table>
+                              <Box
+                                  sx={{
+                                      maxWidth: "50%",
+                                      mx: "auto",
+                                      mt: 2,
+                                  }}
+                              >
+                                  <PieChart
+                                      dataPieChart={setup.breakdown}
+                                      title={false}
+                                  />
+                              </Box>
+                          </SetupItem>
                       ))
                     : null}
-            </Grid>
+            </Box>
             <Menu
                 anchorEl={anchorEl}
                 open={open}

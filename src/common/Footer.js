@@ -10,8 +10,7 @@ const useStyles = makeStyles((theme) =>
     createStyles({
         footer: {
             padding: "20px 100px",
-            backgroundColor: "#6E7C87",
-            color: "#fff",
+            backgroundColor: "#F9FAFF",
             marginTop: "auto",
             display: "flex",
             justifyContent: "space-between",
@@ -28,7 +27,7 @@ const Footer = () => {
                 @2022 Backtest Analyser. All Rights Reserved.
             </Typography>
             <Box display="flex" alignItems="center">
-                <Typography sx={{ mr: 1 }}>Follow Us</Typography>
+                <Typography sx={{ mr: 1 }}>Follow Us:</Typography>
                 <IconButton
                     disableRipple
                     sx={{
@@ -37,7 +36,7 @@ const Footer = () => {
                         },
                     }}
                 >
-                    <YouTubeIcon sx={{ color: "#fff" }} />
+                    <YouTubeIcon />
                 </IconButton>
                 <IconButton
                     disableRipple
@@ -47,7 +46,7 @@ const Footer = () => {
                         },
                     }}
                 >
-                    <InstagramIcon sx={{ color: "#fff" }} />
+                    <InstagramIcon />
                 </IconButton>
                 <IconButton
                     disableRipple
@@ -57,7 +56,7 @@ const Footer = () => {
                         },
                     }}
                 >
-                    <LinkedInIcon sx={{ color: "#fff" }} />
+                    <LinkedInIcon />
                 </IconButton>
             </Box>
         </Box>

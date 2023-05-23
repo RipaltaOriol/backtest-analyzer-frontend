@@ -1,3 +1,5 @@
+import parseColumnName from "utils/parseColumns";
+
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -27,7 +29,9 @@ const SimpleTable = ({ id }) => {
             for (const prop in data[0]) {
                 if (prop !== "stat") {
                     tableRows.push(
-                        <TableCell align="center">{prop}</TableCell>
+                        <TableCell align="center">
+                            {parseColumnName(prop)}
+                        </TableCell>
                     );
                 }
             }
@@ -42,13 +46,23 @@ const SimpleTable = ({ id }) => {
                     <TableRow sx={{ fontSize: "14px" }}>{tableRows}</TableRow>
                 </TableHead>
                 <TableBody>
+                    {/* optimise this loop */}
                     {tableData.map((row, idx) => (
                         <TableRow key={idx} hover>
                             <TableCell>{row.stat}</TableCell>
                             {Object.keys(row).reduce((result, cell, idx) => {
                                 if (cell !== "stat") {
                                     result.push(
-                                        <TableCell key={idx} align="center">
+                                        <TableCell
+                                            key={idx}
+                                            align="center"
+                                            sx={{
+                                                color:
+                                                    row[cell] < 0
+                                                        ? "red"
+                                                        : "inherit",
+                                            }}
+                                        >
                                             {row[cell].toFixed(3)}
                                         </TableCell>
                                     );

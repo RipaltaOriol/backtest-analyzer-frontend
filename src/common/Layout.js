@@ -1,3 +1,4 @@
+import logoTradeSharpener from "assets/svg/trade_sharpener_logo.svg";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link, Outlet, useLocation } from "react-router-dom";
@@ -22,7 +23,6 @@ import Typography from "@mui/material/Typography";
 import { createStyles, makeStyles } from "@mui/styles";
 import { styled } from "@mui/system";
 
-import LogoIcon from "../assets/svg/layers-triple.svg";
 import { useLogoutMutation } from "../features/auth/authApiSlice";
 import { logOut } from "../features/auth/authSlice";
 import DocumentBar from "../features/documents/DocumentBar";
@@ -143,13 +143,13 @@ export default function Layout() {
                         className={classes.logoLink}
                     >
                         <img
-                            alt="Backtest Analyser Logo"
-                            src={LogoIcon}
+                            alt="Trade Sharpener Logo"
+                            src={logoTradeSharpener}
                             className={classes.logoIcon}
                         />
                         <LogoTitle
-                            first="Backtest"
-                            second="Analyser"
+                            first="Trade"
+                            second="Sharpener"
                             variant="h6"
                             component="p"
                             weight="700"

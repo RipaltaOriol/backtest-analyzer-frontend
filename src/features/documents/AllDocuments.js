@@ -143,7 +143,14 @@ const AllDocuments = () => {
         content = <></>;
     } else if (isSuccess) {
         content = orderedDocuments.map((doc, idx) => (
-            <Grid item xs={6} lg={4} xl={3} sx={{ backgroundColor: "none" }}>
+            <Grid
+                item
+                xs={12}
+                sm={6}
+                lg={4}
+                xl={3}
+                sx={{ backgroundColor: "none" }}
+            >
                 <DocumentItem>
                     <Box sx={{ display: "flex", alignItems: "center" }}>
                         <Box

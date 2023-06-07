@@ -23,3 +23,37 @@
     width: 100%;
     position: absolute;
 }
+
+.export-csv {
+    font-size: 14px;
+    display: flex;
+    /* align-items: center; */
+    flex-direction: column;
+}
+.export-csv .export-final {
+    margin-top: 5px;
+}
+
+/* Extra-Small */
+@media (min-width: 600px) {
+    .export-csv {
+        display: flex;
+        align-items: center;
+        flex-direction: row;
+    }
+    .export-csv .export-final {
+        margin-top: 0px;
+    }
+}
+
+/* Small */
+@media (min-width: 900px) {
+}
+
+/* Medium */
+@media (min-width: 1200px) {
+}
+
+/* Large */
+@media (min-width: 1536px) {
+}

@@ -53,6 +53,7 @@ export const apiSlice = createApi({
         "DocumentTable",
         "Charts",
         "CalendarTable",
+        "CompareSetups",
     ],
     endpoints: (builder) => ({}),
 });

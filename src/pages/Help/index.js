@@ -42,8 +42,8 @@ const Help = () => {
                 <Divider sx={{ my: 2 }} />
                 <Box sx={{ mb: 5 }}>
                     <LogoTitle
-                        first="Trade"
-                        second="Sharpener"
+                        first="Backtest"
+                        second="Analyser"
                         variant="h3"
                         component="h1"
                         weight="700"
@@ -117,29 +117,15 @@ const Help = () => {
                             CSV following these steps:
                         </Typography>
                         <BoxPaper sx={{ my: 1.5 }}>
-                            <Box className="export-csv">
-                                <Box
-                                    sx={{
-                                        display: "flex",
-                                        alignItems: "center",
-                                    }}
-                                >
-                                    File
-                                    <KeyboardArrowRightIcon />
-                                </Box>
-                                <Box
-                                    sx={{
-                                        display: "flex",
-                                        alignItems: "center",
-                                    }}
-                                >
-                                    Save As
-                                    <KeyboardArrowRightIcon />
-                                </Box>
-                                <Box className="export-final">
-                                    CSV UTF-8 (Comma-delimited) (.csv)
-                                </Box>
-                            </Box>
+                            <Typography
+                                sx={{ fontSize: "14px", display: "flex" }}
+                            >
+                                File
+                                <KeyboardArrowRightIcon />
+                                Save As
+                                <KeyboardArrowRightIcon />
+                                CSV UTF-8 (Comma-delimited) (.csv)
+                            </Typography>
                         </BoxPaper>
                         <Typography variant="overline" display="block">
                             Only CSV files are accepted
@@ -221,11 +207,11 @@ const Help = () => {
                             <Typography variant="h5">Upload File</Typography>
                             <Typography variant="body2">
                                 This short video shows how to code your columns
-                                in your file to prepare it for upload in Trade
-                                Sharpener. Additionally, it demonstrates how to
-                                save an Excel file as CSV.
+                                in your file to prepare it for upload in
+                                Backtest Analyser. Additionally, it demonstrates
+                                how to save an Excel file as CSV.
                             </Typography>
-                            <Box sx={{ py: 3 }}>
+                            <Box sx={{ p: 3 }}>
                                 <YoutubeEmbed embedId="16EXtGBntxA" />
                             </Box>
                         </Box>
@@ -247,7 +233,7 @@ const Help = () => {
                                     alt="Empty columns being displayed"
                                 />
                             </BoxPaper>
-                            <Box sx={{ py: 3 }}>
+                            <Box sx={{ p: 3 }}>
                                 <YoutubeEmbed embedId="Y3NE8Oy178w" />
                             </Box>
                         </Box>

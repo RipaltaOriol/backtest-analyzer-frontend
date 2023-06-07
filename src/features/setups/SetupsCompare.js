@@ -7,6 +7,7 @@ import TrendingUpRoundedIcon from "@mui/icons-material/TrendingUpRounded";
 import ViewColumnRoundedIcon from "@mui/icons-material/ViewColumnRounded";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import Card from "@mui/material/Card";
 import Divider from "@mui/material/Divider";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
@@ -24,7 +25,6 @@ import { styled } from "@mui/system";
 import PieChart from "../../common/PieChart";
 import { selectDocumentById } from "../documents/documentSlice";
 import { useCompareDocumentSetupsQuery } from "../documents/documentSlice";
-import "./SetupsCompre.css";
 
 const MenuButton = styled(Button)({
     color: "#252C32",
@@ -41,7 +41,7 @@ const SetupTitle = styled(Typography)({
     fontSize: "16px",
 });
 
-const SetupItem = styled(Box)({
+const SetupItem = styled(Card)({
     padding: "16px 0",
     borderRadius: "6px",
     border: "1px solid #E5E9EB",
@@ -142,7 +142,14 @@ const SetupsCompare = () => {
 
             <Divider sx={{ my: 2 }} />
             {/* the margin top is aesthetic */}
-            <Box className="setups-compare">
+            <Box
+                sx={{
+                    display: "grid",
+                    gridTemplateColumns: "repeat(4, 1fr)",
+                    gridAutoRows: "auto",
+                    gap: 2,
+                }}
+            >
                 {/* Missing IDS */}
                 {data
                     ? data.data.map((setup) => (

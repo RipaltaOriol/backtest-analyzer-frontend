@@ -40,7 +40,6 @@ const PieChart = ({ dataPieChart, title = true }) => {
                                 position: "bottom",
                             },
                         },
-                        responsive: true,
                     }}
                 />
             ) : (

@@ -48,7 +48,6 @@ export const setupsSlice = apiSlice.injectEndpoints({
                 "Stats",
                 "Graphs",
                 "Charts",
-                "CompareSetups",
             ],
         }),
         deleteFilterSetup: builder.mutation({
@@ -61,7 +60,6 @@ export const setupsSlice = apiSlice.injectEndpoints({
                 "Stats",
                 "Graphs",
                 "Charts",
-                "CompareSetups",
             ],
         }),
         addSetups: builder.mutation({

@@ -1,36 +1,7 @@
-.container-grid {
-    display: grid;
-    grid-template-columns: repeat(1, 1fr);
-}
-
 .forgot-password-link {
     color: black;
     text-decoration: none;
     font-weight: 500;
     font-size: 14px;
     line-height: 22px;
-}
-
-/* Extra-Small */
-@media (min-width: 600px) {
-    .container-grid {
-        border: 1px solid #e5e9eb;
-        box-shadow: 0px 4px 35px rgba(91, 104, 113, 0.12);
-        border-radius: 12px;
-    }
-}
-
-/* Small */
-@media (min-width: 900px) {
-    .container-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-/* Medium */
-@media (min-width: 1200px) {
-}
-
-/* Large */
-@media (min-width: 1536px) {
 }

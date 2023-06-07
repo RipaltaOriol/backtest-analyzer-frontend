@@ -81,7 +81,6 @@ export const documentsApiSlice = apiSlice.injectEndpoints({
                 url: `/documents/${documentId}/compare`,
                 params: metric ? { metric: metric } : null,
             }),
-            providesTags: ["CompareSetups"],
         }),
         getCalendarTable: builder.query({
             query: ({ documentId, metric = null, date = null }) => ({

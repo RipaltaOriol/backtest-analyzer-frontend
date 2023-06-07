@@ -3,7 +3,7 @@ import Typography from "@mui/material/Typography";
 import { makeStyles } from "@mui/styles";
 
 const useStyles = makeStyles({
-    logo: {
+    logoBacktest: {
         fontSize: "18px",
     },
 });
@@ -24,7 +24,7 @@ const LogoTitle = ({
             <Typography
                 variant={variant}
                 component={component}
-                className={classes.logo}
+                className={classes.logoBacktest}
                 sx={{ fontWeight: weight, color: firstColor }}
             >
                 {first}

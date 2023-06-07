@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
-import { styled } from "@mui/material/styles";
 
 import PieChart from "../../common/PieChart";
 import SimpleTable from "../../common/SimpleTable";
@@ -12,16 +11,10 @@ import BarGraph from "../graphs/BarGraph";
 import LineGraph from "../graphs/LineGraph";
 import ScatterGraph from "../graphs/ScatterGraph";
 import { useGetChartsQuery } from "../statistics/statisticsApiSlice";
-import "./Setups.css";
 import SingleRecordDialog from "./SingleSetup/SingleRecordDialog";
 import FilterList from "./filters/FilterList";
 
 let dataPieChart = {};
-
-const Item = styled(Box)({
-    borderRadius: "6px",
-    border: "1px solid #E5E9EB",
-});
 
 let SetupView = ({ setup }) => {
     const [open, setOpen] = useState(false);
@@ -48,33 +41,41 @@ let SetupView = ({ setup }) => {
         <Box>
             <FilterList setupId={setup?.id} filters={setup?.filters} />
 
-            <Box className="setup-dashboard">
-                <Box className="setup-equity">
+            <Grid container spacing={2}>
+                <Grid item xs={8}>
                     {setup?.id && <LineGraph setupId={setup?.id} />}
-                </Box>
-                <Item className="setup-result-distribution" sx={{ p: 2 }}>
-                    <PieChart dataPieChart={dataPieChart} />
-                </Item>
-                <Box className="setup-bar">
+                </Grid>
+                <Grid item xs={4}>
+                    <Box
+                        sx={{
+                            border: "1px solid #E5E9EB",
+                            borderRadius: "6px",
+                            p: 2,
+                        }}
+                    >
+                        <PieChart dataPieChart={dataPieChart} />
+                    </Box>
+                </Grid>
+                <Grid item xs={6}>
                     {setup?.id && <BarGraph setupId={setup?.id} />}
-                </Box>
-                <Box className="setup-scatter">
+                </Grid>
+                <Grid item xs={6}>
                     {setup?.id && <ScatterGraph setupId={setup?.id} />}
-                </Box>
-                <Item className="setup-stats">
+                </Grid>
+                <Grid item xs={6}>
                     {setup?.id && <SimpleTable id={setup?.id} />}
-                </Item>
-                <Item className="setup-notes">
+                </Grid>
+                <Grid item xs={6}>
                     <Notes setupId={setup?.id} notes={setup?.notes} />
-                </Item>
-                <Box className="setup-table">
+                </Grid>
+                <Grid item xs={12}>
                     <StateTable
                         setup={setup}
                         setOpen={setOpen}
                         setSelectedRow={setSelectedRow}
                     />
-                </Box>
-            </Box>
+                </Grid>
+            </Grid>
 
             {/* popup to display a trade */}
             <SingleRecordDialog

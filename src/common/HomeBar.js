@@ -1,21 +1,13 @@
-import LogoIcon from "assets/svg/trade_sharpener_logo.svg";
-import {
-    GuideButtonMobile,
-    LoginButtonMobile,
-} from "pages/Home/HomeComponents";
-import { useState } from "react";
 import { Link, Outlet } from "react-router-dom";
 
-import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import IconButton from "@mui/material/IconButton";
-import SwipeableDrawer from "@mui/material/SwipeableDrawer";
 import Toolbar from "@mui/material/Toolbar";
 import { makeStyles } from "@mui/styles";
 import { styled } from "@mui/system";
 
+import LogoIcon from "../assets/svg/layers-triple.svg";
 import LogoTitle from "./LogoTitle";
 
 const LoginButton = styled(Button)({
@@ -54,36 +46,10 @@ const useStyles = makeStyles({
 
 const HomeBar = () => {
     const classes = useStyles();
-    const [openDrawer, setOpenDrawer] = useState(false);
-    const toggleDrawer = (open) => (event) => {
-        if (
-            event &&
-            event.type === "keydown" &&
-            (event.key === "Tab" || event.key === "Shift")
-        ) {
-            return;
-        }
-
-        setOpenDrawer(open);
-    };
-
-    const iOS =
-        typeof navigator !== "undefined" &&
-        /iPad|iPhone|iPod/.test(navigator.userAgent);
 
     return (
         <Box>
-            <AppBar
-                elevation={0}
-                sx={{
-                    py: 1,
-                    px: {
-                        xs: 1,
-                        md: 2,
-                        lg: 5,
-                    },
-                }}
-            >
+            <AppBar elevation={0} sx={{ py: 1, px: 5 }}>
                 <Toolbar>
                     <Box
                         sx={{ flexGrow: 1, display: "inline-flex" }}
@@ -92,58 +58,18 @@ const HomeBar = () => {
                         className={classes.logoLink}
                     >
                         <img
-                            alt="Trade Sharpener Logo"
+                            alt="Backtest Analyser Logo"
                             src={LogoIcon}
                             className={classes.logoIcon}
                         />
                         <LogoTitle
-                            first="Trade"
-                            second="Sharpener"
+                            first="Backtest"
+                            second="Analyser"
                             variant="h6"
                             component="p"
                             weight="700"
                             color="#000"
                         />
-                    </Box>
-                    <Box sx={{ display: { xs: "block", sm: "none" } }}>
-                        <IconButton onClick={toggleDrawer(true)}>
-                            <MenuRoundedIcon sx={{ color: "#000" }} />
-                        </IconButton>
-                        <SwipeableDrawer
-                            anchor="right"
-                            open={openDrawer}
-                            onClose={toggleDrawer(false)}
-                            onOpen={toggleDrawer(true)}
-                            disableBackdropTransition={!iOS}
-                            disableDiscovery={iOS}
-                            elevation={0}
-                            PaperProps={{
-                                sx: {
-                                    backgroundColor: "transparent",
-                                },
-                            }}
-                        >
-                            <Box className="mobile-drawer">
-                                <GuideButtonMobile
-                                    className="guide-btn"
-                                    sx={{ mb: 1 }}
-                                    component={Link}
-                                    to="/guide"
-                                    variant="contained"
-                                    onClick={toggleDrawer(false)}
-                                >
-                                    Guide
-                                </GuideButtonMobile>
-                                <LoginButtonMobile
-                                    component={Link}
-                                    to="/login"
-                                    variant="contained"
-                                    onClick={toggleDrawer(false)}
-                                >
-                                    My Account
-                                </LoginButtonMobile>
-                            </Box>
-                        </SwipeableDrawer>
                     </Box>
                     <Box sx={{ display: { xs: "none", sm: "block" } }}>
                         <GuideButton

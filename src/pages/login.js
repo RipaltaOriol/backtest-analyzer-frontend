@@ -4,9 +4,11 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
+import { styled } from "@mui/material/styles";
 
 import LoginSketch from "../assets/svg/login-sketch.svg";
 import Footer from "../common/Footer";
@@ -16,6 +18,12 @@ import { setCredentials } from "../features/auth/authSlice";
 import { setLoginMsg } from "../features/messages/messagesSlice";
 import { selectLoginMsg } from "../features/messages/messagesSlice";
 import "./Login.css";
+
+const ContainerGrid = styled(Grid)({
+    border: "1px solid #E5E9EB",
+    boxShadow: "0px 4px 35px rgba(91, 104, 113, 0.12)",
+    borderRadius: "12px",
+});
 
 const Login = () => {
     const location = useLocation();
@@ -71,16 +79,16 @@ const Login = () => {
             <Toolbar />
 
             <Box sx={{ m: 5 }}>
-                <Box className="container-grid">
-                    <Box
+                <ContainerGrid container>
+                    <Grid
+                        item
+                        xs={6}
                         sx={{
                             backgroundColor: "#F6F8F9",
                             borderRadius: "12px",
                             p: 10,
-                            display: {
-                                xs: "none",
-                                md: "flex",
-                            },
+                            height: "100%",
+                            display: "flex",
                             flexDirection: "column",
                             justifyContent: "center",
                             alignItems: "center",
@@ -94,19 +102,18 @@ const Login = () => {
                                 mb: 5,
                             }}
                         >
-                            Trade Sharpener is the tool you need to so start
+                            Backtest Analyser is the tool you need to so start
                             centralizing your data analysis and keep track of
                             your strategy
                         </Typography>
                         <img src={LoginSketch} alt="login sketch" />
-                    </Box>
-                    <Box
+                    </Grid>
+                    <Grid
+                        item
+                        xs={6}
                         sx={{
-                            p: {
-                                xs: 0,
-                                sm: 5,
-                                md: 10,
-                            },
+                            p: 10,
+                            height: "100%",
                             display: "flex",
                             flexDirection: "column",
                             justifyContent: "center",
@@ -166,8 +173,8 @@ const Login = () => {
                                 </Link>
                             </form>
                         </Box>
-                    </Box>
-                </Box>
+                    </Grid>
+                </ContainerGrid>
             </Box>
             <Footer />
         </Box>

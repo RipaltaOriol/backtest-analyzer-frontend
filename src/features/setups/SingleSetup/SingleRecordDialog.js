@@ -128,7 +128,7 @@ function SingleRecordDialog({
         if (isSetup) {
             res = await updateRowNoteSetup({
                 setupId,
-                rowId: rowRecord.rowId,
+                rowId: rowRecord.index,
                 note: editor?.getHTML(),
                 images,
                 isSync,
@@ -168,7 +168,6 @@ function SingleRecordDialog({
     useEffect(() => {
         editor?.commands.setContent(rowRecord?.note || "");
         setImages(rowRecord?.imgs || []);
-        setMsg("");
     }, [rowRecord, editor]);
 
     return (

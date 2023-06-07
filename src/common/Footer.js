@@ -9,21 +9,11 @@ import { createStyles, makeStyles } from "@mui/styles";
 const useStyles = makeStyles((theme) =>
     createStyles({
         footer: {
+            padding: "20px 100px",
             backgroundColor: "#F9FAFF",
-            [theme.breakpoints.down("sm")]: {
-                padding: "30px",
-            },
-            [theme.breakpoints.up("sm")]: {
-                padding: "30px 60px 20px",
-            },
-
-            [theme.breakpoints.up("md")]: {
-                padding: "20px 100px",
-                backgroundColor: "#F9FAFF",
-                marginTop: "auto",
-                display: "flex",
-                justifyContent: "space-between",
-            },
+            marginTop: "auto",
+            display: "flex",
+            justifyContent: "space-between",
         },
     })
 );
@@ -34,7 +24,7 @@ const Footer = () => {
     return (
         <Box className={classes.footer}>
             <Typography alignSelf="center">
-                @2023 Trade Sharpener. All Rights Reserved.
+                @2022 Backtest Analyser. All Rights Reserved.
             </Typography>
             <Box display="flex" alignItems="center">
                 <Typography sx={{ mr: 1 }}>Follow Us:</Typography>

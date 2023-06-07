@@ -1,0 +1,119 @@
+.setup-dashboard {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 1rem;
+}
+
+.setup-equity {
+    grid-column: span 12;
+    order: 1;
+}
+
+.setup-result-distribution {
+    grid-column: span 6;
+    order: 2;
+}
+
+.setup-bar {
+    grid-column: span 12;
+    order: 3;
+}
+
+.setup-scatter {
+    grid-column: span 12;
+    order: 4;
+}
+
+.setup-stats {
+    grid-column: span 12;
+    order: 5;
+}
+
+.setup-notes {
+    grid-column: span 6;
+    order: 2;
+}
+
+.setup-table {
+    grid-column: span 12;
+    order: 7;
+}
+
+@media (min-width: 600px) {
+    /* Small */
+}
+
+@media (min-width: 900px) {
+    /* Medium */
+}
+
+@media (min-width: 1200px) {
+    /* Large */
+    .setup-equity {
+        grid-column: span 8;
+    }
+
+    .setup-result-distribution {
+        grid-column: span 4;
+    }
+
+    .setup-bar {
+        grid-column: span 6;
+    }
+
+    .setup-scatter {
+        grid-column: span 6;
+    }
+
+    .setup-stats {
+        grid-column: span 6;
+    }
+
+    .setup-notes {
+        grid-column: span 6;
+        order: 6;
+    }
+}
+
+@media (min-width: 1536px) {
+    /* Extra Large */
+}
+
+@media screen and (min-width: 1920px) {
+    /* For Projectors or Higher Resolution Screens (Full HD) */
+    .setup-equity {
+        grid-column: span 6;
+    }
+    .setup-result-distribution {
+        grid-column: span 3;
+    }
+    .setup-bar {
+        grid-column: span 6;
+    }
+
+    .setup-scatter {
+        grid-column: span 6;
+    }
+
+    .setup-stats {
+        grid-column: span 6;
+    }
+}
+@media screen and (min-width: 3840px) {
+    /* For 4K Displays (Ultra HD) */
+    .setup-notes {
+        grid-column: span 3;
+        order: 2;
+    }
+    .setup-bar {
+        grid-column: span 4;
+    }
+
+    .setup-scatter {
+        grid-column: span 4;
+    }
+
+    .setup-stats {
+        grid-column: span 4;
+    }
+}

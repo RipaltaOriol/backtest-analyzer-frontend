@@ -38,12 +38,7 @@ const Notes = ({ setupId, notes }) => {
     };
 
     return (
-        <Box
-            sx={{
-                border: "1px solid #E5E9EB",
-                borderRadius: "6px 6px 6px 6px",
-            }}
-        >
+        <Box>
             <Typography sx={{ px: 2, py: "8px" }}>Notes</Typography>
             <TextField
                 className={classes.inputMultiline}
@@ -68,7 +63,7 @@ const Notes = ({ setupId, notes }) => {
                 multiline
                 fullWidth
                 value={setupNotes || ""}
-                rows={14}
+                rows={15}
                 variant="outlined"
                 onChange={(e) => setSetupNotes(e.target.value)}
                 InputProps={{

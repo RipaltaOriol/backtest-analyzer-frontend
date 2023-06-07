@@ -1,17 +1,21 @@
 import GraphUpIcon from "assets/svg/graph_up.svg";
-import LogoIcon from "assets/svg/layers-triple.svg";
 import MultipleUsersIcon from "assets/svg/multiple_users.svg";
 import RoundedStatsIcon from "assets/svg/rounded_stats.svg";
+import LogoIcon from "assets/svg/trade_sharpener_logo.svg";
 import LogoTitle from "common/LogoTitle";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 
 import ArrowForwardIosRoundedIcon from "@mui/icons-material/ArrowForwardIosRounded";
+import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import Divider from "@mui/material/Divider";
+import IconButton from "@mui/material/IconButton";
 import Paper from "@mui/material/Paper";
+import SwipeableDrawer from "@mui/material/SwipeableDrawer";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import { styled } from "@mui/material/styles";
@@ -25,6 +29,7 @@ import HomeVisualise from "../../assets/images/home-visualise.png";
 import Footer from "../../common/Footer";
 import FAQ from "./FAQ";
 import "./Home.css";
+import { GuideButtonMobile, LoginButtonMobile } from "./HomeComponents";
 
 // TODO: is this paper necessary?
 const Item = styled(Box)({
@@ -114,18 +119,43 @@ const HomeAppbar = (props) => {
     const classes = useStyles();
     const { window } = props;
 
+    const [openDrawer, setOpenDrawer] = useState(false);
+
+    // NOTE: this treshold should be responsive
+    let threshold = 50;
+
     const trigger = useScrollTrigger({
         disableHysteresis: true,
         target: window ? window() : undefined,
-        threshold: 400,
+        threshold,
     });
+
+    const toggleDrawer = (open) => (event) => {
+        if (
+            event &&
+            event.type === "keydown" &&
+            (event.key === "Tab" || event.key === "Shift")
+        ) {
+            return;
+        }
+
+        setOpenDrawer(open);
+    };
+
+    const iOS =
+        typeof navigator !== "undefined" &&
+        /iPad|iPhone|iPod/.test(navigator.userAgent);
 
     return (
         <AppBar
             elevation={0}
             sx={{
                 py: 1,
-                px: 5,
+                px: {
+                    xs: 1,
+                    md: 2,
+                    lg: 5,
+                },
                 background: trigger ? "default" : "transparent",
             }}
         >
@@ -137,21 +167,63 @@ const HomeAppbar = (props) => {
                     className={classes.logoLink}
                 >
                     <img
-                        alt="Backtest Analyser Logo"
+                        alt="Trade Sharpener Logo"
                         src={LogoIcon}
                         className={`logo-icon ${
                             trigger ? "logo-icon-scrollable" : null
                         }`}
                     />
                     <LogoTitle
-                        first="Backtest"
-                        second="Analyser"
+                        first="Trade"
+                        second="Sharpener"
                         variant="h6"
                         component="p"
                         weight="700"
                         firstColor={trigger ? undefined : "#fff"}
                         color={trigger ? "#000" : "#fff"}
                     />
+                </Box>
+                <Box sx={{ display: { xs: "block", sm: "none" } }}>
+                    <IconButton onClick={toggleDrawer(true)}>
+                        <MenuRoundedIcon
+                            sx={{ color: trigger ? "#000" : "#fff" }}
+                        />
+                    </IconButton>
+                    <SwipeableDrawer
+                        anchor="right"
+                        open={openDrawer}
+                        onClose={toggleDrawer(false)}
+                        onOpen={toggleDrawer(true)}
+                        disableBackdropTransition={!iOS}
+                        disableDiscovery={iOS}
+                        elevation={0}
+                        PaperProps={{
+                            sx: {
+                                backgroundColor: "transparent",
+                            },
+                        }}
+                    >
+                        {/* {list(anchor)} */}
+                        <Box className="mobile-drawer">
+                            <GuideButtonMobile
+                                className="guide-btn"
+                                sx={{ mb: 1 }}
+                                component={Link}
+                                to="/guide"
+                                variant="contained"
+                            >
+                                Guide
+                            </GuideButtonMobile>
+                            <LoginButtonMobile
+                                component={Link}
+                                to="/login"
+                                variant="contained"
+                                trigger={true}
+                            >
+                                My Account
+                            </LoginButtonMobile>
+                        </Box>
+                    </SwipeableDrawer>
                 </Box>
                 <Box sx={{ display: { xs: "none", sm: "block" } }}>
                     <GuideButton
@@ -198,7 +270,7 @@ const Home = (props) => {
                         }}
                     >
                         <Typography variant="h1" sx={{ mb: 2.5 }}>
-                            Backtest Analyser
+                            Trade Sharpener
                         </Typography>
                         <Typography
                             compoenent="h2"
@@ -246,13 +318,7 @@ const Home = (props) => {
                             <span className="blue-highlights">Features</span>
                         </Typography>
                     </Box>
-                    <Box
-                        sx={{
-                            display: "grid",
-                            gridTemplateColumns: "repeat(3, 1fr)",
-                            gap: 2,
-                        }}
-                    >
+                    <Box className="card-section">
                         <Item sx={{ p: 3 }}>
                             <Typography variant="h4">1. Filter</Typography>
                             <Box sx={{ my: 1.5 }}>
@@ -324,18 +390,14 @@ const Home = (props) => {
                             <span className="blue-highlights">Workflow</span>
                         </Typography>
                     </Box>
-                    <Box
-                        sx={{
-                            display: "grid",
-                            gridTemplateColumns: "repeat(3, 1fr)",
-                            gap: 2,
-                        }}
-                    >
+                    <Box className="card-section">
                         {/* TODO: missing height 100% - upgrading MUI v5.0 contains a better way */}
                         <Box
                             sx={{
                                 border: "1px solid #E1E4E8",
                                 borderRadius: "12px",
+                                display: "flex",
+                                flexDirection: "column",
                                 p: 3,
                             }}
                         >
@@ -354,21 +416,28 @@ const Home = (props) => {
                                 Generate different versions of your backtest
                                 data and study them individually
                             </Typography>
-                            <LearnButton
-                                sx={{ px: 1.5 }}
-                                size="small"
-                                disableRipple
-                                endIcon={
-                                    <ArrowForwardIosRoundedIcon fontSize="small" />
-                                }
-                            >
-                                Learn More
-                            </LearnButton>
+                            <Box sx={{ flexGrow: 1, display: "flex" }}>
+                                <LearnButton
+                                    sx={{
+                                        px: 1.5,
+                                        alignSelf: "flex-end",
+                                    }}
+                                    size="small"
+                                    disableRipple
+                                    endIcon={
+                                        <ArrowForwardIosRoundedIcon fontSize="small" />
+                                    }
+                                >
+                                    Learn More
+                                </LearnButton>
+                            </Box>
                         </Box>
                         <Box
                             sx={{
                                 border: "1px solid #E1E4E8",
                                 borderRadius: "12px",
+                                display: "flex",
+                                flexDirection: "column",
                                 p: 3,
                             }}
                         >
@@ -387,21 +456,28 @@ const Home = (props) => {
                                 Utilise all of our tools to study your backtest
                                 in the way that best fits your needs
                             </Typography>
-                            <LearnButton
-                                sx={{ px: 1.5 }}
-                                size="small"
-                                disableRipple
-                                endIcon={
-                                    <ArrowForwardIosRoundedIcon fontSize="small" />
-                                }
-                            >
-                                Learn More
-                            </LearnButton>
+                            <Box sx={{ flexGrow: 1, display: "flex" }}>
+                                <LearnButton
+                                    sx={{
+                                        px: 1.5,
+                                        alignSelf: "flex-end",
+                                    }}
+                                    size="small"
+                                    disableRipple
+                                    endIcon={
+                                        <ArrowForwardIosRoundedIcon fontSize="small" />
+                                    }
+                                >
+                                    Learn More
+                                </LearnButton>
+                            </Box>
                         </Box>
                         <Box
                             sx={{
                                 border: "1px solid #E1E4E8",
                                 borderRadius: "12px",
+                                display: "flex",
+                                flexDirection: "column",
                                 p: 3,
                             }}
                         >
@@ -420,16 +496,21 @@ const Home = (props) => {
                                 Come up with leads for your next backtest and
                                 improve your strategy
                             </Typography>
-                            <LearnButton
-                                sx={{ px: 1.5 }}
-                                size="small"
-                                disableRipple
-                                endIcon={
-                                    <ArrowForwardIosRoundedIcon fontSize="small" />
-                                }
-                            >
-                                Learn More
-                            </LearnButton>
+                            <Box sx={{ flexGrow: 1, display: "flex" }}>
+                                <LearnButton
+                                    sx={{
+                                        px: 1.5,
+                                        alignSelf: "flex-end",
+                                    }}
+                                    size="small"
+                                    disableRipple
+                                    endIcon={
+                                        <ArrowForwardIosRoundedIcon fontSize="small" />
+                                    }
+                                >
+                                    Learn More
+                                </LearnButton>
+                            </Box>
                         </Box>
                     </Box>
                 </Container>
@@ -439,15 +520,7 @@ const Home = (props) => {
             <Box id="section-4">
                 <Container sx={{ pt: 5 }}>
                     <Box sx={{ backgroundColor: "#2B61FF" }}>
-                        <Box
-                            sx={{
-                                display: "flex",
-                                justifyContent: "space-between",
-                                alignItems: "center",
-                                p: 5,
-                                py: 10,
-                            }}
-                        >
+                        <Box className="blue-modal">
                             <Box>
                                 <Typography className="h4-subtitle">
                                     So What's Next?
@@ -461,7 +534,11 @@ const Home = (props) => {
                                 </Typography>
                             </Box>
                             {/* TODO: link to signup */}
-                            <LoginButton variant="contained" sx={{ py: 1 }}>
+                            <LoginButton
+                                variant="contained"
+                                // className="modal-login-btn"
+                                sx={{ py: 1, mt: { xs: 2, md: 0 } }}
+                            >
                                 Get Started
                             </LoginButton>
                         </Box>

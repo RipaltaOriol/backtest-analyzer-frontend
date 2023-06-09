@@ -9,12 +9,12 @@ import Typography from "@mui/material/Typography";
 import { styled } from "@mui/system";
 
 const faq = {
-    "Sample FAQ 1":
-        "Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old.",
-    "Sample FAQ 2":
-        "Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source.",
-    "Sample FAQ 3":
-        "Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of 'de Finibus Bonorum et Malorum' (The Extremes of Good and Evil) by Cicero, written in 45 BC.",
+    "What can I do with Trade Sharpener?":
+        "Trade Sharpener allows you to upload your trading data and analyze it in-depth through easy-to-use and intuitive tools. You can create different versions of possible improvements you can make, compare them, and see how that affects different metrics within your trading strategy. You can also keep track of your trades and take detailed notes on each of them to spot every detail that could potentially lead to a higher return rate in your trading.",
+    "Is Trade Sharpener free?":
+        "Yes, Trade Sharpener is currently free for everyone. And you don’t have to worry about it ever. Even if in the future we raise prices, by signing up now you will always enjoy your account free of charge. This is our way of compensating early users.",
+    "Why should I use Trade Sharpener?":
+        "Through years of experience, we noticed that even though keeping a trading journal is relatively easy, going through the actual data and finding areas of improvement is not. There is not a single alternative out there that can simultaneously let you keep detailed notes of trades and also gives you the flexibility to analyze your trades quantitatively. If you are looking to take your trading to the next level then you must try Trade Sharpener.",
 };
 
 const CustomAccordion = styled(Accordion)({

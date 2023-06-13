@@ -29,7 +29,7 @@ import HomeVisualise from "../../assets/images/home-visualise.png";
 import Footer from "../../common/Footer";
 import FAQ from "./FAQ";
 import "./Home.css";
-import { GuideButtonMobile, LoginButtonMobile } from "./HomeComponents";
+import { LoginButtonMobile, NavButtonMobile } from "./HomeComponents";
 
 // TODO: is this paper necessary?
 const Item = styled(Box)({
@@ -80,7 +80,7 @@ const LoginButton = styled(Button, {
     }),
 }));
 
-const GuideButton = styled(Button, {
+const NavButton = styled(Button, {
     shouldForwardProp: (prop) => prop !== "trigger",
 })(({ trigger, theme }) => ({
     color: "#FFF",
@@ -205,7 +205,17 @@ const HomeAppbar = (props) => {
                     >
                         {/* {list(anchor)} */}
                         <Box className="mobile-drawer">
-                            <GuideButtonMobile
+                            {/* this is not right */}
+                            <NavButtonMobile
+                                className="guide-btn"
+                                sx={{ mb: 1 }}
+                                component={Link}
+                                to="/features"
+                                variant="contained"
+                            >
+                                Features
+                            </NavButtonMobile>
+                            <NavButtonMobile
                                 className="guide-btn"
                                 sx={{ mb: 1 }}
                                 component={Link}
@@ -213,7 +223,7 @@ const HomeAppbar = (props) => {
                                 variant="contained"
                             >
                                 Guide
-                            </GuideButtonMobile>
+                            </NavButtonMobile>
                             <LoginButtonMobile
                                 component={Link}
                                 to="/login"
@@ -226,14 +236,24 @@ const HomeAppbar = (props) => {
                     </SwipeableDrawer>
                 </Box>
                 <Box sx={{ display: { xs: "none", sm: "block" } }}>
-                    <GuideButton
+                    <NavButton
+                        component={Link}
+                        to="/features"
+                        variant="contained"
+                        trigger={trigger}
+                    >
+                        Features
+                    </NavButton>
+                    <NavButton
+                        sx={{ ml: 1.5 }}
                         component={Link}
                         to="/guide"
                         variant="contained"
                         trigger={trigger}
                     >
                         Guide
-                    </GuideButton>
+                    </NavButton>
+
                     <LoginButton
                         sx={{ ml: 1.5 }}
                         component={Link}
@@ -282,12 +302,14 @@ const Home = (props) => {
                                 mb: 4,
                             }}
                         >
-                            Explore and Learn from your Backtest Data
+                            Explore and Learn from your Trading Data
                         </Typography>
                         <OrangeButton
                             variant="contained"
                             size="large"
                             sx={{ px: 3, py: 1 }}
+                            component={Link}
+                            to="/login"
                         >
                             Get Sarted
                         </OrangeButton>
@@ -330,8 +352,8 @@ const Home = (props) => {
                                 what is not.
                             </Typography>
                             <Typography>
-                                Apply differentent layers and generate multiple
-                                scenario to generat leads.
+                                Apply different layers and generate multiple
+                                scenarios to generate leads.
                             </Typography>
                         </Item>
                         <Item sx={{ p: 3 }}>
@@ -350,19 +372,19 @@ const Home = (props) => {
                             </Typography>
                         </Item>
                         <Item sx={{ p: 3 }}>
-                            <Typography variant="h4">3. Visualise</Typography>
+                            <Typography variant="h4">3. Interpret</Typography>
                             <Box sx={{ my: 1.5 }}>
                                 <img src={HomeVisualise} alt="Change" />
                             </Box>
                             <Typography sx={{ mb: 2 }}>
-                                Be able to visualise your data through our
+                                Be able to visualize your data through our
                                 graphs and get a better sense of what your data
                                 looks like.
                             </Typography>
                             <Typography>
                                 If you also have screenshots of your trades we
-                                offer image embeding to look at them as you work
-                                on your data.
+                                offer image embedding to look at them as you
+                                work on through your data.
                             </Typography>
                         </Item>
                     </Box>
@@ -391,7 +413,7 @@ const Home = (props) => {
                         </Typography>
                     </Box>
                     <Box className="card-section">
-                        {/* TODO: missing height 100% - upgrading MUI v5.0 contains a better way */}
+                        {/* TODO: custom links to ID with 'Learn More' */}
                         <Box
                             sx={{
                                 border: "1px solid #E1E4E8",
@@ -423,6 +445,10 @@ const Home = (props) => {
                                         alignSelf: "flex-end",
                                     }}
                                     size="small"
+                                    component={Link}
+                                    to="/features"
+                                    // hash="#versioning"
+
                                     disableRipple
                                     endIcon={
                                         <ArrowForwardIosRoundedIcon fontSize="small" />
@@ -453,7 +479,7 @@ const Home = (props) => {
                                 Study your Data
                             </Typography>
                             <Typography sx={{ mb: 3 }}>
-                                Utilise all of our tools to study your backtest
+                                Utilize all of our tools to study your backtest
                                 in the way that best fits your needs
                             </Typography>
                             <Box sx={{ flexGrow: 1, display: "flex" }}>
@@ -463,6 +489,9 @@ const Home = (props) => {
                                         alignSelf: "flex-end",
                                     }}
                                     size="small"
+                                    component={Link}
+                                    to="/features"
+                                    // hash="#detail"
                                     disableRipple
                                     endIcon={
                                         <ArrowForwardIosRoundedIcon fontSize="small" />
@@ -503,6 +532,8 @@ const Home = (props) => {
                                         alignSelf: "flex-end",
                                     }}
                                     size="small"
+                                    component={Link}
+                                    to="/features"
                                     disableRipple
                                     endIcon={
                                         <ArrowForwardIosRoundedIcon fontSize="small" />
@@ -537,6 +568,8 @@ const Home = (props) => {
                             <LoginButton
                                 variant="contained"
                                 // className="modal-login-btn"
+                                component={Link}
+                                to="/login"
                                 sx={{ py: 1, mt: { xs: 2, md: 0 } }}
                             >
                                 Get Started

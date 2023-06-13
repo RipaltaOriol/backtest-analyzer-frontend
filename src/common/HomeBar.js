@@ -1,8 +1,5 @@
 import LogoIcon from "assets/svg/trade_sharpener_logo.svg";
-import {
-    GuideButtonMobile,
-    LoginButtonMobile,
-} from "pages/Home/HomeComponents";
+import { LoginButtonMobile, NavButtonMobile } from "pages/Home/HomeComponents";
 import { useState } from "react";
 import { Link, Outlet } from "react-router-dom";
 
@@ -26,7 +23,7 @@ const LoginButton = styled(Button)({
     padding: "4px 24px",
 });
 
-const GuideButton = styled(Button)({
+const NavButton = styled(Button)({
     fontSize: "0.875rem",
     fontWeight: "400",
     color: "#252C32",
@@ -124,7 +121,17 @@ const HomeBar = () => {
                             }}
                         >
                             <Box className="mobile-drawer">
-                                <GuideButtonMobile
+                                <NavButtonMobile
+                                    className="guide-btn"
+                                    sx={{ mb: 1 }}
+                                    component={Link}
+                                    to="/features"
+                                    variant="contained"
+                                    onClick={toggleDrawer(false)}
+                                >
+                                    Features
+                                </NavButtonMobile>
+                                <NavButtonMobile
                                     className="guide-btn"
                                     sx={{ mb: 1 }}
                                     component={Link}
@@ -133,7 +140,7 @@ const HomeBar = () => {
                                     onClick={toggleDrawer(false)}
                                 >
                                     Guide
-                                </GuideButtonMobile>
+                                </NavButtonMobile>
                                 <LoginButtonMobile
                                     component={Link}
                                     to="/login"
@@ -146,13 +153,21 @@ const HomeBar = () => {
                         </SwipeableDrawer>
                     </Box>
                     <Box sx={{ display: { xs: "none", sm: "block" } }}>
-                        <GuideButton
+                        <NavButton
+                            component={Link}
+                            to="/features"
+                            variant="contained"
+                        >
+                            Features
+                        </NavButton>
+                        <NavButton
+                            sx={{ ml: 1.5 }}
                             component={Link}
                             to="/guide"
                             variant="contained"
                         >
                             Guide
-                        </GuideButton>
+                        </NavButton>
                         <LoginButton
                             sx={{ ml: 1.5 }}
                             component={Link}

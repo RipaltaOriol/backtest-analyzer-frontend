@@ -1,7 +1,7 @@
 import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
 
-export const GuideButtonMobile = styled(Button)({
+export const NavButtonMobile = styled(Button)({
     color: "#252C32",
     backgroundColor: "#FFF",
     fontWeight: "400",

@@ -12,8 +12,6 @@ import { styled } from "@mui/system";
 import { useGetStatisticsQuery } from "../features/statistics/statisticsApiSlice";
 
 const TablePaper = styled(Paper)({
-    border: "1px solid #E5E9EB",
-    borderRadius: "6px",
     boxShadow: "none",
 });
 

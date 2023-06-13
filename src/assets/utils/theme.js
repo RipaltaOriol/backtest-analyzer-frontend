@@ -216,7 +216,7 @@ const theme = createTheme({
             color: "#5B6871",
         },
         overline: {
-            fontStyle: "italic",
+            color: "#2b61ff",
             fontSize: "16px",
             lineHeight: "24px",
         },

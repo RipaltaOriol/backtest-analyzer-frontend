@@ -96,7 +96,7 @@ const BarGraph = ({ setupId }) => {
         currentMetric: currentMetric,
     });
 
-    if (isSuccess) {
+    if (isSuccess && data?.success) {
         barData.labels = data?.dataLabels;
         let barDatasets = [];
         data?.data.forEach((dataset, idx) => {
@@ -120,36 +120,53 @@ const BarGraph = ({ setupId }) => {
                     my: 1,
                 }}
             >
-                <Typography align="center">
-                    {data?.labels?.title || "Loading"}
-                </Typography>
-                <Select
-                    size="small"
-                    value={data?.active_metric || ""}
-                    onChange={(e) =>
-                        dispatch(
-                            setCurrentMetric({ currentMetric: e.target.value })
-                        )
-                    }
-                    sx={{
-                        "& legend": { display: "none" },
-                        "& fieldset": { top: 0 },
-                        "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                            borderColor: "inherit",
-                            borderWidth: "1px",
-                        },
-                        position: "absolute",
-                        right: 0,
-                    }}
-                >
-                    {data
-                        ? data?.metric_list.map(([metric, parsedDate], idx) => (
-                              <FilterMenuItem key={idx} id={idx} value={metric}>
-                                  {parsedDate}
-                              </FilterMenuItem>
-                          ))
-                        : null}
-                </Select>
+                {data?.success && (
+                    <Typography align="center">
+                        {data?.labels?.title || "Loading"}
+                    </Typography>
+                )}
+                {!data?.success && (
+                    <Typography align="center" sx={{ color: "red" }}>
+                        {data?.msg}
+                    </Typography>
+                )}
+                {data?.success && (
+                    <Select
+                        size="small"
+                        value={data?.active_metric || ""}
+                        onChange={(e) =>
+                            dispatch(
+                                setCurrentMetric({
+                                    currentMetric: e.target.value,
+                                })
+                            )
+                        }
+                        sx={{
+                            "& legend": { display: "none" },
+                            "& fieldset": { top: 0 },
+                            "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                borderColor: "inherit",
+                                borderWidth: "1px",
+                            },
+                            position: "absolute",
+                            right: 0,
+                        }}
+                    >
+                        {data
+                            ? data?.metric_list.map(
+                                  ([metric, parsedDate], idx) => (
+                                      <FilterMenuItem
+                                          key={idx}
+                                          id={idx}
+                                          value={metric}
+                                      >
+                                          {parsedDate}
+                                      </FilterMenuItem>
+                                  )
+                              )
+                            : null}
+                    </Select>
+                )}
             </Box>
 
             <Bar options={options} data={barData} />

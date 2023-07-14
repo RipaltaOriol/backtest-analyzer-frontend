@@ -95,7 +95,7 @@ const ScatterGraph = ({ setupId }) => {
         currentMetric: currentMetric,
     });
 
-    if (isSuccess) {
+    if (isSuccess && data?.success) {
         let scatterDatasets = [];
         data?.data.forEach((dataset, idx) => {
             scatterDatasets.push({
@@ -118,36 +118,54 @@ const ScatterGraph = ({ setupId }) => {
                     my: 1,
                 }}
             >
-                <Typography align="center">
-                    {data?.labels?.title || "Loading"}
-                </Typography>
-                <Select
-                    size="small"
-                    value={data?.active_metric || ""}
-                    onChange={(e) =>
-                        dispatch(
-                            setCurrentMetric({ currentMetric: e.target.value })
-                        )
-                    }
-                    sx={{
-                        "& legend": { display: "none" },
-                        "& fieldset": { top: 0 },
-                        "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                            borderColor: "inherit",
-                            borderWidth: "1px",
-                        },
-                        position: "absolute",
-                        right: 0,
-                    }}
-                >
-                    {data
-                        ? data?.metric_list.map(([metric, parsedDate], idx) => (
-                              <FilterMenuItem key={idx} id={idx} value={metric}>
-                                  {parsedDate}
-                              </FilterMenuItem>
-                          ))
-                        : null}
-                </Select>
+                {data?.success && (
+                    <Typography align="center">
+                        {data?.labels?.title || "Loading"}
+                    </Typography>
+                )}
+
+                {!data?.success && (
+                    <Typography align="center" sx={{ color: "red" }}>
+                        {data?.msg}
+                    </Typography>
+                )}
+                {data?.success && (
+                    <Select
+                        size="small"
+                        value={data?.active_metric || ""}
+                        onChange={(e) =>
+                            dispatch(
+                                setCurrentMetric({
+                                    currentMetric: e.target.value,
+                                })
+                            )
+                        }
+                        sx={{
+                            "& legend": { display: "none" },
+                            "& fieldset": { top: 0 },
+                            "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                borderColor: "inherit",
+                                borderWidth: "1px",
+                            },
+                            position: "absolute",
+                            right: 0,
+                        }}
+                    >
+                        {data
+                            ? data?.metric_list.map(
+                                  ([metric, parsedDate], idx) => (
+                                      <FilterMenuItem
+                                          key={idx}
+                                          id={idx}
+                                          value={metric}
+                                      >
+                                          {parsedDate}
+                                      </FilterMenuItem>
+                                  )
+                              )
+                            : null}
+                    </Select>
+                )}
             </Box>
             <Scatter options={options} data={scatterData} />
         </Box>

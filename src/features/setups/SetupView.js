@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
 
+import PPTTemplate from "features/templates/PPTTemplate";
+
 import PieChart from "../../common/PieChart";
 import SimpleTable from "../../common/SimpleTable";
 import Notes from "../../pages/Analysis/Notes";
@@ -16,6 +18,7 @@ import SingleRecordDialog from "./SingleSetup/SingleRecordDialog";
 import FilterList from "./filters/FilterList";
 
 let dataPieChart = {};
+let dataPieSuccess = false;
 
 const Item = styled(Box)({
     borderRadius: "6px",
@@ -35,6 +38,7 @@ let SetupView = ({ setup }) => {
 
     if (isSuccess) {
         if (data) {
+            dataPieSuccess = data.success;
             dataPieChart = data.pie;
         }
     }
@@ -52,7 +56,10 @@ let SetupView = ({ setup }) => {
                     {setup?.id && <LineGraph setupId={setup?.id} />}
                 </Box>
                 <Item className="setup-result-distribution" sx={{ p: 2 }}>
-                    <PieChart dataPieChart={dataPieChart} />
+                    <PieChart
+                        dataPieChart={dataPieChart}
+                        success={dataPieSuccess}
+                    />
                 </Item>
                 <Box className="setup-bar">
                     {setup?.id && <BarGraph setupId={setup?.id} />}
@@ -61,6 +68,7 @@ let SetupView = ({ setup }) => {
                     {setup?.id && <ScatterGraph setupId={setup?.id} />}
                 </Box>
                 <Item className="setup-stats">
+                    {/* <SimpleTable id={setup?.id} /> */}
                     {setup?.id && <SimpleTable id={setup?.id} />}
                 </Item>
                 <Item className="setup-notes">
@@ -82,6 +90,8 @@ let SetupView = ({ setup }) => {
                 setupId={setup?.id}
                 rowRecord={selectedRow}
             />
+            {/* this should return the appropriate tempalte for the given document */}
+            <PPTTemplate />
         </Box>
     );
 };

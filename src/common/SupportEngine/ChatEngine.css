@@ -1,0 +1,19 @@
+.ce-chat-title-text {
+    color: #0e73f6;
+}
+
+.ce-chat-subtitle-text {
+    color: #0e73f6;
+}
+
+.ce-chat-title-container {
+    background-color: #e5e9eb;
+    opacity: 0.9;
+}
+
+.ce-avatar-dot:first-child {
+    background-color: black !important;
+}
+.ce-avatar-dot:nth-child(2) {
+    background-color: #0e73f6 !important;
+}

@@ -1,0 +1,16 @@
+.box-grid-sl-tp {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    column-gap: 16px;
+}
+
+.box-grid-close {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    column-gap: 16px;
+}
+
+.preview-image {
+    max-width: 800px;
+    margin-bottom: 8px;
+}

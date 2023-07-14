@@ -270,6 +270,17 @@ const HomeAppbar = (props) => {
 };
 
 const Home = (props) => {
+    // useEffect(() => {
+    //     const script = document.createElement("script");
+    //     script.src = "//code.tidio.co/ky4jajarj9ghialebwkpxjyqz3qjls4g.js";
+    //     script.async = true;
+    //     document.body.appendChild(script);
+
+    //     return () => {
+    //         document.body.removeChild(script);
+    //     };
+    // }, []);
+
     return (
         <Box
             sx={{

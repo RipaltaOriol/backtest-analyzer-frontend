@@ -2,7 +2,7 @@ import Message from "common/Message";
 import Upload from "pages/upload";
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
 import DriveFileRenameOutlineRoundedIcon from "@mui/icons-material/DriveFileRenameOutlineRounded";
@@ -195,14 +195,25 @@ const AllDocuments = () => {
     return (
         <Box>
             <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                <Typography variant="h5">All Documents</Typography>
-                <Button
-                    color="primary"
-                    variant="contained"
-                    onClick={handleUploadOpen}
-                >
-                    Upload New Document
-                </Button>
+                <Typography variant="h5">All Accounts</Typography>
+                <Box>
+                    <Button
+                        color="primary"
+                        variant="contained"
+                        component={Link}
+                        to="/files/create"
+                        sx={{ mr: 2 }}
+                    >
+                        Creaete Manually
+                    </Button>
+                    <Button
+                        color="primary"
+                        variant="contained"
+                        onClick={handleUploadOpen}
+                    >
+                        Upload New Document
+                    </Button>
+                </Box>
             </Box>
             <Divider sx={{ mt: 2, mb: 3 }} />
             {msg && (

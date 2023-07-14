@@ -1,3 +1,4 @@
+import ManualAccountCreation from "assets/images/manual-account-creation.png";
 import { useLocation } from "react-router-dom";
 
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
@@ -245,51 +246,55 @@ const Help = () => {
                     </Box>
                     <Box sx={{ my: 2 }}>
                         <Typography variant="h4" component="h2">
-                            Documents
+                            Accounts
                         </Typography>
                         <Typography variant="body2" sx={{ my: 1 }}>
-                            When a file is uploaded to Trade Sharpener, it
-                            creates a{" "}
-                            <span className="highlight">document</span> to store
-                            the data from the file. These documents serve as
-                            reference points for the uploaded files and cannot
-                            be directly edited. However, if you need to make
+                            When a file is uploaded (or created) in Trade
+                            Sharpener, the app creates an{" "}
+                            <span className="highlight">account</span> where the
+                            data will be stored. These accounts serve as
+                            reference points for the uploaded files (not
+                            applicable to manual creation) and cannot be
+                            directly edited. However, if you need to make
                             changes to the original data, you can rename,
                             duplicate, delete, and update each trade within the
-                            document by navigating to the{" "}
-                            <span className="highlight">All Documents</span>{" "}
-                            section. To initiate an analysis on a{" "}
-                            <span className="highlight">document</span>, simply
-                            click on the document name located in the left
+                            account by navigating to the{" "}
+                            <span className="highlight">All Accounts</span>{" "}
+                            section. To initiate an analysis on an{" "}
+                            <span className="highlight">account</span>, simply
+                            click on the account name located in the left
                             sidebar of the app.
                         </Typography>
                     </Box>
                     <Box sx={{ my: 2 }}>
                         <Typography variant="h4" component="h2">
-                            Setups
+                            Versions
                         </Typography>
                         <Typography variant="body2" sx={{ my: 1 }}>
                             Trade Sharpener utilizes{" "}
-                            <span className="highlight">setups</span> to
+                            <span className="highlight">versions</span> to
                             facilitate the analysis of trading data while
                             preserving the original data for future reference.
                             This feature allows users to work on different
-                            analyses within the same document without the need
-                            to delete or lose progress from previous analyses,
-                            or upload the same file multiple times. The setups
-                            of a document can be accessed through the top right
-                            dropdown menu and can be created, renamed, and
-                            deleted in the{" "}
-                            <span className="highlight">All Setups</span>
+                            analyses within the same account without the need to
+                            delete or lose progress from previous analyses, or
+                            create/upload the same file multiple times. The
+                            versions of an account can be accessed through the
+                            top right dropdown menu and can be created, renamed,
+                            and deleted in the{" "}
+                            <span className="highlight">All Versions</span>
                             section, which is also accessible from the left
-                            sidebar. Additionally, upon uploading data and
-                            creating a document, an initial{" "}
-                            <span className="highlight">setup</span> is
+                            sidebar. Additionally, upon creating/uploading data
+                            and therefore, creating an account, an initial{" "}
+                            <span className="highlight">version</span> is
                             automatically generated and marked as{" "}
                             <span className="highlight">default</span>. However,
                             users have the flexibility to change the
-                            <span className="highlight">default setup</span> in
-                            the <span className="highlight">All Setups</span>{" "}
+                            <span className="highlight">
+                                default version
+                            </span>{" "}
+                            in the{" "}
+                            <span className="highlight">All Versions</span>{" "}
                             section.
                         </Typography>
                     </Box>
@@ -297,6 +302,43 @@ const Help = () => {
                         <Typography variant="h4" component="h1" sx={{ mb: 1 }}>
                             Examples
                         </Typography>
+                        <Box>
+                            <Typography variant="h5">
+                                Manual Account Creation
+                            </Typography>
+                            <Typography variant="body2" gutterBottom>
+                                As a user, you have the option to manually
+                                create an account if you prefer not to import
+                                your data. To do this, simply navigate to the{" "}
+                                <span className="highlight">All Accounts</span>{" "}
+                                section and click on the{" "}
+                                <span className="highlight">
+                                    Create Manually
+                                </span>{" "}
+                                button. A form will appear, allowing you to
+                                specify the name of the new account and add the
+                                desired fields/columns.
+                            </Typography>
+                            <Typography variant="body2">
+                                <span className="highlight">Note</span>: We
+                                highly recommend adding at least one result
+                                column to track your progress and receive a more
+                                comprehensive analysis. This will provide you
+                                with a better understanding of your performance.
+                            </Typography>
+                            <Box
+                                sx={{
+                                    my: 3,
+                                    borderRadius: "6px",
+                                    border: "1px solid #E5E9EB",
+                                }}
+                            >
+                                <img
+                                    src={ManualAccountCreation}
+                                    alt="Manual Account Creation"
+                                />
+                            </Box>
+                        </Box>
                         <Box>
                             <Typography variant="h5">Upload File</Typography>
                             <Typography variant="body2">

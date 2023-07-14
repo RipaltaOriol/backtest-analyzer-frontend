@@ -29,6 +29,7 @@ import DocumentBar from "../features/documents/DocumentBar";
 import { setLoginMsg } from "../features/messages/messagesSlice";
 import Upload from "../pages/upload";
 import LogoTitle from "./LogoTitle";
+import SupportEngine from "./SupportEngine";
 
 const drawerWidth = 240;
 
@@ -78,13 +79,13 @@ const useStyles = makeStyles((theme) =>
 const features = [
     {
         id: "files",
-        name: "All Documents",
+        name: "All Accounts",
         url: "/files",
         icon: <LibraryBooksIcon />,
     },
     {
         id: "setups",
-        name: "All Setups",
+        name: "All Versions",
         url: "/setups",
         icon: <Inventory2RoundedIcon />,
     },
@@ -164,6 +165,7 @@ export default function Layout() {
                 variant="permanent"
                 sx={{
                     width: drawerWidth,
+                    height: "100vh",
                     flexShrink: 0,
                     "& .MuiDrawer-paper": {
                         width: drawerWidth,
@@ -209,13 +211,13 @@ export default function Layout() {
                 </List>
                 <Divider sx={{ m: 1 }} />
                 {/* Files */}
-                <List>
+                <List sx={{ overflow: "scroll" }}>
                     <Typography sx={{ px: 3 }} variant="subtitle1">
-                        Files
+                        Accounts
                     </Typography>
                     <DocumentBar />
                 </List>
-                <List sx={{ mt: "auto", mb: 1 }}>
+                <List sx={{ mt: "auto" }}>
                     <Divider sx={{ mx: 1, mb: 1 }} />
                     {assistance.map((feat) => (
                         <DrawerItemButton
@@ -257,6 +259,7 @@ export default function Layout() {
                     <Outlet />
                 </Box>
                 <Upload open={openUpload} onClose={handleUploadClose} />
+                <SupportEngine />
             </Box>
         </Box>
     );

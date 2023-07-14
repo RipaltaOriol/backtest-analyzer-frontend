@@ -31,7 +31,6 @@ const rows = [
         "col_p_Result at 1.6"
     ),
     createData("Value Result", "Number", "col_v_{...}", "col_v_Result at 1.6"),
-    createData("Value Result", "Number", "col_v_{...}", "col_v_Result at 1.6"),
     createData("Notes", "Test", "note", "note"),
     createData("Images", "URL", "imgs", "imgs"),
 ];

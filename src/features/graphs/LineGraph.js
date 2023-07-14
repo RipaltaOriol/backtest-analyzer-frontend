@@ -101,7 +101,7 @@ const LineGraph = ({ setupId }) => {
         labels: [],
         datasets: [],
     };
-    if (isSuccess) {
+    if (isSuccess && data?.success) {
         lineData.labels = data?.xLabels;
 
         let lineDatasets = [];
@@ -125,9 +125,16 @@ const LineGraph = ({ setupId }) => {
                     my: 1,
                 }}
             >
-                <Typography align="center">
-                    {data?.labels?.title || "Loading"}
-                </Typography>
+                {data?.success && (
+                    <Typography align="center">
+                        {data?.labels?.title || "Loading"}
+                    </Typography>
+                )}
+                {!data?.success && (
+                    <Typography align="center" sx={{ color: "red" }}>
+                        {data?.msg}
+                    </Typography>
+                )}
                 <Select
                     size="small"
                     value={data?.active_metric || ""}

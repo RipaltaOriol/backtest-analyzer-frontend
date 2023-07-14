@@ -84,14 +84,14 @@ const AddSetupDialog = ({
         <Dialog open={openAddDialog} onClose={handleAddDialogClose}>
             <DialogTitle sx={{ color: "inherit" }}>
                 <Typography variant="h5" sx={{ mt: 1 }}>
-                    Add New Setup
+                    Add New Version
                 </Typography>
             </DialogTitle>
             <DialogContent>
                 {documentId == null && (
                     <>
                         <DialogContentText sx={{ fontSize: "14px", mb: 1 }}>
-                            Indicate for which document is this setup and what
+                            Indicate for which account is this version and what
                             name should it have:
                         </DialogContentText>
                         <DropdownButton
@@ -100,7 +100,7 @@ const AddSetupDialog = ({
                             onClick={handleClick}
                         >
                             <DocumentPlaceholder>
-                                Document:&nbsp;
+                                Account:&nbsp;
                             </DocumentPlaceholder>
                             {document ? document?.name : "None"}
                         </DropdownButton>
@@ -133,7 +133,6 @@ const AddSetupDialog = ({
                     </>
                 )}
                 <TextField
-                    autoFocus
                     margin="dense"
                     id="name"
                     label="Name"

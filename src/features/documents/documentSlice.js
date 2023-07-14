@@ -26,6 +26,14 @@ export const documentsApiSlice = apiSlice.injectEndpoints({
             query: ({ documentId }) => `/documents/${documentId}`,
             providesTags: ["DocumentTable"],
         }),
+        postDocument: builder.mutation({
+            query: ({ name, fields, checkbox }) => ({
+                url: "/documents",
+                method: "POST",
+                body: { name, fields, checkbox },
+            }),
+            invalidatesTags: [{ type: "Document", id: "LIST" }, "Setup"],
+        }),
         updateDocument: builder.mutation({
             query: ({ id, method, data }) => ({
                 url: `/documents/${id}/update`,
@@ -103,6 +111,7 @@ export const {
     useUploadDocumentMutation,
     useCloneDocumentMutation,
     useRenameDocumentMutation,
+    usePostDocumentMutation,
     useDeleteDocumentMutation,
     useCompareDocumentSetupsQuery,
     useGetCalendarTableQuery,

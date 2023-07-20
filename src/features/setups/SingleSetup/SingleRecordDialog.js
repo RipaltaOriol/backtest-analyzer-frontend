@@ -160,8 +160,6 @@ function SingleRecordDialog({
     const removeImage = (idx) => {
         var newImages = [...images];
         newImages.splice(idx, 1);
-        console.log(idx);
-        console.log(newImages);
         setImages(newImages);
     };
 
@@ -280,15 +278,7 @@ function SingleRecordDialog({
                                                             {parseColumnName(
                                                                 key
                                                             )}
-                                                            <HighlightText
-                                                                onClick={() =>
-                                                                    console.log(
-                                                                        getResultAdornment(
-                                                                            key
-                                                                        )
-                                                                    )
-                                                                }
-                                                            >
+                                                            <HighlightText>
                                                                 {/* todo: change this */}
                                                                 {value}{" "}
                                                                 {getResultAdornment(

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 
+import ContentPasteSearchRoundedIcon from "@mui/icons-material/ContentPasteSearchRounded";
 import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
 import DriveFileRenameOutlineRoundedIcon from "@mui/icons-material/DriveFileRenameOutlineRounded";
 import FileCopyRoundedIcon from "@mui/icons-material/FileCopyRounded";
@@ -29,6 +30,7 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { styled } from "@mui/system";
 
+import TemplateSelection from "./TemplateSelection";
 import { selectAllDocuments } from "./documentSlice";
 import {
     useCloneDocumentMutation,
@@ -75,10 +77,11 @@ const DocumentSource = styled(Typography)({
 const AllDocuments = () => {
     let navigate = useNavigate();
     const [openDialog, setOpenDialog] = useState(false);
+    const [openSelectTemplate, setOpenSelectTemplate] = useState(false);
     const [msg, setMsg] = useState("");
     const [newName, setNewName] = useState("");
     const [anchorEl, setAnchorEl] = useState(null);
-    const [documentId, setDocumentId] = useState(null);
+    const [selectedDocument, setSelectedDocument] = useState(null);
     const [openUpload, setOpenUpload] = useState(false);
     const open = Boolean(anchorEl);
 
@@ -90,39 +93,44 @@ const AllDocuments = () => {
         setOpenUpload(false);
     };
 
-    const handleClick = (id, event) => {
-        setDocumentId(id);
+    const handleClick = (document, event) => {
+        setSelectedDocument(document);
         setAnchorEl(event.currentTarget);
     };
 
     const handleClose = () => {
-        setDocumentId(null);
+        setSelectedDocument(null);
         setAnchorEl(null);
     };
 
-    const handleRenameClose = (id) => {
+    const handleRenameClose = () => {
         setAnchorEl(null);
         setOpenDialog(true);
     };
 
-    const handleCopyClose = (id) => {
-        cloneDocument({ id: documentId });
+    const handleSelectTemplateClose = () => {
+        setAnchorEl(null);
+        setOpenSelectTemplate(true);
+    };
+
+    const handleCopyClose = () => {
+        cloneDocument({ id: selectedDocument.id });
         setAnchorEl(null);
     };
 
     const handleDeleteClose = () => {
         setAnchorEl(null);
-        deleteDocument({ id: documentId });
+        deleteDocument({ id: selectedDocument.id });
     };
 
     const handleDialogClose = () => {
-        setDocumentId(null);
+        setSelectedDocument(null);
         setNewName("");
         setOpenDialog(false);
     };
 
     const handleChangeName = () => {
-        renameDocument({ id: documentId, name: newName });
+        renameDocument({ id: selectedDocument.id, name: newName });
         setOpenDialog(false);
     };
 
@@ -176,7 +184,7 @@ const AllDocuments = () => {
                         }
                         aria-haspopup="true"
                         aria-expanded={open ? "true" : undefined}
-                        onClick={(e) => handleClick(doc.id, e)}
+                        onClick={(e) => handleClick(doc, e)}
                     >
                         <MoreHorizIcon sx={{ color: "#252C32" }} />
                     </IconButton>
@@ -256,6 +264,11 @@ const AllDocuments = () => {
                     </Button>
                 </DialogActions>
             </Dialog>
+            <TemplateSelection
+                open={openSelectTemplate}
+                handleCloseDialog={() => setOpenSelectTemplate(false)}
+                document={selectedDocument}
+            />
             <Menu
                 anchorEl={anchorEl}
                 open={open}
@@ -276,12 +289,18 @@ const AllDocuments = () => {
                     <ListItemText>Rename</ListItemText>
                 </DocumentMenuItem>
                 <DocumentMenuItem
-                    onClick={() => navigate("update/" + documentId)}
+                    onClick={() => navigate("update/" + selectedDocument.id)}
                 >
                     <ListItemIcon sx={{ minWidth: "30px !important" }}>
                         <UpdateRoundedIcon fontSize="small" />
                     </ListItemIcon>
                     <ListItemText>Update</ListItemText>
+                </DocumentMenuItem>
+                <DocumentMenuItem onClick={handleSelectTemplateClose}>
+                    <ListItemIcon sx={{ minWidth: "30px !important" }}>
+                        <ContentPasteSearchRoundedIcon fontSize="small" />
+                    </ListItemIcon>
+                    <ListItemText>Select Template</ListItemText>
                 </DocumentMenuItem>
                 <DocumentMenuItem onClick={handleCopyClose}>
                     <ListItemIcon sx={{ minWidth: "30px !important" }}>

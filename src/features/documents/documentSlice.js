@@ -81,6 +81,15 @@ export const documentsApiSlice = apiSlice.injectEndpoints({
             }),
             invalidatesTags: [{ type: "Document", id: "LIST" }],
         }),
+        assignDocumentTemplate: builder.mutation({
+            query: ({ documentId, templateId }) => ({
+                url: `/documents/${documentId}/templates/${templateId}`,
+                method: "POST",
+            }),
+            invalidatesTags: (result, error, arg) => [
+                { type: "Document", id: arg.documentId },
+            ],
+        }),
         getDocumentColumns: builder.query({
             query: ({ documentId }) => `/documents/${documentId}/columns`,
         }),
@@ -116,6 +125,7 @@ export const {
     useCompareDocumentSetupsQuery,
     useGetCalendarTableQuery,
     useGetDocumentColumnsQuery,
+    useAssignDocumentTemplateMutation,
 } = documentsApiSlice;
 
 // returns the query result object

@@ -84,7 +84,6 @@ const Upload = memo(({ open, onClose }) => {
             return true;
         }
 
-        console.log(file.type);
         const data = new FormData();
 
         data.append("file", file);

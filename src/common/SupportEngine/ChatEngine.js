@@ -11,7 +11,6 @@ const ChatEngine = ({ visible, user, chat }) => {
     useEffect(() => {
         if (visible) {
             setTimeout(() => {
-                console.log("chat");
                 setShowChat(true);
             }, 500);
         }

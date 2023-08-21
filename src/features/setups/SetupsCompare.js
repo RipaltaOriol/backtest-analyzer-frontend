@@ -163,22 +163,24 @@ const SetupsCompare = () => {
                                   >
                                       <SetupTitle>{setup.name}</SetupTitle>
 
-                                      {/* Implement in the future */}
-                                      {/* <Button
-                                        variant='text'
-                                        component={Link}
-                                        to={`/${documentId}`}
-                                        state={{
-                                            setup: setup.id 
-                                        }}
-                                        endIcon={<TrendingUpRoundedIcon />}
-                                        sx={{
-                                            textTransform: 'none',
-                                            py: 0
-                                        }}
-                                    >
-                                        Go To
-                                    </Button> */}
+                                      <Button
+                                          variant="text"
+                                          component={Link}
+                                          to={`/${documentId}`}
+                                          state={{
+                                              setup: {
+                                                  id: setup.id,
+                                                  parent: documentId,
+                                              },
+                                          }}
+                                          endIcon={<TrendingUpRoundedIcon />}
+                                          sx={{
+                                              textTransform: "none",
+                                              py: 0,
+                                          }}
+                                      >
+                                          Go To
+                                      </Button>
                                   </Box>
                                   <List sx={{ px: "16px" }}>
                                       {setup.filters.map((filter) => (

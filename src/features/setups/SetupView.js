@@ -5,6 +5,7 @@ import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
 
 import PPTTemplate from "features/templates/PPTTemplate";
+import { renderTemplate } from "features/templates/utilsRenderTemplate";
 
 import PieChart from "../../common/PieChart";
 import SimpleTable from "../../common/SimpleTable";
@@ -14,7 +15,6 @@ import LineGraph from "../graphs/LineGraph";
 import ScatterGraph from "../graphs/ScatterGraph";
 import { useGetChartsQuery } from "../statistics/statisticsApiSlice";
 import "./Setups.css";
-import SingleRecordDialog from "./SingleSetup/SingleRecordDialog";
 import FilterList from "./filters/FilterList";
 
 let dataPieChart = {};
@@ -82,15 +82,14 @@ let SetupView = ({ setup }) => {
                     />
                 </Box>
             </Box>
-
             {/* popup to display a trade */}
-            <SingleRecordDialog
-                open={open}
-                onClose={() => setOpen(false)}
-                setupId={setup?.id}
-                rowRecord={selectedRow}
-            />
-            {/* this should return the appropriate tempalte for the given document */}
+            {renderTemplate(
+                setup?.template,
+                setup?.id,
+                selectedRow,
+                open,
+                setOpen
+            )}
             <PPTTemplate />
         </Box>
     );

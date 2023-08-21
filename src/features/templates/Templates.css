@@ -1,3 +1,11 @@
+.position-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    column-gap: 16px;
+    margin-bottom: 8px;
+    align-items: center;
+}
+
 .box-grid-sl-tp {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -13,4 +21,12 @@
 .preview-image {
     max-width: 800px;
     margin-bottom: 8px;
+}
+
+.execution-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    column-gap: 16px;
+    margin-bottom: 8px;
+    align-items: center;
 }

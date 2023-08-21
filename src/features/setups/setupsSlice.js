@@ -28,7 +28,7 @@ export const setupsSlice = apiSlice.injectEndpoints({
         }),
         updateRowNoteSetup: builder.mutation({
             query: ({ setupId, rowId, note, images, isSync }) => ({
-                url: `/setups/${setupId}/${rowId}/note`,
+                url: `/setups/${setupId}/${rowId}`,
                 method: "POST",
                 body: { note, images, isSync },
             }),
@@ -122,8 +122,18 @@ export const selectSetupsByDocument = createSelector(
 
 export const selectDefaultSetup = createSelector(
     [selectAllSetups, (data, documentId) => documentId],
-    (setups, documentId) =>
-        setups.find((setup) => setup.default && setup.documentId === documentId)
+    (setups, documentId) => {
+        console.log(documentId);
+        return setups.find(
+            (setup) => setup.default && setup.documentId === documentId
+        );
+    }
+);
+
+// NOTE: this is a duplicate - probably delete and reuse
+export const selectProvidedSetup = createSelector(
+    [selectAllSetups, (data, setupId) => setupId],
+    (setups, setupId) => setups.find((setup) => setup.id === setupId)
 );
 
 export const selectSetupOnId = createSelector(

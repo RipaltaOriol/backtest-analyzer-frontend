@@ -5,7 +5,6 @@ import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-import TextField from "@mui/material/TextField";
 
 import Close from "./PPTTemplate/Close";
 import Execution from "./PPTTemplate/Execution";
@@ -23,7 +22,7 @@ const PPTTemplate = ({ setupId, rowId, open, onClose }) => {
     );
 
     const [putSetupRow] = usePutSetupRowMutation();
-    const [template, setTemplate] = useState({});
+    const [template, setTemplate] = useState(row);
 
     useEffect(() => {
         setTemplate(row);
@@ -118,15 +117,6 @@ const PPTTemplate = ({ setupId, rowId, open, onClose }) => {
                     </Box>
                     <DialogContent sx={{ p: 4, pt: 1.5 }}>
                         {/* Fundamental */}
-                        <input
-                            size="small"
-                            variant="outlined"
-                            value={row?.asset}
-                            onChange={(e) =>
-                                onChangeField("asset", e.target.value)
-                            }
-                        />
-                        <h1>{row?.asset}</h1>
                         <Fundamental
                             template={template}
                             onChangeField={onChangeField}

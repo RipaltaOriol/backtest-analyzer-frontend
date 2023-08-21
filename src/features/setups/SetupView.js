@@ -15,7 +15,6 @@ import LineGraph from "../graphs/LineGraph";
 import ScatterGraph from "../graphs/ScatterGraph";
 import { useGetChartsQuery } from "../statistics/statisticsApiSlice";
 import "./Setups.css";
-import SingleRecordDialog from "./SingleSetup/SingleRecordDialog";
 import FilterList from "./filters/FilterList";
 
 let dataPieChart = {};

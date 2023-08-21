@@ -1,5 +1,4 @@
 import { CustomMenuItem } from "common/CustomComponents";
-import { useEffect, useState } from "react";
 
 import { Divider } from "@mui/material";
 import Box from "@mui/material/Box";
@@ -31,21 +30,10 @@ const strengthOptions = CURRENCY_STATES.map((state) => (
     <CustomMenuItem value={state}>{state}</CustomMenuItem>
 ));
 
-// first upadteProperly
-// potentially use a useEffect - values are correct but not updateo
-
 const Fundamental = ({ template, onChangeField }) => {
-    console.log("HERE: " + template?.asset);
-    // const [asset, setAsset] = useState("");
-
-    // useEffect(() => {
-    //     setAsset(template?.asset);
-    // }, [template]);
-
     return (
         <Box sx={{ mb: 2.5 }}>
             <Typography variant="h5">Fundamental View</Typography>
-            <button onClick={() => console.log(template?.asset)}>See</button>
             <Divider sx={{ mb: 1.5 }} />
             <Grid container rowSpacing={1} columnSpacing={2}>
                 <Grid item xs={6}>
@@ -55,7 +43,7 @@ const Fundamental = ({ template, onChangeField }) => {
                             <CustomTextField
                                 size="small"
                                 variant="outlined"
-                                value={template?.asset}
+                                value={template?.asset || ""}
                                 onChange={(e) =>
                                     onChangeField("asset", e.target.value)
                                 }
@@ -179,7 +167,7 @@ const Fundamental = ({ template, onChangeField }) => {
                     </Typography>
                     <CustomTextField
                         multiline
-                        value={template?.reason}
+                        value={template?.reason || ""}
                         onChange={(e) =>
                             onChangeField("reason", e.target.value)
                         }

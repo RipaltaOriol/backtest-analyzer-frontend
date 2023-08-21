@@ -12,8 +12,8 @@ import {
     useAddTemplateUserSettingsMutation,
     useGetUserSettingsQuery,
 } from "features/auth/authApiSlice";
-import { renderTemplate } from "features/templates/utilsTemplateManager";
 
+// import { renderTemplate } from "features/templates/utilsTemplateManager";
 import "./settings.css";
 
 function stringToColor(string) {
@@ -138,6 +138,7 @@ const Settings = () => {
                             <Button
                                 variant="contained"
                                 startIcon={<VisibilityRoundedIcon />}
+                                disabled
                             >
                                 Preview
                             </Button>
@@ -177,6 +178,7 @@ const Settings = () => {
                                 <Button
                                     color="secondary"
                                     startIcon={<VisibilityRoundedIcon />}
+                                    disabled
                                 >
                                     Preview
                                 </Button>

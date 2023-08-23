@@ -42,7 +42,7 @@ let StateTable = ({ setup, setOpen, setSelectedRow }) => {
             setColumns(
                 Object.keys(setup.state.fields).reduce((result, key) => {
                     if (key !== "imgs" && key !== "note") {
-                        if (key.startsWith("col_d")) {
+                        if (key.startsWith("col_d_")) {
                             result.push(
                                 columnHelper.accessor(key, {
                                     header: parseColumnName(key),

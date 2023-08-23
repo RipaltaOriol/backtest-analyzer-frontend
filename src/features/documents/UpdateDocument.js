@@ -158,6 +158,13 @@ const UpdateDocument = () => {
     };
 
     const handleDocumentUpdate = async (method) => {
+        if (checkDirectionValue()) {
+            setMsg(
+                "Direction value is incorrect. It should be either Long or Short."
+            );
+            setMsgStatus(false);
+            return false;
+        }
         let res = await updateDocument({
             id: documentId,
             method,
@@ -188,9 +195,20 @@ const UpdateDocument = () => {
         });
     };
 
+    const checkDirectionValue = () => {
+        let direction = rowValues.col_d;
+        if (direction) {
+            return (
+                direction.toLowerCase() !== "long" &&
+                direction.toLowerCase() !== "short"
+            );
+        }
+        return false;
+    };
+
     function updateDocumentTextField(column, idx) {
         if (column.name !== "note" && column.name !== "imgs") {
-            if (column.id.startsWith("col_d")) {
+            if (column.id.startsWith("col_d_")) {
                 return (
                     <Grid item>
                         <DateTimeField
@@ -217,6 +235,11 @@ const UpdateDocument = () => {
                             key={idx}
                             label={column.name}
                             type={column.type}
+                            error={
+                                column.id === "col_d"
+                                    ? checkDirectionValue()
+                                    : false
+                            }
                             variant="outlined"
                             value={
                                 rowValues?.[column.id] === 0

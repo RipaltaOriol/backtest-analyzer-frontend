@@ -23,6 +23,10 @@ export function parseColumnName(name) {
         return "Take Profit";
     } else if (name === "col_sl") {
         return "Stop Loss";
+    } else if (name === "col_t") {
+        return "Timeframe";
+    } else if (name === "col_d") {
+        return "Direction";
     }
     return name;
 }

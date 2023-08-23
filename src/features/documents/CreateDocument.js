@@ -53,6 +53,8 @@ const checkboxOptions = {
     col_rr: "Risk Reward Ratio",
     col_sl: "Stop Loss",
     col_tp: "Take Profit",
+    col_t: "Timeframe",
+    col_d: "Direction",
 };
 
 const columnHelper = createColumnHelper();
@@ -72,6 +74,8 @@ const CreateDocument = () => {
         col_rr: false,
         col_sl: false,
         col_tp: false,
+        col_t: false,
+        col_d: false,
     });
 
     const [columns, setColumns] = useState(() => []);
@@ -414,6 +418,20 @@ const CreateDocument = () => {
                             onChange={() => handleCheckbox("col_tp")}
                             control={<Checkbox disableRipple />}
                             label="Take Profit"
+                        />
+                        <FormControlLabel
+                            sx={{ mr: 5 }}
+                            checked={checkbox.col_t}
+                            onChange={() => handleCheckbox("col_t")}
+                            control={<Checkbox disableRipple />}
+                            label="Timeframe"
+                        />
+                        <FormControlLabel
+                            sx={{ mr: 5 }}
+                            checked={checkbox.col_d}
+                            onChange={() => handleCheckbox("col_d")}
+                            control={<Checkbox disableRipple />}
+                            label="Direction"
                         />
                     </Box>
                 </Box>

@@ -238,10 +238,28 @@ const Help = () => {
                                 sx={{ textTransform: "uppercase" }}
                                 gutterBottom
                             >
-                                Use this table to know how to name your own
+                                Use this table to learn how to name your own
                                 columns
                             </Typography>
                             {indexColumnTable()}
+                            <Typography sx={{ my: 2 }}>
+                                The <span className="highlight">timeframe</span>{" "}
+                                column functions identically to that of
+                                TradingView. Begin by typing the unit (e.g., 4),
+                                followed by your chosen timeframe (e.g., H for
+                                hours). This results in the notation "4H" to
+                                represent a 4-hour timeframe. For quick
+                                reference: seconds = S, hours = H, days = D,
+                                weeks = W, and so forth.
+                            </Typography>
+                            <Typography>
+                                In the{" "}
+                                <span className="highlight">direction</span>{" "}
+                                column, only "Long" or "Short" inputs are
+                                accepted. These entries are case-insensitive,
+                                signifying that Trade Sharpener acknowledges
+                                "long," "LONG," and "loNg" as valid inputs.
+                            </Typography>
                         </BoxPaper>
                     </Box>
                     <Box sx={{ my: 2 }}>

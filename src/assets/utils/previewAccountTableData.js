@@ -11,6 +11,8 @@ export const previewAccountTableData = [
         col_r_: "0.32",
         col_p_: "0.64%",
         col_v_: "$567.23",
+        col_d: "Long",
+        col_t: "4H",
     },
     {
         col_p: "NZDUSD",
@@ -24,6 +26,8 @@ export const previewAccountTableData = [
         col_r_: "0.84",
         col_p_: "1.68%",
         col_v_: "$1234.55",
+        col_d: "Short",
+        col_t: "1H",
     },
     {
         col_p: "GBPCHF",
@@ -37,5 +41,7 @@ export const previewAccountTableData = [
         col_r_: "-1",
         col_p_: "-2%",
         col_v_: "-$2000.00",
+        col_d: "Long",
+        col_t: "1D",
     },
 ];

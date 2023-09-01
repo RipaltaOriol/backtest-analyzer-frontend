@@ -4,6 +4,7 @@ import FileUploadIcon from "@mui/icons-material/FileUpload";
 import UploadFileRoundedIcon from "@mui/icons-material/UploadFileRounded";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import CircularProgress from "@mui/material/CircularProgress";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
@@ -12,11 +13,15 @@ import FormLabel from "@mui/material/FormLabel";
 import LinearProgress from "@mui/material/LinearProgress";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
+import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { styled } from "@mui/system";
 
 import Message from "../common/Message";
-import { useUploadDocumentMutation } from "../features/documents/documentSlice";
+import {
+    useConnectDcoumentMutation,
+    useUploadDocumentMutation,
+} from "../features/documents/documentSlice";
 
 const UploadBox = styled(Box)({
     display: "flex",
@@ -35,9 +40,14 @@ const Upload = memo(({ open, onClose }) => {
     const [isError, setIsError] = useState(false);
     const [fileName, setFileName] = useState("Choose File");
     const [fileSource, setFileSource] = useState("default");
+    const [account, setAccount] = useState("");
+    const [password, setPassword] = useState("");
+    const [server, setServer] = useState("");
 
     const [uploadDocument, { isLoading: isUpdating }] =
         useUploadDocumentMutation();
+    const [connectDocument, { isLoading: isConnecting }] =
+        useConnectDcoumentMutation();
 
     const closeDialog = () => {
         setMsg("");
@@ -66,43 +76,60 @@ const Upload = memo(({ open, onClose }) => {
         progress = <></>;
     }
 
+    const onSubmitConnet = async (e) => {
+        if (account && password && server) {
+            connectDocument({ account, password, server })
+                .unwrap()
+                .then((response) => {
+                    setIsError(!response.success);
+                    setMsg(response.msg);
+                })
+                .catch((err) => {
+                    console.error(err);
+                });
+        } else {
+            setIsError(true);
+            setMsg("Some credentials are missing");
+        }
+    };
+
     const onSubmit = async (e) => {
         e.preventDefault();
 
-        if (
-            file.type !== "text/csv" &&
-            file.type !==
-                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-        ) {
-            setIsError(true);
-            if (file.type === undefined) {
-                setMsg("Document not selected");
-            } else {
-                setMsg("This file is not of type CSV");
+        if (fileSource === "mt4_api") {
+            onSubmitConnet();
+        } else {
+            if (
+                file.type !== "text/csv" &&
+                file.type !==
+                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            ) {
+                setIsError(true);
+                if (file.type === undefined) {
+                    setMsg("Document not selected");
+                } else {
+                    setMsg("This file is not of type CSV");
+                }
+
+                return true;
             }
 
-            return true;
+            const data = new FormData();
+
+            data.append("file", file);
+            data.append("fileName", fileName);
+            data.append("filesourcetype", fileSource);
+
+            uploadDocument(data)
+                .unwrap()
+                .then((response) => {
+                    setIsError(!response.success);
+                    setMsg(response.msg);
+                })
+                .catch((err) => {
+                    console.error(err);
+                });
         }
-
-        const data = new FormData();
-
-        data.append("file", file);
-        data.append("fileName", fileName);
-        data.append("filesourcetype", fileSource);
-
-        uploadDocument(data)
-            .unwrap()
-            .then((response) => {
-                setIsError(!response.success);
-                if (response.success) {
-                    setMsg(response.msg);
-                } else {
-                    setMsg(response.msg);
-                }
-            })
-            .catch((err) => {
-                console.error(err);
-            });
     };
 
     return (
@@ -114,7 +141,9 @@ const Upload = memo(({ open, onClose }) => {
         >
             <DialogTitle sx={{ color: "inherit" }}>
                 <Typography align="center" variant="h5" sx={{ mt: 1 }}>
-                    File Upload
+                    {fileSource === "mt4_api"
+                        ? "Connect Meta Trader"
+                        : "File Upload"}
                 </Typography>
             </DialogTitle>
             <DialogContent>
@@ -127,35 +156,113 @@ const Upload = memo(({ open, onClose }) => {
                     />
                 ) : null}
                 <form onSubmit={onSubmit}>
-                    <UploadBox sx={{ p: 6 }}>
-                        <UploadFileRoundedIcon
-                            sx={{ fontSize: 50, mb: 4 }}
-                            color="primary"
-                        />
-                        <label htmlFor="upload-file">
-                            <input
-                                style={{ display: "none" }}
-                                id="upload-file"
-                                name="upload-file"
-                                type="file"
-                                onChange={onChange}
-                            />
-                            <Button
-                                variant="outlined"
-                                component="span"
-                                startIcon={<FileUploadIcon color="primary" />}
-                                size="small"
-                                sx={{
-                                    borderRadius: "6px",
-                                    fontSize: "14px",
-                                    textTransform: "none",
-                                    background: "#fff",
-                                    color: "#000",
-                                }}
-                            >
-                                Upload File
-                            </Button>
-                        </label>
+                    <UploadBox
+                        sx={{
+                            p: fileSource === "mt4_api" ? 4 : 6,
+                        }}
+                    >
+                        {fileSource === "mt4_api" ? (
+                            <Box>
+                                {!isConnecting && (
+                                    <Box>
+                                        <TextField
+                                            label="Account"
+                                            variant="standard"
+                                            value={account}
+                                            onChange={(e) =>
+                                                setAccount(e.target.value)
+                                            }
+                                            sx={{
+                                                mb: 2,
+                                                width: "100%",
+                                                input: {
+                                                    fontSize: "14px",
+                                                },
+                                            }}
+                                        />
+                                        <TextField
+                                            label="Password"
+                                            variant="standard"
+                                            value={password}
+                                            onChange={(e) =>
+                                                setPassword(e.target.value)
+                                            }
+                                            sx={{
+                                                mb: 2,
+                                                width: "100%",
+                                                input: {
+                                                    fontSize: "14px",
+                                                },
+                                            }}
+                                        />
+                                        <TextField
+                                            label="Server"
+                                            variant="standard"
+                                            value={server}
+                                            onChange={(e) =>
+                                                setServer(e.target.value)
+                                            }
+                                            sx={{
+                                                mb: 1,
+                                                width: "100%",
+                                                input: {
+                                                    fontSize: "14px",
+                                                },
+                                            }}
+                                        />
+                                    </Box>
+                                )}
+                                {isConnecting && (
+                                    <Box
+                                        sx={{
+                                            display: "flex",
+                                            flexDirection: "column",
+                                            alignItems: "center",
+                                            color: "#5B6871",
+                                        }}
+                                    >
+                                        <Typography sx={{ mb: 5 }}>
+                                            Please wait. This might take a few
+                                            minutes.
+                                        </Typography>
+                                        <CircularProgress size={80} sx={{}} />
+                                    </Box>
+                                )}
+                            </Box>
+                        ) : (
+                            <>
+                                <UploadFileRoundedIcon
+                                    sx={{ fontSize: 50, mb: 4 }}
+                                    color="primary"
+                                />
+                                <label htmlFor="upload-file">
+                                    <input
+                                        style={{ display: "none" }}
+                                        id="upload-file"
+                                        name="upload-file"
+                                        type="file"
+                                        onChange={onChange}
+                                    />
+                                    <Button
+                                        variant="outlined"
+                                        component="span"
+                                        startIcon={
+                                            <FileUploadIcon color="primary" />
+                                        }
+                                        size="small"
+                                        sx={{
+                                            borderRadius: "6px",
+                                            fontSize: "14px",
+                                            textTransform: "none",
+                                            background: "#fff",
+                                            color: "#000",
+                                        }}
+                                    >
+                                        Upload File
+                                    </Button>
+                                </label>
+                            </>
+                        )}
                     </UploadBox>
 
                     <Box sx={{ mt: 2 }}>
@@ -173,15 +280,14 @@ const Upload = memo(({ open, onClose }) => {
                                 label="Default"
                             />
                             <FormControlLabel
-                                value="mt4"
+                                value="mt4_file"
                                 control={<Radio size="small" />}
-                                label="MT4"
+                                label="MT4 Trade History"
                             />
                             <FormControlLabel
-                                value="trading_view"
-                                disabled
+                                value="mt4_api"
                                 control={<Radio size="small" />}
-                                label="TraginView Paper Trade"
+                                label="Connect MT4"
                             />
                         </RadioGroup>
 
@@ -198,7 +304,7 @@ const Upload = memo(({ open, onClose }) => {
                         fullWidth
                         disableRipple
                     >
-                        Upload
+                        {fileSource === "mt4_api" ? "Connect" : "Upload"}
                     </Button>
                 </form>
             </DialogContent>

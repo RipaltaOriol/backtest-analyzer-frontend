@@ -49,11 +49,33 @@ export const documentsApiSlice = apiSlice.injectEndpoints({
                 "Charts",
             ], // maybe not invalidate all setups
         }),
+        refetchDocument: builder.mutation({
+            query: ({ id }) => ({
+                url: `/documents/${id}/refetch`,
+                method: "PUT",
+            }),
+            invalidatesTags: [
+                "DocumentTable",
+                "CalendarTable",
+                "Setup",
+                "Stats",
+                "Graphs",
+                "Charts",
+            ], // maybe not invalidate all setups
+        }),
         uploadDocument: builder.mutation({
             query: (file) => ({
                 url: "/documents/upload",
                 method: "POST",
                 body: file,
+            }),
+            invalidatesTags: [{ type: "Document", id: "LIST" }, "Setup"],
+        }),
+        connectDcoument: builder.mutation({
+            query: ({ account, password, server }) => ({
+                url: "/documents/fetch",
+                method: "POST",
+                body: { account, password, server },
             }),
             invalidatesTags: [{ type: "Document", id: "LIST" }, "Setup"],
         }),
@@ -88,6 +110,7 @@ export const documentsApiSlice = apiSlice.injectEndpoints({
             }),
             invalidatesTags: (result, error, arg) => [
                 { type: "Document", id: arg.documentId },
+                "Setup",
             ],
         }),
         getDocumentColumns: builder.query({
@@ -117,7 +140,9 @@ export const {
     useGetDocumentQuery,
     useGetDocumentsQuery,
     useUpdateDocumentMutation,
+    useRefetchDocumentMutation,
     useUploadDocumentMutation,
+    useConnectDcoumentMutation,
     useCloneDocumentMutation,
     useRenameDocumentMutation,
     usePostDocumentMutation,

@@ -9,11 +9,13 @@ import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
 import DriveFileRenameOutlineRoundedIcon from "@mui/icons-material/DriveFileRenameOutlineRounded";
 import FileCopyRoundedIcon from "@mui/icons-material/FileCopyRounded";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import SensorsIcon from "@mui/icons-material/Sensors";
 import TextSnippetIcon from "@mui/icons-material/TextSnippet";
 import UpdateRoundedIcon from "@mui/icons-material/UpdateRounded";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
+import CircularProgress from "@mui/material/CircularProgress";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -36,6 +38,7 @@ import {
     useCloneDocumentMutation,
     useDeleteDocumentMutation,
     useGetDocumentsQuery,
+    useRefetchDocumentMutation,
     useRenameDocumentMutation,
 } from "./documentSlice";
 
@@ -79,6 +82,7 @@ const AllDocuments = () => {
     const [openDialog, setOpenDialog] = useState(false);
     const [openSelectTemplate, setOpenSelectTemplate] = useState(false);
     const [msg, setMsg] = useState("");
+    const [isError, setIsError] = useState(false);
     const [newName, setNewName] = useState("");
     const [anchorEl, setAnchorEl] = useState(null);
     const [selectedDocument, setSelectedDocument] = useState(null);
@@ -129,17 +133,37 @@ const AllDocuments = () => {
         setOpenDialog(false);
     };
 
+    const handleRefetch = () => {
+        setAnchorEl(null);
+        refetchDocument({ id: selectedDocument.id })
+            .unwrap()
+            .then((response) => {
+                setIsError(!response.success);
+                setMsg(response.msg);
+            })
+            .catch((err) => {
+                console.error(err);
+            });
+    };
+
     const handleChangeName = () => {
         renameDocument({ id: selectedDocument.id, name: newName });
         setOpenDialog(false);
     };
 
-    const { isLoading, isSuccess, isError, error } = useGetDocumentsQuery();
+    const {
+        isLoading,
+        isSuccess,
+        isError: isFailure,
+        error,
+    } = useGetDocumentsQuery();
 
     const orderedDocuments = useSelector(selectAllDocuments);
 
     const [cloneDocument] = useCloneDocumentMutation();
     const [renameDocument] = useRenameDocumentMutation();
+    const [refetchDocument, { isLoading: isFetching }] =
+        useRefetchDocumentMutation();
     const [
         deleteDocument,
         { data: deleteResponse, isSuccess: isDeleteSuccess, reset },
@@ -159,7 +183,14 @@ const AllDocuments = () => {
                 xl={3}
                 sx={{ backgroundColor: "none" }}
             >
-                <DocumentItem>
+                <DocumentItem
+                    sx={{
+                        backgroundColor:
+                            selectedDocument?.id === doc.id
+                                ? "#D7EDFF"
+                                : "transparent",
+                    }}
+                >
                     <Box sx={{ display: "flex", alignItems: "center" }}>
                         <Box
                             sx={{
@@ -191,11 +222,12 @@ const AllDocuments = () => {
                 </DocumentItem>
             </Grid>
         ));
-    } else if (isError) {
+    } else if (isFailure) {
         content = <p>{error}</p>;
     }
 
     if (isDeleteSuccess) {
+        setIsError(!isDeleteSuccess.success);
         setMsg(deleteResponse.msg);
         reset();
     }
@@ -225,13 +257,41 @@ const AllDocuments = () => {
             </Box>
             <Divider sx={{ mt: 2, mb: 3 }} />
             {msg && (
-                <Message message={msg} setMessage={setMsg} sx={{ my: 1 }} />
+                <Message
+                    message={msg}
+                    setMessage={setMsg}
+                    isError={isError}
+                    sx={{ my: 1 }}
+                />
             )}
             <Box sx={{ flexGrow: 1 }}>
                 {content.length > 0 && (
                     <DocumentGrid container>{content}</DocumentGrid>
                 )}
             </Box>
+            <Dialog open={isFetching}>
+                <Box
+                    sx={{
+                        background: "#F6F8F9",
+                        borderRadius: "8px",
+                    }}
+                >
+                    <Box
+                        sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "center",
+                            color: "#5B6871",
+                            p: 4,
+                        }}
+                    >
+                        <Typography sx={{ mb: 5 }}>
+                            Please wait. This might take a few minutes.
+                        </Typography>
+                        <CircularProgress size={80} sx={{ mb: 1 }} />
+                    </Box>
+                </Box>
+            </Dialog>
             <Upload open={openUpload} onClose={handleUploadClose} />
             <Dialog open={openDialog} onClose={handleDialogClose}>
                 <DialogTitle sx={{ color: "inherit" }}>
@@ -294,8 +354,16 @@ const AllDocuments = () => {
                     <ListItemIcon sx={{ minWidth: "30px !important" }}>
                         <UpdateRoundedIcon fontSize="small" />
                     </ListItemIcon>
-                    <ListItemText>Update</ListItemText>
+                    <ListItemText>Modify</ListItemText>
                 </DocumentMenuItem>
+                {selectedDocument?.source === "MT4 API" && (
+                    <DocumentMenuItem onClick={handleRefetch}>
+                        <ListItemIcon sx={{ minWidth: "30px !important" }}>
+                            <SensorsIcon fontSize="small" />
+                        </ListItemIcon>
+                        <ListItemText>Update</ListItemText>
+                    </DocumentMenuItem>
+                )}
                 <DocumentMenuItem onClick={handleSelectTemplateClose}>
                     <ListItemIcon sx={{ minWidth: "30px !important" }}>
                         <ContentPasteSearchRoundedIcon fontSize="small" />

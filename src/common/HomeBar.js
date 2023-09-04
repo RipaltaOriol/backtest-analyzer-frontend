@@ -141,6 +141,16 @@ const HomeBar = () => {
                                 >
                                     Guide
                                 </NavButtonMobile>
+                                <NavButtonMobile
+                                    className="guide-btn"
+                                    sx={{ mb: 1 }}
+                                    component={Link}
+                                    to="https://t.me/TradeSharpener_Support"
+                                    variant="contained"
+                                    onClick={toggleDrawer(false)}
+                                >
+                                    Support
+                                </NavButtonMobile>
                                 <LoginButtonMobile
                                     component={Link}
                                     to="/login"
@@ -167,6 +177,14 @@ const HomeBar = () => {
                             variant="contained"
                         >
                             Guide
+                        </NavButton>
+                        <NavButton
+                            sx={{ ml: 1.5 }}
+                            component={Link}
+                            to="/https://t.me/TradeSharpener_Supoort"
+                            variant="contained"
+                        >
+                            Support
                         </NavButton>
                         <LoginButton
                             sx={{ ml: 1.5 }}

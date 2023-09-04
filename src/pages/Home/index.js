@@ -224,6 +224,15 @@ const HomeAppbar = (props) => {
                             >
                                 Guide
                             </NavButtonMobile>
+                            <NavButtonMobile
+                                className="guide-btn"
+                                sx={{ mb: 1 }}
+                                component={Link}
+                                to="https://t.me/TradeSharpener_Support"
+                                variant="contained"
+                            >
+                                Support
+                            </NavButtonMobile>
                             <LoginButtonMobile
                                 component={Link}
                                 to="/login"
@@ -254,8 +263,18 @@ const HomeAppbar = (props) => {
                         Guide
                     </NavButton>
 
-                    <LoginButton
+                    <NavButton
                         sx={{ ml: 1.5 }}
+                        component={Link}
+                        to="https://t.me/TradeSharpener_Support"
+                        variant="contained"
+                        trigger={trigger}
+                    >
+                        Support
+                    </NavButton>
+
+                    <LoginButton
+                        sx={{ ml: 2 }}
                         component={Link}
                         to="/login"
                         variant="contained"

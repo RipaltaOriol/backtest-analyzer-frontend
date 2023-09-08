@@ -30,3 +30,8 @@ code {
     border: 1px solid #e5e9eb;
     border-radius: 5px;
 }
+
+/* style calendar week day label */
+.MuiDayCalendar-weekDayLabel {
+    background: none !important;
+}

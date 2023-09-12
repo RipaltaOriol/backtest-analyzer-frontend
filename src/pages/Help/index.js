@@ -2,6 +2,7 @@ import ManualAccountCreation from "assets/images/manual-account-creation.png";
 import { useLocation } from "react-router-dom";
 
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
+import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Divider from "@mui/material/Divider";
@@ -161,13 +162,9 @@ const Help = () => {
                                 </Box>
                             </Box>
                         </BoxPaper>
-                        <Typography
-                            variant="overline"
-                            display="block"
-                            gutterBottom
-                        >
-                            Only CSV files are accepted *
-                        </Typography>
+                        <Alert severity="warning" sx={{ mb: 2 }}>
+                            Only CSV type files are accepted
+                        </Alert>
                         <Typography variant="h5" component="h4">
                             MT4 Import
                         </Typography>
@@ -232,6 +229,12 @@ const Help = () => {
                             examples section below for a guide on how to apply
                             this format.
                         </Typography>
+
+                        <Alert severity="warning">
+                            Do not use duplicate or repeated column names. This
+                            will result in unpredictable behaviors and might
+                            trigger an error.
+                        </Alert>
                         <BoxPaper sx={{ my: 2 }}>
                             <Typography
                                 align="center"
@@ -242,25 +245,23 @@ const Help = () => {
                                 columns
                             </Typography>
                             {indexColumnTable()}
-                            <Typography sx={{ my: 2 }}>
-                                The <span className="highlight">timeframe</span>{" "}
-                                column functions identically to that of
-                                TradingView. Begin by typing the unit (e.g., 4),
-                                followed by your chosen timeframe (e.g., H for
-                                hours). This results in the notation "4H" to
-                                represent a 4-hour timeframe. For quick
-                                reference: seconds = S, hours = H, days = D,
-                                weeks = W, and so forth.
-                            </Typography>
-                            <Typography>
-                                In the{" "}
-                                <span className="highlight">direction</span>{" "}
-                                column, only "Long" or "Short" inputs are
-                                accepted. These entries are case-insensitive,
-                                signifying that Trade Sharpener acknowledges
-                                "long," "LONG," and "loNg" as valid inputs.
-                            </Typography>
                         </BoxPaper>
+                        <Alert severity="info" sx={{ my: 2 }}>
+                            The <span className="highlight">timeframe</span>{" "}
+                            column functions identically to that of TradingView.
+                            Begin by typing the unit (e.g., 4), followed by your
+                            chosen timeframe (e.g., H for hours). This results
+                            in the notation "4H" to represent a 4-hour
+                            timeframe. For quick reference: seconds = S, hours =
+                            H, days = D, weeks = W, and so forth.
+                        </Alert>
+                        <Alert severity="info">
+                            In the <span className="highlight">direction</span>{" "}
+                            column, only "Long" or "Short" inputs are accepted.
+                            These entries are case-insensitive, signifying that
+                            Trade Sharpener acknowledges "long," "LONG," and
+                            "loNg" as valid inputs.
+                        </Alert>
                     </Box>
                     <Box sx={{ my: 2 }}>
                         <Typography variant="h4" component="h2">

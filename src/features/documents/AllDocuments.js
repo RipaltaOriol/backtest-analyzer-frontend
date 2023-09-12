@@ -119,12 +119,14 @@ const AllDocuments = () => {
 
     const handleCopyClose = () => {
         cloneDocument({ id: selectedDocument.id });
+        setSelectedDocument(null);
         setAnchorEl(null);
     };
 
     const handleDeleteClose = () => {
-        setAnchorEl(null);
         deleteDocument({ id: selectedDocument.id });
+        setSelectedDocument(null);
+        setAnchorEl(null);
     };
 
     const handleDialogClose = () => {
@@ -148,6 +150,7 @@ const AllDocuments = () => {
 
     const handleChangeName = () => {
         renameDocument({ id: selectedDocument.id, name: newName });
+        setSelectedDocument(null);
         setOpenDialog(false);
     };
 
@@ -161,7 +164,14 @@ const AllDocuments = () => {
     const orderedDocuments = useSelector(selectAllDocuments);
 
     const [cloneDocument] = useCloneDocumentMutation();
-    const [renameDocument] = useRenameDocumentMutation();
+    const [
+        renameDocument,
+        {
+            data: renameResponse,
+            isSuccess: isRenameSuccess,
+            reset: resetRename,
+        },
+    ] = useRenameDocumentMutation();
     const [refetchDocument, { isLoading: isFetching }] =
         useRefetchDocumentMutation();
     const [
@@ -227,9 +237,15 @@ const AllDocuments = () => {
     }
 
     if (isDeleteSuccess) {
-        setIsError(!isDeleteSuccess.success);
+        setIsError(isDeleteSuccess.success);
         setMsg(deleteResponse.msg);
         reset();
+    }
+
+    if (isRenameSuccess) {
+        setIsError(isRenameSuccess.success);
+        setMsg(renameResponse.msg);
+        resetRename();
     }
 
     return (

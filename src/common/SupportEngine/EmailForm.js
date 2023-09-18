@@ -1,60 +1,55 @@
-import axios from "axios";
+import { db } from "api/firebase";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
 
 import { Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
+
+import { selectCurrentUser } from "features/auth/authSlice";
 
 import "./Support.css";
 
 const EmailForm = (props) => {
     const [email, setEmail] = useState("");
     const [loading, setLoading] = useState(false);
+    const userId = useSelector(selectCurrentUser);
 
-    function getOrCreateUser(callback) {
-        axios({
-            method: "put",
-            url: "https://api.chatengine.io/users/",
-            headers: {
-                "PRIVATE-KEY": process.env.REACT_APP_CHAT_ENGINE_PRIVATE_KEY,
-            },
-            data: { username: email, email, secret: email },
-        })
-            .then((r) => callback(r.data))
-            .catch((e) => console.log("Get or create user error", e));
+    async function getOrCreateUser() {
+        const userRef = doc(db, "users", userId);
+        let userSnap = await getDoc(userRef);
+        if (!userSnap.exists()) {
+            await setDoc(userRef, {
+                uid: userId,
+                email,
+            });
+            userSnap = await getDoc(userRef);
+        }
+        return userSnap.data();
     }
 
-    function getOrCreateChat(callback) {
-        axios
-            .put(
-                "https://api.chatengine.io/chats/",
-                {
-                    usernames: [email, "Trade Sharpener Support"],
-                    is_direct_chat: true,
-                },
-                {
-                    headers: {
-                        "Project-ID": process.env.REACT_APP_CHAT_ENGINE_ID,
-                        "User-Name": email,
-                        "User-Secret": email,
-                    },
-                }
-            )
-            .then((r) => callback(r.data))
-            .catch((e) => console.log("Get or create chat error", e));
+    async function getOrCreateChat() {
+        const chatRef = doc(db, "chats", userId);
+        let chatSnap = await getDoc(chatRef);
+        if (!chatSnap.exists()) {
+            await setDoc(chatRef, {
+                messages: [],
+            });
+            chatSnap = await getDoc(chatRef);
+        }
+        return chatSnap.data();
     }
 
-    function handleSubmit(event) {
+    async function handleSubmit(event) {
         event.preventDefault();
         setLoading(true);
 
-        getOrCreateUser((user) => {
-            props.setUser && props.setUser(user);
-            getOrCreateChat((chat) => {
-                setLoading(false);
-                props.setChat && props.setChat(chat);
-            });
-        });
+        const user = await getOrCreateUser();
+        props.setUser && props.setUser(user);
+        const chat = await getOrCreateChat();
+        setLoading(false);
+        props.setChat && props.setChat(chat);
     }
 
     return (
@@ -77,17 +72,19 @@ const EmailForm = (props) => {
                 <Typography className="support-text">
                     Welcome to to support 👋
                 </Typography>
-                <form
-                    onSubmit={(e) => handleSubmit(e)}
-                    className="support-form"
-                >
-                    <input
-                        className="email-input"
-                        placeholder="Your Email"
-                        type="email"
-                        onChange={(e) => setEmail(e.target.value)}
-                    />
-                </form>
+                {!loading && (
+                    <form
+                        onSubmit={(e) => handleSubmit(e)}
+                        className="support-form"
+                    >
+                        <input
+                            className="email-input"
+                            placeholder="Your Email"
+                            type="email"
+                            onChange={(e) => setEmail(e.target.value)}
+                        />
+                    </form>
+                )}
             </Box>
         </Box>
     );

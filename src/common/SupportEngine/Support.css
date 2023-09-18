@@ -12,6 +12,11 @@
     background-color: #0e73f6;
 }
 
+.support-icon-open {
+    color: #d7edff;
+    background-color: #0e73f6;
+}
+
 .transition-1 {
     transition: all 0.33s ease !important;
     -webkit-transition: all 0.33s ease !important;
@@ -33,8 +38,8 @@
     right: 24px;
     width: 400px;
     height: 530px;
-    /* max-width: calc(100% - 48px);
-    max-height: calc(100% - 48px); */
+    max-width: calc(100% - 48px);
+    max-height: calc(100% - 48px);
     background-color: white;
     border-radius: 5px;
     overflow: hidden;

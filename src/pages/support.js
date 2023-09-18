@@ -1,57 +1,137 @@
+import { db } from "api/firebase";
+import ChatMessages from "common/SupportEngine/ChatMessages";
 import {
-    ChannelList,
-    Chat,
-    MessageInput,
-    MessageList,
-    TypingIndicator,
-    useUsers,
-} from "@pubnub/react-chat-components";
-import PubNub from "pubnub";
-import { PubNubProvider } from "pubnub-react";
-import React from "react";
-import { ChatEngine } from "react-chat-engine";
+    Timestamp,
+    arrayUnion,
+    collection,
+    doc,
+    getDoc,
+    getDocs,
+    query,
+    updateDoc,
+    where,
+} from "firebase/firestore";
+import { useState } from "react";
+import { v4 as uuid } from "uuid";
 
-/* Creates and configures your PubNub instance. Be sure to replace "myPublishKey" and "mySubscribeKey"
-with your own keyset. If you wish, modify the default "myFirstUser" userId value for the chat user. */
-const pubnub = new PubNub({
-    publishKey: "pub-c-94008a57-7f67-406b-be0d-b7803db30574",
-    subscribeKey: "sub-c-59a5c93a-6b09-4cdb-a46e-c808bbdf3093",
-    userId: "12342de2",
-});
-const currentChannel = "Default";
-const theme = "support";
-
-function ChatConversation() {
-    const [users] = useUsers();
-    console.log(users);
-
-    return (
-        //     <ActiveUsersListPanelWrapper>
-        //     <ActiveUsersListPanel />
-        //   </ActiveUsersListPanelWrapper>
-        //   <MessageListPanelWrapper>
-        //     <MessageListPanel />
-        //   </MessageListPanelWrapper>
-        <Chat currentChannel="test-channel" users={users}>
-            <MessageList />
-            <MessageInput />
-        </Chat>
-    );
-}
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Container from "@mui/material/Container";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
 
 const SupportChat = () => {
+    const [admin, setAdmin] = useState(null);
+    const [adminKey, setAdminKey] = useState(null);
+    const [adminChats, setAdminChats] = useState([{ id: 123 }]);
+    const [target, setTarget] = useState(null);
+    const [text, setText] = useState("");
+
+    const handleAccess = async () => {
+        const userRef = doc(db, "users", adminKey);
+        let userSnap = await getDoc(userRef);
+        if (!userSnap.exists()) {
+            return false;
+        } else {
+            setAdmin(userSnap.data());
+        }
+
+        const q = query(
+            collection(db, "users"),
+            where("uid", "!=", "admin123")
+        );
+        const querySnapshot = await getDocs(q);
+
+        let newChats = [];
+        querySnapshot.forEach((doc) => {
+            newChats.push(doc.data());
+        });
+        setAdminChats(newChats);
+    };
+
+    const handleSendMessage = async () => {
+        if (!text) return;
+        updateDoc(doc(db, "chats", target.uid), {
+            messages: arrayUnion({
+                id: uuid(),
+                text,
+                senderId: admin.uid,
+                date: Timestamp.now(),
+            }),
+        });
+        setText("");
+    };
+
     return (
-        <PubNubProvider client={pubnub}>
-            {/* PubNubProvider is a part of the PubNub React SDK and allows you to access PubNub instance
-      in components down the tree. */}
-            <ChatConversation />
-        </PubNubProvider>
-        // <ChatEngine
-        //     projectID={process.env.REACT_APP_CHAT_ENGINE_ID}
-        //     userName="Trade Sharpener Support"
-        //     userSecret="admin@tradesharpener.com"
-        //     height="100vh"
-        // />
+        <Container>
+            <Box
+                sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    my: 5,
+                }}
+            >
+                <TextField
+                    size="small"
+                    sx={{ width: "100%", mr: 2 }}
+                    value={adminKey}
+                    onChange={(e) => setAdminKey(e.target.value)}
+                />
+                <Button variant="contained" onClick={handleAccess}>
+                    Access
+                </Button>
+            </Box>
+
+            <Box sx={{ display: "flex", width: "100%" }}>
+                <Box sx={{ mr: 2 }}>
+                    {adminChats.map((chat) => (
+                        <Typography
+                            sx={{
+                                cursor: "pointer",
+                                p: 1,
+                                backgroundColor: "lightblue",
+                                mb: 1,
+                                borderRadius: "5px",
+                            }}
+                            onClick={() => setTarget(chat)}
+                        >
+                            {chat?.email}
+                        </Typography>
+                    ))}
+                </Box>
+                {target && (
+                    <Box
+                        sx={{
+                            backgroundColor: "lightblue",
+                            border: "1px solid lightgray",
+                            borderRadius: "5px",
+                        }}
+                    >
+                        <Box
+                            sx={{
+                                maxHeight: "600px",
+                                height: "600px",
+                            }}
+                        >
+                            <ChatMessages user={target} />
+                            <TextField
+                                sx={{
+                                    width: "100%",
+                                    backgroundColor: "lightgray",
+                                }}
+                                value={text}
+                                onChange={(e) => setText(e.target.value)}
+                                onKeyDown={(e) =>
+                                    e.keyCode === 13
+                                        ? handleSendMessage()
+                                        : null
+                                }
+                            />
+                        </Box>
+                    </Box>
+                )}
+            </Box>
+        </Container>
     );
 };
 

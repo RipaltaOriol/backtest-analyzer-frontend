@@ -32,6 +32,7 @@
         "chartjs-plugin-autocolors": "^0.2.2",
         "dayjs": "^1.11.7",
         "emoji-mart": "^5.5.2",
+        "firebase": "^10.3.1",
         "material-table": "^2.0.3",
         "pubnub": "^7.3.2",
         "pubnub-react": "^3.0.2",

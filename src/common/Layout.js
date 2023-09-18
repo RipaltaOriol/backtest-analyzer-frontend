@@ -271,7 +271,7 @@ export default function Layout() {
                     <Outlet />
                 </Box>
                 <Upload open={openUpload} onClose={handleUploadClose} />
-                {/* <SupportEngine /> */}
+                <SupportEngine />
             </Box>
         </Box>
     );

@@ -1,4 +1,5 @@
 import defaultTemplate from "assets/images/templates/defaultTemplate.png";
+import { useState } from "react";
 
 import VisibilityRoundedIcon from "@mui/icons-material/VisibilityRounded";
 import Avatar from "@mui/material/Avatar";
@@ -11,35 +12,17 @@ import Typography from "@mui/material/Typography";
 import {
     useAddTemplateUserSettingsMutation,
     useGetUserSettingsQuery,
+    useUpdatePasswordMutation,
 } from "features/auth/authApiSlice";
 
+import Message from "../common/Message";
 // import { renderTemplate } from "features/templates/utilsTemplateManager";
 import "./settings.css";
-
-function stringToColor(string) {
-    let hash = 0;
-    let i;
-
-    /* eslint-disable no-bitwise */
-    for (i = 0; i < string.length; i += 1) {
-        hash = string.charCodeAt(i) + ((hash << 5) - hash);
-    }
-
-    let color = "#";
-
-    for (i = 0; i < 3; i += 1) {
-        const value = (hash >> (i * 8)) & 0xff;
-        color += `00${value.toString(16)}`.slice(-2);
-    }
-    /* eslint-enable no-bitwise */
-
-    return color;
-}
 
 function stringAvatar(name) {
     return {
         sx: {
-            bgcolor: stringToColor(name.toUpperCase()),
+            bgcolor: "#0e73f6",
             width: 100,
             height: 100,
             mr: 3,
@@ -51,18 +34,53 @@ function stringAvatar(name) {
 const Settings = () => {
     const { data } = useGetUserSettingsQuery();
 
+    const [newPassword, setNewPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+    const [message, setMessage] = useState("");
+    const [isError, setIsError] = useState(false);
+
+    const [updatePassword] = useUpdatePasswordMutation();
     const [addTemplateUserSettings] = useAddTemplateUserSettingsMutation();
 
     const handleAddTemplate = (templateId) => {
         addTemplateUserSettings({ templateId });
     };
 
+    const handleUpdatePassword = async () => {
+        if (newPassword === confirmPassword) {
+            try {
+                const updateResponse = await updatePassword({
+                    newPassword,
+                }).unwrap();
+                setMessage(updateResponse.msg);
+                setIsError(!updateResponse.success);
+            } catch (err) {
+                setMessage("Something went wrong. Please try again.");
+                setIsError(true);
+            }
+        } else {
+            setMessage("Passwords do not match.");
+            setIsError(true);
+        }
+    };
+
     return (
         <Box>
+            {true && (
+                <Message
+                    message={message}
+                    setMessage={setMessage}
+                    isError={isError}
+                    sx={{ mb: 1.5 }}
+                />
+            )}
             <Typography variant="h5">Settings</Typography>
             <Divider sx={{ mt: 2, mb: 3 }} />
             <Box display="flex" sx={{ mb: 5 }}>
-                <Avatar {...stringAvatar("oriolripalta@hotmail.com")} />
+                <Avatar
+                    size="40"
+                    {...stringAvatar("oriolripalta@hotmail.com")}
+                />
                 <Box>
                     <Typography
                         sx={{ fontSize: 16, fontWeight: 600 }}
@@ -88,22 +106,26 @@ const Settings = () => {
                     <TextField
                         label="New Password"
                         size="small"
-                        autoComplete=""
                         type="password"
+                        autoComplete=""
+                        value={newPassword}
+                        onChange={(e) => setNewPassword(e.target.value)}
                         sx={{ "& input": { fontSize: 14 }, mr: 2 }}
                     />
                     <TextField
                         label="Confirm Password"
                         size="small"
                         autoComplete=""
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
                         type="password"
                         sx={{ "& input": { fontSize: 14 }, mr: 2 }}
                     />
                     <Button
                         color="primary"
                         variant="outlined"
-                        disabled
                         sx={{ textTransform: "none" }}
+                        onClick={handleUpdatePassword}
                     >
                         Update Password
                     </Button>

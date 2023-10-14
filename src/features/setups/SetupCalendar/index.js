@@ -1,19 +1,28 @@
+import { ErrorFeedback } from "common/ErrorFeedback";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 
 import Box from "@mui/material/Box";
-import Divider from "@mui/material/Divider";
 
 import {
     deselectTrade,
     selectSelectedTrade,
 } from "features/calendar/calendarSlice";
+import {
+    selectDateFormat,
+    selectResultDisplay,
+} from "features/calendar/calendarSlice";
 import CalendarDrawer from "features/setups/SetupCalendar/CalendarDrawer";
 import CalendarGrid from "features/setups/SetupCalendar/CalendarGrid";
-import CalendarHeader from "features/setups/SetupCalendar/CalendarHeader";
+import "features/setups/SetupCalendar/index.css";
+// import CalendarHeader from "features/setups/SetupCalendar/CalendarHeader"; TO REMOVE
 import SingleRecordDialog from "features/setups/SingleSetup/SingleRecordDialog";
+import { useGetCalendarTableQuery } from "features/setups/setupsSlice";
 
-const SetupCalendar = () => {
+import "./index.css";
+
+const SetupCalendar = (props) => {
+    const { children, value, setup, index, ...other } = props;
     const { documentId } = useParams();
 
     const dispatch = useDispatch();
@@ -24,17 +33,39 @@ const SetupCalendar = () => {
         dispatch(deselectTrade());
     };
 
+    const dateFormat = useSelector(selectDateFormat);
+    const resultDisplay = useSelector(selectResultDisplay);
+
+    // console.log(dateFormat);
+    const { data: calendarData } = useGetCalendarTableQuery(
+        {
+            setupId: setup?.id,
+            date: dateFormat,
+            metric: resultDisplay,
+        },
+        { skip: !setup?.id }
+    );
+
+    console.log(calendarData);
+
     return (
-        <Box>
-            <CalendarHeader />
-
-            <Divider sx={{ my: 2 }} />
+        <Box
+            role="tabpanel"
+            hidden={value !== index}
+            id={`simple-tabpanel-${index}`}
+            aria-labelledby={`simple-tab-${index}`}
+            {...other}
+        >
             {/* TODO: this might be best as a grid - but have to test widths */}
-            <Box sx={{ display: "flex" }}>
-                <CalendarGrid />
+            {calendarData?.success ? (
+                <Box className="calendar-tab" sx={{ mt: 3 }}>
+                    <CalendarGrid calendarData={calendarData} />
 
-                <CalendarDrawer />
-            </Box>
+                    <CalendarDrawer calendarData={calendarData} />
+                </Box>
+            ) : (
+                <ErrorFeedback msg={calendarData?.msg} />
+            )}
 
             {/* Single Setup Dialog */}
             {currentTrade && (

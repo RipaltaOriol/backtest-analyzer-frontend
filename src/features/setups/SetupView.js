@@ -4,8 +4,13 @@ import { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
+import Typography from "@mui/material/Typography";
 import { styled } from "@mui/material/styles";
 
+import SetupCalendar from "features/setups/SetupCalendar";
+import SetupGeneral from "features/setups/SetupGeneral";
+import SetupStats from "features/setups/SetupStats";
+import SetupTable from "features/setups/SetupTable";
 import PPTTemplate from "features/templates/PPTTemplate";
 import { renderTemplate } from "features/templates/utilsRenderTemplate";
 
@@ -18,13 +23,6 @@ import ScatterGraph from "../graphs/ScatterGraph";
 import { useGetChartsQuery } from "../statistics/statisticsApiSlice";
 import "./Setups.css";
 import FilterList from "./filters/FilterList";
-
-function a11yProps(index) {
-    return {
-        id: `simple-tab-${index}`,
-        "aria-controls": `simple-tabpanel-${index}`,
-    };
-}
 
 let dataPieChart = {};
 let dataPieSuccess = false;
@@ -76,6 +74,7 @@ let SetupView = ({ setup }) => {
     const [value, setValue] = useState(0);
 
     const handleChange = (event, newValue) => {
+        console.log(event, newValue);
         setValue(newValue);
     };
 
@@ -96,8 +95,13 @@ let SetupView = ({ setup }) => {
                 </CustomTabs>
             </Box>
 
+            <SetupGeneral value={value} index={0} setup={setup} />
+            <SetupTable value={value} index={1} setup={setup} />
+            <SetupStats value={value} index={2} setup={setup} />
+            <SetupCalendar value={value} index={3} setup={setup} />
+
             <Box className="setup-dashboard">
-                <Box className="setup-equity">
+                {/* <Box className="setup-equity">
                     {setup?.id && <LineGraph setupId={setup?.id} />}
                 </Box>
                 <Item className="setup-result-distribution" sx={{ p: 2 }}>
@@ -112,9 +116,9 @@ let SetupView = ({ setup }) => {
                 <Box className="setup-scatter">
                     {setup?.id && <ScatterGraph setupId={setup?.id} />}
                 </Box>
-                <Item className="setup-stats">
-                    {/* <SimpleTable id={setup?.id} /> */}
-                    {setup?.id && <SimpleTable id={setup?.id} />}
+                <Item className="setup-stats"> */}
+                {/* <SimpleTable id={setup?.id} /> */}
+                {/* {setup?.id && <SimpleTable id={setup?.id} />}
                 </Item>
                 <Item className="setup-notes">
                     <Notes setupId={setup?.id} notes={setup?.notes} />
@@ -125,7 +129,7 @@ let SetupView = ({ setup }) => {
                         setOpen={setOpen}
                         setSelectedRow={setSelectedRow}
                     />
-                </Box>
+                </Box> */}
             </Box>
             {/* popup to display a trade */}
             {renderTemplate(

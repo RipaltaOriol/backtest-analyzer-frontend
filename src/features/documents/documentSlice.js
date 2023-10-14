@@ -123,16 +123,6 @@ export const documentsApiSlice = apiSlice.injectEndpoints({
             }),
             providesTags: ["CompareSetups"],
         }),
-        getCalendarTable: builder.query({
-            query: ({ documentId, metric = null, date = null }) => ({
-                url: `/documents/${documentId}/calendar`,
-                params: {
-                    metric: metric ? metric : undefined,
-                    date: date ? date : undefined,
-                },
-            }),
-            providesTags: ["CalendarTable"],
-        }),
     }),
 });
 
@@ -148,7 +138,6 @@ export const {
     usePostDocumentMutation,
     useDeleteDocumentMutation,
     useCompareDocumentSetupsQuery,
-    useGetCalendarTableQuery,
     useGetDocumentColumnsQuery,
     useAssignDocumentTemplateMutation,
 } = documentsApiSlice;

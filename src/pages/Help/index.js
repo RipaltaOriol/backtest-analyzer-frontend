@@ -1,4 +1,5 @@
 import ManualAccountCreation from "assets/images/manual-account-creation.png";
+import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
@@ -26,6 +27,10 @@ const BoxPaper = styled(Box)({
 
 const Help = () => {
     const location = useLocation();
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
 
     return (
         <Box

@@ -1,10 +1,12 @@
 export function getResultAdornment(resultCol) {
+    console.log(resultCol);
+    if (!resultCol) return "";
     switch (true) {
         case resultCol.startsWith("col_r_"):
-            return "RR";
+            return " RR";
         case resultCol.startsWith("col_p_"):
             return "%";
         default:
-            return "";
+            return " USD";
     }
 }

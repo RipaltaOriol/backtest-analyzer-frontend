@@ -91,6 +91,7 @@ const Analysis = () => {
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "space-between",
+                    mb: 1,
                 }}
             >
                 <Typography variant="h5">
@@ -166,7 +167,7 @@ const Analysis = () => {
                 </Box>
             </Box>
 
-            <Divider sx={{ my: 2 }} />
+            {/* <Divider sx={{ my: 2 }} /> */}
             <SetupView setup={actualSetup} />
             <AddSetupDialog
                 openAddDialog={openAddSetup}

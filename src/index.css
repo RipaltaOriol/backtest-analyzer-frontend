@@ -14,6 +14,11 @@ code {
         monospace;
 }
 
+.loading-logo {
+    width: 180px;
+    margin-bottom: 16px;
+}
+
 .MuiDataGrid-columnHeader:focus {
     outline: none !important;
 }

@@ -93,6 +93,16 @@ export const setupsSlice = apiSlice.injectEndpoints({
                 "Document",
             ],
         }),
+        getCalendarTable: builder.query({
+            query: ({ setupId, metric = null, date = null }) => ({
+                url: `/setups/${setupId}/calendar`,
+                params: {
+                    metric: metric ? metric : undefined,
+                    date: date ? date : undefined,
+                },
+            }),
+            providesTags: ["CalendarTable"],
+        }),
     }),
 });
 
@@ -104,6 +114,7 @@ export const {
     useDeleteSetupsMutation,
     useUpdateRowNoteSetupMutation,
     useAddFilterSetupMutation,
+    useGetCalendarTableQuery,
     useDeleteFilterSetupMutation,
 } = setupsSlice;
 

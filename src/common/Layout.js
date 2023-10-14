@@ -221,7 +221,7 @@ export default function Layout() {
                 </List>
                 <Divider sx={{ m: 1 }} />
                 {/* Files */}
-                <List sx={{ overflow: "scroll" }}>
+                <List sx={{ overflowY: "scroll" }}>
                     <Typography sx={{ px: 3 }} variant="subtitle1">
                         Accounts
                     </Typography>

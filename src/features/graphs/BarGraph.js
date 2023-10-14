@@ -8,12 +8,14 @@ import {
     Tooltip,
 } from "chart.js";
 import autocolors from "chartjs-plugin-autocolors";
+import { CustomSelect } from "common/CustomComponents";
+import { ErrorFeedback } from "common/ErrorFeedback";
 import { Bar } from "react-chartjs-2";
 import { useDispatch, useSelector } from "react-redux";
 
+import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
 import Box from "@mui/material/Box";
 import MenuItem from "@mui/material/MenuItem";
-import Select from "@mui/material/Select";
 import Typography from "@mui/material/Typography";
 import { styled } from "@mui/material/styles";
 
@@ -110,29 +112,14 @@ const BarGraph = ({ setupId }) => {
     }
 
     return (
-        <Box sx={{ border: "1px solid #E5E9EB", borderRadius: "6px", p: 2 }}>
-            <Box
-                sx={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    position: "relative",
-                    my: 1,
-                }}
-            >
-                {data?.success && (
-                    <Typography align="center">
-                        {data?.labels?.title || "Loading"}
-                    </Typography>
-                )}
-                {!data?.success && (
-                    <Typography align="center" sx={{ color: "red" }}>
-                        {data?.msg}
-                    </Typography>
-                )}
-                {data?.success && (
-                    <Select
+        <Box>
+            {!data?.success && <ErrorFeedback msg={data?.msg} />}
+
+            {data?.success && (
+                <>
+                    <CustomSelect
                         size="small"
+                        IconComponent={KeyboardArrowDownRoundedIcon}
                         value={data?.active_metric || ""}
                         onChange={(e) =>
                             dispatch(
@@ -142,14 +129,7 @@ const BarGraph = ({ setupId }) => {
                             )
                         }
                         sx={{
-                            "& legend": { display: "none" },
-                            "& fieldset": { top: 0 },
-                            "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                borderColor: "inherit",
-                                borderWidth: "1px",
-                            },
-                            position: "absolute",
-                            right: 0,
+                            mr: 0.8,
                         }}
                     >
                         {data
@@ -165,11 +145,14 @@ const BarGraph = ({ setupId }) => {
                                   )
                               )
                             : null}
-                    </Select>
-                )}
-            </Box>
+                    </CustomSelect>{" "}
+                    <Typography variant="h6" component="span" gutterBottom>
+                        by Result
+                    </Typography>
+                </>
+            )}
 
-            <Bar options={options} data={barData} />
+            {data?.success && <Bar options={options} data={barData} />}
         </Box>
     );
 };

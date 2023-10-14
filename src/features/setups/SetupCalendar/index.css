@@ -1,14 +1,43 @@
+.calendar-tab {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 1rem;
+}
+
 .calendar-grid {
-    border-bottom: 1px solid grey;
-    border-right: 1px solid grey;
+    grid-column: span 7;
+    order: 2;
+}
+
+.calendar-drawer {
+    grid-column: span 7;
+    order: 1;
+}
+
+@media screen and (min-width: 1536px) {
+    /* For 4K Displays (Ultra HD) */
+    .calendar-grid {
+        grid-column: span 4;
+        order: 1;
+    }
+
+    .calendar-drawer {
+        grid-column: span 3;
+        order: 2;
+    }
+}
+
+.calendar-grid-item {
+    border-bottom: 1px solid #e5e9eb;
+    border-right: 1px solid #e5e9eb;
 }
 
 .calendar-grid-top {
-    border-top: 1px solid grey;
+    border-top: 1px solid #e5e9eb;
 }
 
 .calendar-grid-left {
-    border-left: 1px solid grey;
+    border-left: 1px solid #e5e9eb;
 }
 
 .calendar-day-text {
@@ -20,7 +49,7 @@
 }
 
 .not-current-month {
-    background-color: rgb(225, 225, 225) !important;
+    background-color: #f0f1f2 !important;
 }
 
 .current-day {

@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) =>
     })
 );
 
-const Notes = ({ setupId, notes }) => {
+const Notes = ({ setupId, notes, className }) => {
     const classes = useStyles();
     const [setupNotes, setSetupNotes] = useState(notes);
 
@@ -38,7 +38,10 @@ const Notes = ({ setupId, notes }) => {
     };
 
     return (
-        <Box>
+        <Box
+            className={className}
+            sx={{ borderRadius: "6px", border: "1px solid #E5E9EB" }}
+        >
             <Typography sx={{ px: 2, py: "8px" }}>Notes</Typography>
             <TextField
                 className={classes.inputMultiline}

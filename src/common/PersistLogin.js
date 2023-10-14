@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Outlet } from "react-router-dom";
 
+import LoadingPage from "features/loading";
+
 import { useRefreshTokenMutation } from "../features/auth/authApiSlice";
 import { selectCurrentToken, setCredentials } from "../features/auth/authSlice";
 
@@ -35,7 +37,7 @@ const PersistLogin = () => {
         return () => (isMounted = false);
     }, [token, dispatch, refreshToken]);
 
-    return <>{isWorking ? <p>Loading...</p> : <Outlet />}</>;
+    return <>{isWorking ? <LoadingPage /> : <Outlet />}</>;
 };
 
 export default PersistLogin;

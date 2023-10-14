@@ -9,6 +9,7 @@ import {
     Tooltip,
 } from "chart.js";
 import autocolors from "chartjs-plugin-autocolors";
+import { ErrorFeedback } from "common/ErrorFeedback";
 import { Line } from "react-chartjs-2";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -64,6 +65,8 @@ const LineGraph = ({ setupId }) => {
     const currentMetric = useSelector(selectCurrentMetric);
 
     let options = {
+        maintainAspectRatio: false,
+        responsive: true,
         scales: {
             y: {
                 title: {
@@ -115,7 +118,15 @@ const LineGraph = ({ setupId }) => {
     }
 
     return (
-        <Box sx={{ border: "1px solid #E5E9EB", borderRadius: "6px", p: 2 }}>
+        <Box
+            sx={{
+                border: "1px solid #E5E9EB",
+                borderRadius: "5px",
+                p: 2,
+                pb: 6,
+                maxHeight: "500px",
+            }}
+        >
             <Box
                 sx={{
                     display: "flex",
@@ -125,46 +136,52 @@ const LineGraph = ({ setupId }) => {
                     my: 1,
                 }}
             >
+                {!data?.success && <ErrorFeedback msg={data?.msg} />}
                 {data?.success && (
                     <Typography align="center">
                         {data?.labels?.title || "Loading"}
                     </Typography>
                 )}
-                {!data?.success && (
-                    <Typography align="center" sx={{ color: "red" }}>
-                        {data?.msg}
-                    </Typography>
+                {data?.success && (
+                    <Select
+                        size="small"
+                        value={data?.active_metric || ""}
+                        onChange={(e) =>
+                            dispatch(
+                                setCurrentMetric({
+                                    currentMetric: e.target.value,
+                                })
+                            )
+                        }
+                        sx={{
+                            "& legend": { display: "none" },
+                            "& fieldset": { top: 0 },
+                            "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                borderColor: "inherit",
+                                borderWidth: "1px",
+                            },
+                            position: "absolute",
+                            right: 0,
+                        }}
+                    >
+                        {data
+                            ? data?.metric_list.map(
+                                  ([metric, parsedDate], idx) => (
+                                      <FilterMenuItem
+                                          key={idx}
+                                          id={idx}
+                                          value={metric}
+                                      >
+                                          {parsedDate}
+                                      </FilterMenuItem>
+                                  )
+                              )
+                            : null}
+                    </Select>
                 )}
-                <Select
-                    size="small"
-                    value={data?.active_metric || ""}
-                    onChange={(e) =>
-                        dispatch(
-                            setCurrentMetric({ currentMetric: e.target.value })
-                        )
-                    }
-                    sx={{
-                        "& legend": { display: "none" },
-                        "& fieldset": { top: 0 },
-                        "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                            borderColor: "inherit",
-                            borderWidth: "1px",
-                        },
-                        position: "absolute",
-                        right: 0,
-                    }}
-                >
-                    {data
-                        ? data?.metric_list.map(([metric, parsedDate], idx) => (
-                              <FilterMenuItem key={idx} id={idx} value={metric}>
-                                  {parsedDate}
-                              </FilterMenuItem>
-                          ))
-                        : null}
-                </Select>
             </Box>
 
-            <Line data={lineData} options={options} />
+            {data?.success && <Line data={lineData} options={options} />}
         </Box>
     );
 };

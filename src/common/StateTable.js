@@ -20,6 +20,7 @@ import FormControl from "@mui/material/FormControl";
 import IconButton from "@mui/material/IconButton";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
+import Typography from "@mui/material/Typography";
 import { styled } from "@mui/system";
 
 const TablePaginationIcon = styled(IconButton)({
@@ -107,7 +108,9 @@ let StateTable = ({ setup, setOpen, setSelectedRow }) => {
 
     return (
         <div className="table-container">
-            <h3 className="table-title">Data</h3>
+            <Typography className="table-title" variant="h6">
+                Trades Table
+            </Typography>
             <table>
                 <thead>
                     {table.getHeaderGroups().map((headerGroup) => (

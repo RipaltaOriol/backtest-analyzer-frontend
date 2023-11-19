@@ -36,7 +36,6 @@ const SetupCalendar = (props) => {
     const dateFormat = useSelector(selectDateFormat);
     const resultDisplay = useSelector(selectResultDisplay);
 
-    // console.log(dateFormat);
     const { data: calendarData } = useGetCalendarTableQuery(
         {
             setupId: setup?.id,
@@ -45,8 +44,6 @@ const SetupCalendar = (props) => {
         },
         { skip: !setup?.id }
     );
-
-    console.log(calendarData);
 
     return (
         <Box

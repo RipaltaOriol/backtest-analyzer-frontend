@@ -104,9 +104,10 @@ export const documentsApiSlice = apiSlice.injectEndpoints({
             invalidatesTags: [{ type: "Document", id: "LIST" }],
         }),
         assignDocumentTemplate: builder.mutation({
-            query: ({ documentId, templateId }) => ({
+            query: ({ documentId, templateId, mappings }) => ({
                 url: `/documents/${documentId}/templates/${templateId}`,
                 method: "POST",
+                body: { mappings },
             }),
             invalidatesTags: (result, error, arg) => [
                 { type: "Document", id: arg.documentId },

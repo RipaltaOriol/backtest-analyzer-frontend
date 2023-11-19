@@ -32,7 +32,6 @@ const NetBarChart = ({ setupId }) => {
         labels: [],
         datasets: [],
     };
-    console.log(getNetReturn);
     if (getNetReturn?.success) {
         let datasetsDaily = [];
         for (const [key, value] of Object.entries(getNetReturn?.data)) {

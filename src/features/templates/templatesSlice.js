@@ -12,7 +12,15 @@ export const templatesSlice = apiSlice.injectEndpoints({
                 method: "POST",
                 body: { row: template },
             }),
-            invalidatesTags: ["SetupRow"],
+            invalidatesTags: [
+                "SetupRow",
+                "DocumentTable",
+                "CalendarTable",
+                "Setup",
+                "Stats",
+                "Graphs",
+                "Charts",
+            ],
         }),
     }),
 });

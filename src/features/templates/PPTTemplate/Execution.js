@@ -1,3 +1,5 @@
+import dayjs from "dayjs";
+
 import { Divider } from "@mui/material";
 import Box from "@mui/material/Box";
 import Checkbox from "@mui/material/Checkbox";
@@ -18,9 +20,12 @@ const Execution = ({ template, onChangeField }) => {
                     </Typography>
                     <CustomDateTimeField
                         format="L HH:mm"
-                        value={template?.date_executed}
+                        value={dayjs(template?.date_executed)}
                         onChange={(newValue) =>
-                            onChangeField("date_executed", newValue)
+                            onChangeField(
+                                "date_executed",
+                                newValue.toISOString()
+                            )
                         }
                     />
                 </Box>

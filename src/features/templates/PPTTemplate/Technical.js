@@ -49,33 +49,6 @@ const Technical = ({ template, onChangeField }) => {
                     />
                 </AccordionDetails>
             </TemplateAccordion>
-            <TemplateAccordion disableGutters sx={{ mb: 1.5 }}>
-                <AccordionSummary
-                    expandIcon={<ExpandMoreIcon />}
-                    sx={{
-                        px: 1.5,
-                    }}
-                >
-                    <Typography>Market Structure</Typography>
-                </AccordionSummary>
-                <AccordionDetails sx={{ px: 1.5, pt: 0, pb: 1.5 }}>
-                    <CustomTextField
-                        multiline
-                        minRows={3}
-                        value={template?.market_stucture}
-                        onChange={(e) =>
-                            onChangeField("market_stucture", e.target.value)
-                        }
-                        sx={{
-                            "& .MuiInputBase-multiline": { p: 1 },
-                            "& textarea": { fontSize: 14 },
-                            backgroundColor: "#d7edff",
-                            borderRadius: "5px",
-                        }}
-                    />
-                </AccordionDetails>
-            </TemplateAccordion>
-
             {template?.pre_trade_screenshot && (
                 <img
                     className="preview-image"

@@ -1,8 +1,7 @@
+import LoadingPage from "pages/loading";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Outlet } from "react-router-dom";
-
-import LoadingPage from "features/loading";
 
 import { useRefreshTokenMutation } from "../features/auth/authApiSlice";
 import { selectCurrentToken, setCredentials } from "../features/auth/authSlice";

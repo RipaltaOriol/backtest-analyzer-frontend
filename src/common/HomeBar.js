@@ -7,6 +7,7 @@ import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import Container from "@mui/material/Container";
 import IconButton from "@mui/material/IconButton";
 import SwipeableDrawer from "@mui/material/SwipeableDrawer";
 import Toolbar from "@mui/material/Toolbar";
@@ -16,23 +17,27 @@ import { styled } from "@mui/system";
 import LogoTitle from "./LogoTitle";
 
 const LoginButton = styled(Button)({
-    fontSize: "0.875rem",
-    color: "#F6F8F9",
-    backgroundColor: "#4094F7",
-    borderRadius: "6px",
-    padding: "4px 24px",
+    background: "white",
+    border: "2px solid #2b61ff",
+    borderRadius: "5px",
+    color: "#2b61ff",
+    "&:hover": {
+        backgroundColor: "white",
+        color: "#2b61ff",
+    },
 });
 
 const NavButton = styled(Button)({
-    fontSize: "0.875rem",
-    fontWeight: "400",
-    color: "#252C32",
-    backgroundColor: "#FFFFFF",
+    color: "#000",
+    backgroundColor: "transparent",
+    boxShadow: "none",
+    fontWeight: "500",
     borderRadius: "6px",
-    padding: "4px 24px",
+    fontSize: "16px",
     "&:hover": {
-        backgroundColor: "#f5f5f5",
-        color: "#252C32",
+        backgroundColor: "transparent",
+        color: "#000",
+        boxShadow: "none",
     },
 });
 
@@ -70,39 +75,62 @@ const HomeBar = () => {
 
     return (
         <Box>
-            <AppBar
-                elevation={0}
-                sx={{
-                    py: 1,
-                    px: {
-                        xs: 1,
-                        md: 2,
-                        lg: 5,
-                    },
-                }}
-            >
-                <Toolbar>
+            <AppBar elevation={1} sx={{ backgroundColor: "white" }}>
+                <Toolbar component={Container} sx={{ py: 3 }}>
                     <Box
-                        sx={{ flexGrow: 1, display: "inline-flex" }}
+                        sx={{
+                            flexGrow: 1,
+                            display: "inline-flex",
+                            alignItems: "center",
+                        }}
                         component={Link}
                         to="/"
                         className={classes.logoLink}
                     >
-                        <img
-                            alt="Trade Sharpener Logo"
-                            src={LogoIcon}
-                            className={classes.logoIcon}
-                        />
-                        <LogoTitle
-                            first="Trade"
-                            second="Sharpener"
-                            variant="h6"
-                            component="p"
-                            weight="700"
-                            color="#000"
-                        />
+                        <Box sx={{ mr: 4 }}>
+                            <img
+                                alt="Trade Sharpener Logo"
+                                src={LogoIcon}
+                                className={classes.logoIcon}
+                            />
+                            <LogoTitle
+                                first="Trade"
+                                second="Sharpener"
+                                variant="h6"
+                                component="p"
+                                weight="700"
+                                color="#000"
+                            />
+                        </Box>
+                        <Box sx={{ display: { xs: "none", md: "block" } }}>
+                            <NavButton
+                                component={Link}
+                                to="/features"
+                                variant="contained"
+                            >
+                                Features
+                            </NavButton>
+                            <NavButton
+                                sx={{ ml: 1.5 }}
+                                component={Link}
+                                to="/guide"
+                                variant="contained"
+                            >
+                                Guide
+                            </NavButton>
+
+                            <NavButton
+                                sx={{ ml: 1.5 }}
+                                component={Link}
+                                to="https://t.me/TradeSharpener_Support"
+                                variant="contained"
+                            >
+                                Support
+                            </NavButton>
+                        </Box>
                     </Box>
-                    <Box sx={{ display: { xs: "block", sm: "none" } }}>
+
+                    <Box sx={{ display: { xs: "block", md: "none" } }}>
                         <IconButton onClick={toggleDrawer(true)}>
                             <MenuRoundedIcon sx={{ color: "#000" }} />
                         </IconButton>
@@ -162,34 +190,12 @@ const HomeBar = () => {
                             </Box>
                         </SwipeableDrawer>
                     </Box>
-                    <Box sx={{ display: { xs: "none", sm: "block" } }}>
-                        <NavButton
-                            component={Link}
-                            to="/features"
-                            variant="contained"
-                        >
-                            Features
-                        </NavButton>
-                        <NavButton
-                            sx={{ ml: 1.5 }}
-                            component={Link}
-                            to="/guide"
-                            variant="contained"
-                        >
-                            Guide
-                        </NavButton>
-                        <NavButton
-                            sx={{ ml: 1.5 }}
-                            component={Link}
-                            to="/https://t.me/TradeSharpener_Supoort"
-                            variant="contained"
-                        >
-                            Support
-                        </NavButton>
+                    <Box sx={{ display: { xs: "none", md: "block" } }}>
                         <LoginButton
-                            sx={{ ml: 1.5 }}
+                            sx={{ px: 3, py: 1 }}
                             component={Link}
                             to="/login"
+                            disableRipple
                             variant="contained"
                         >
                             My Account

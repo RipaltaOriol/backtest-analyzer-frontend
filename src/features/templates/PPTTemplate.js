@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import { useCallback, useEffect, useState } from "react";
 
 import Box from "@mui/material/Box";
@@ -25,7 +26,16 @@ const PPTTemplate = ({ setupId, rowId, open, onClose }) => {
     const [template, setTemplate] = useState(row);
 
     useEffect(() => {
-        setTemplate(row);
+        if (row?.date_executed) {
+            let dateFormated = dayjs(row.date_executed).toISOString();
+
+            setTemplate({
+                ...row,
+                date_executed: dateFormated,
+            });
+        } else {
+            setTemplate(row);
+        }
     }, [row]);
 
     const handleClose = () => {
@@ -34,11 +44,11 @@ const PPTTemplate = ({ setupId, rowId, open, onClose }) => {
 
     const handleSubmit = async () => {
         await putSetupRow({
-            setupId: row.setup["$oid"],
+            setupId: row.document["$oid"], //TODO: this has to be changed
             rowId: row.row_id,
             template,
         });
-        // onClose();
+        onClose();
     };
 
     const onChangeFieldArray = useCallback(

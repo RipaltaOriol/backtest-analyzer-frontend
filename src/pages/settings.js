@@ -1,4 +1,6 @@
-import defaultTemplate from "assets/images/templates/defaultTemplate.png";
+import defaultTemplateImg from "assets/images/templates/defaultTemplate.png";
+import pptTemplateImg from "assets/images/templates/pptTemplate.png";
+import { ErrorFeedback } from "common/ErrorFeedback";
 import { useState } from "react";
 
 import VisibilityRoundedIcon from "@mui/icons-material/VisibilityRounded";
@@ -14,6 +16,8 @@ import {
     useGetUserSettingsQuery,
     useUpdatePasswordMutation,
 } from "features/auth/authApiSlice";
+import DefaultPreview from "features/templates/previews/DefaultPreview";
+import PPTPreview from "features/templates/previews/PPTPreview";
 
 import Message from "../common/Message";
 // import { renderTemplate } from "features/templates/utilsTemplateManager";
@@ -31,6 +35,17 @@ function stringAvatar(name) {
     };
 }
 
+const nameToPreview = (name) => {
+    console.log(name);
+    if (name === "Default") {
+        return defaultTemplateImg;
+    } else if (name === "PPT") {
+        return pptTemplateImg;
+    } else {
+        return defaultTemplateImg;
+    }
+};
+
 const Settings = () => {
     const { data } = useGetUserSettingsQuery();
 
@@ -38,12 +53,18 @@ const Settings = () => {
     const [confirmPassword, setConfirmPassword] = useState("");
     const [message, setMessage] = useState("");
     const [isError, setIsError] = useState(false);
+    const [openPreview, setOpenPreview] = useState({});
 
     const [updatePassword] = useUpdatePasswordMutation();
     const [addTemplateUserSettings] = useAddTemplateUserSettingsMutation();
 
     const handleAddTemplate = (templateId) => {
         addTemplateUserSettings({ templateId });
+    };
+
+    const handlePreview = (isOpen, key) => {
+        console.log(key);
+        setOpenPreview({ ...openPreview, [key]: isOpen });
     };
 
     const handleUpdatePassword = async () => {
@@ -135,7 +156,7 @@ const Settings = () => {
                 <Typography sx={{ fontWeight: 600, mb: 2 }}>
                     Payment Method:
                 </Typography>
-                <Box sx={{ color: "red" }}>No payment method detected</Box>
+                <ErrorFeedback msg="No payment method detected" />
             </Box>
             <Divider sx={{ mb: 2 }} />
             <Box sx={{ mb: 5 }}>
@@ -148,7 +169,10 @@ const Settings = () => {
                             className="light-border"
                             sx={{ width: "300px", p: 2 }}
                         >
-                            <img src={defaultTemplate} alt="default template" />
+                            <img
+                                src={nameToPreview(template?.name)}
+                                alt="default template"
+                            />
                             <Typography sx={{ mt: 2 }}>
                                 {template.name}
                             </Typography>
@@ -160,7 +184,12 @@ const Settings = () => {
                             <Button
                                 variant="contained"
                                 startIcon={<VisibilityRoundedIcon />}
-                                disabled
+                                onClick={() =>
+                                    handlePreview(
+                                        true,
+                                        template?.name.toLowerCase()
+                                    )
+                                }
                             >
                                 Preview
                             </Button>
@@ -178,7 +207,10 @@ const Settings = () => {
                             className="light-border"
                             sx={{ width: "300px", p: 2 }}
                         >
-                            <img src={defaultTemplate} alt="default template" />
+                            <img
+                                src={nameToPreview(template?.name)}
+                                alt="default template"
+                            />
                             <Typography sx={{ mt: 2 }}>
                                 {template.name}
                             </Typography>
@@ -209,6 +241,14 @@ const Settings = () => {
                     ))}
                 </Box>
             </Box>
+            <PPTPreview
+                open={openPreview?.ppt}
+                onClose={() => handlePreview(false, "ppt")}
+            />
+            <DefaultPreview
+                open={openPreview?.default}
+                onClose={() => handlePreview(false, "default")}
+            />
         </Box>
     );
 };

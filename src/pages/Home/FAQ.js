@@ -18,8 +18,12 @@ const faq = {
 };
 
 const CustomAccordion = styled(Accordion)({
-    border: "1px solid rgba(37, 44, 50, 0.1)",
+    // border: "1px solid rgba(37, 44, 50, 0.1)",
     boxShadow: "none",
+    "&.MuiPaper-root": {
+        backgroundColor: "#F7F8F9",
+        borderRadius: "6px",
+    },
 });
 
 const FAQ = () => {
@@ -35,29 +39,24 @@ const FAQ = () => {
                 <CustomAccordion
                     expanded={expanded === indx}
                     onChange={handleExpand(indx)}
-                    sx={{ mb: 2, p: 2, "&:before": { display: "none" } }}
+                    sx={{
+                        mb: 2,
+                        p: 2,
+                        "&:before": { display: "none" },
+                    }}
                 >
                     <AccordionSummary
                         expandIcon={
                             <ExpandMoreIcon
                                 sx={{
-                                    color:
-                                        expanded === indx
-                                            ? "#2B61FE"
-                                            : "inherit ",
+                                    color: "#2B61FE",
                                 }}
                             />
                         }
                         aria-controls="panel1a-content"
                         id="panel1a-header"
                     >
-                        <Typography
-                            className="h5-placeholder"
-                            sx={{
-                                color:
-                                    expanded === indx ? "#2B61FE" : "inherit",
-                            }}
-                        >
+                        <Typography className="h5-placeholder">
                             {question}
                         </Typography>
                     </AccordionSummary>

@@ -94,7 +94,6 @@ const Day = ({ day, rowIdx, cellIdx, calendarData }) => {
     }
 
     function openSingleTrade(trade) {
-        console.log(trade);
         dispatch(setSelectedTrade({ trade }));
     }
 
@@ -143,11 +142,7 @@ const Day = ({ day, rowIdx, cellIdx, calendarData }) => {
                             <Typography>
                                 {trade[PAIR_METRIC].toUpperCase()}
                             </Typography>
-                            <Typography
-                                onClick={() =>
-                                    console.log(calendarData?.active_metric)
-                                }
-                            >
+                            <Typography>
                                 {trade[calendarData?.active_metric]}{" "}
                                 {getResultAdornment(
                                     calendarData?.active_metric

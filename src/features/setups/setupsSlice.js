@@ -134,7 +134,6 @@ export const selectSetupsByDocument = createSelector(
 export const selectDefaultSetup = createSelector(
     [selectAllSetups, (data, documentId) => documentId],
     (setups, documentId) => {
-        console.log(documentId);
         return setups.find(
             (setup) => setup.default && setup.documentId === documentId
         );

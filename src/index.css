@@ -14,6 +14,10 @@ code {
         monospace;
 }
 
+.link-styled {
+    color: #0e73f6;
+}
+
 .loading-logo {
     width: 180px;
     margin-bottom: 16px;

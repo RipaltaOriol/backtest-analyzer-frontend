@@ -38,32 +38,6 @@ const Close = ({ template, onChangeField }) => {
                         px: 1.5,
                     }}
                 >
-                    <Typography>Liquidity Area</Typography>
-                </AccordionSummary>
-                <AccordionDetails sx={{ px: 1.5, pt: 0, pb: 1.5 }}>
-                    <CustomTextField
-                        multiline
-                        minRows={3}
-                        value={template?.liquidity_levels}
-                        onChange={(e) =>
-                            onChangeField("liquidity_levels", e.target.value)
-                        }
-                        sx={{
-                            "& .MuiInputBase-multiline": { p: 1 },
-                            "& textarea": { fontSize: 14 },
-                            backgroundColor: "#d7edff",
-                            borderRadius: "5px",
-                        }}
-                    />
-                </AccordionDetails>
-            </TemplateAccordion>
-            <TemplateAccordion disableGutters sx={{ mb: 1.5 }}>
-                <AccordionSummary
-                    expandIcon={<ExpandMoreIcon />}
-                    sx={{
-                        px: 1.5,
-                    }}
-                >
                     <Typography>Target Area</Typography>
                 </AccordionSummary>
                 <AccordionDetails sx={{ px: 1.5, pt: 0, pb: 1.5 }}>
@@ -73,32 +47,6 @@ const Close = ({ template, onChangeField }) => {
                         value={template?.target_area}
                         onChange={(e) =>
                             onChangeField("target_area", e.target.value)
-                        }
-                        sx={{
-                            "& .MuiInputBase-multiline": { p: 1 },
-                            "& textarea": { fontSize: 14 },
-                            backgroundColor: "#d7edff",
-                            borderRadius: "5px",
-                        }}
-                    />
-                </AccordionDetails>
-            </TemplateAccordion>
-            <TemplateAccordion disableGutters sx={{ mb: 1.5 }}>
-                <AccordionSummary
-                    expandIcon={<ExpandMoreIcon />}
-                    sx={{
-                        px: 1.5,
-                    }}
-                >
-                    <Typography>Price Action</Typography>
-                </AccordionSummary>
-                <AccordionDetails sx={{ px: 1.5, pt: 0, pb: 1.5 }}>
-                    <CustomTextField
-                        multiline
-                        minRows={3}
-                        value={template?.price_action}
-                        onChange={(e) =>
-                            onChangeField("price_action", e.target.value)
                         }
                         sx={{
                             "& .MuiInputBase-multiline": { p: 1 },

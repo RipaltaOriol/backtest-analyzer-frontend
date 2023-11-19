@@ -3,6 +3,7 @@ import { ErrorFeedback } from "common/ErrorFeedback";
 import StateTable from "common/StateTable";
 import { useEffect, useState } from "react";
 import { getResultAdornment } from "utils";
+import parseColumnName from "utils/parseColumns";
 
 import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
 import Alert from "@mui/material/Alert";
@@ -13,6 +14,7 @@ import Select from "@mui/material/Select";
 import Typography from "@mui/material/Typography";
 
 import { useGetStatisticsQuery } from "features/statistics/statisticsApiSlice";
+import { renderTemplate } from "features/templates/utilsRenderTemplate";
 
 import Notes from "../../pages/Analysis/Notes";
 import LineGraph from "../graphs/LineGraph";
@@ -20,7 +22,8 @@ import LineGraph from "../graphs/LineGraph";
 const SetupGeneral = (props) => {
     const { children, value, setup, index, ...other } = props;
     const [resultMetric, setResultMetric] = useState();
-
+    const [open, setOpen] = useState(false);
+    const [selectedRow, setSelectedRow] = useState({});
     const {
         data: setupStatistics,
         isLoading,
@@ -66,7 +69,7 @@ const SetupGeneral = (props) => {
                     >
                         {Object.keys(setupStatistics).map((column) => (
                             <CustomMenuItem value={column}>
-                                {column}
+                                {parseColumnName(column)}
                             </CustomMenuItem>
                         ))}
                     </Select>
@@ -187,10 +190,17 @@ const SetupGeneral = (props) => {
                     <Box className="setup-table">
                         <StateTable
                             setup={setup}
-                            // setOpen={setOpen}
-                            // setSelectedRow={setSelectedRow}
+                            setOpen={setOpen}
+                            setSelectedRow={setSelectedRow}
                         />
                     </Box>
+                    {renderTemplate(
+                        setup?.template,
+                        setup?.id,
+                        selectedRow,
+                        open,
+                        setOpen
+                    )}
                 </Box>
             )}
         </div>

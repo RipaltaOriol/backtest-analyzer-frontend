@@ -46,6 +46,8 @@ const Footer = () => {
                         </IconButton>
                         <IconButton
                             disableRipple
+                            component={Link}
+                            to="https://www.instagram.com/trade.sharpener/"
                             sx={{ backgroundColor: "#2b61ff", mr: 1 }}
                         >
                             <InstagramIcon sx={{ color: "white" }} />

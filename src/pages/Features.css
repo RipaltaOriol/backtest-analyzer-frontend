@@ -51,7 +51,7 @@ ul.feature-ul {
 ul.feature-ul li {
     margin-bottom: 24px;
     display: flex;
-    align-items: start;
+    align-items: flex-start;
     font-weight: 400;
     font-size: 1rem;
     line-height: 1.5;

@@ -14,6 +14,15 @@ code {
         monospace;
 }
 
+.link-styled {
+    color: #0e73f6;
+}
+
+.loading-logo {
+    width: 180px;
+    margin-bottom: 16px;
+}
+
 .MuiDataGrid-columnHeader:focus {
     outline: none !important;
 }
@@ -24,4 +33,14 @@ code {
 
 .MuiDataGrid-cell:focus-within {
     outline: none !important;
+}
+
+.light-border {
+    border: 1px solid #e5e9eb;
+    border-radius: 5px;
+}
+
+/* style calendar week day label */
+.MuiDayCalendar-weekDayLabel {
+    background: none !important;
 }

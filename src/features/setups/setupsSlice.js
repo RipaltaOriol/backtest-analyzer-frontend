@@ -28,7 +28,7 @@ export const setupsSlice = apiSlice.injectEndpoints({
         }),
         updateRowNoteSetup: builder.mutation({
             query: ({ setupId, rowId, note, images, isSync }) => ({
-                url: `/setups/${setupId}/${rowId}/note`,
+                url: `/setups/${setupId}/${rowId}`,
                 method: "POST",
                 body: { note, images, isSync },
             }),
@@ -93,6 +93,16 @@ export const setupsSlice = apiSlice.injectEndpoints({
                 "Document",
             ],
         }),
+        getCalendarTable: builder.query({
+            query: ({ setupId, metric = null, date = null }) => ({
+                url: `/setups/${setupId}/calendar`,
+                params: {
+                    metric: metric ? metric : undefined,
+                    date: date ? date : undefined,
+                },
+            }),
+            providesTags: ["CalendarTable"],
+        }),
     }),
 });
 
@@ -104,6 +114,7 @@ export const {
     useDeleteSetupsMutation,
     useUpdateRowNoteSetupMutation,
     useAddFilterSetupMutation,
+    useGetCalendarTableQuery,
     useDeleteFilterSetupMutation,
 } = setupsSlice;
 
@@ -122,8 +133,17 @@ export const selectSetupsByDocument = createSelector(
 
 export const selectDefaultSetup = createSelector(
     [selectAllSetups, (data, documentId) => documentId],
-    (setups, documentId) =>
-        setups.find((setup) => setup.default && setup.documentId === documentId)
+    (setups, documentId) => {
+        return setups.find(
+            (setup) => setup.default && setup.documentId === documentId
+        );
+    }
+);
+
+// NOTE: this is a duplicate - probably delete and reuse
+export const selectProvidedSetup = createSelector(
+    [selectAllSetups, (data, setupId) => setupId],
+    (setups, setupId) => setups.find((setup) => setup.id === setupId)
 );
 
 export const selectSetupOnId = createSelector(

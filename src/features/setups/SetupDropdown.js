@@ -55,7 +55,7 @@ let SetupDropdown = ({ defaultSetup, setups, changeSetup }) => {
         <>
             <MenuButton color="secondary" sx={{ ml: 1 }} onClick={handleClick}>
                 <Typography sx={{ color: "#9AA6AC", fontSize: "14px" }}>
-                    Setup
+                    Version
                 </Typography>
                 &nbsp;
                 <Typography

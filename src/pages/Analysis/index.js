@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { Link, useParams } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import ArrowUpwardRoundedIcon from "@mui/icons-material/ArrowUpwardRounded";
@@ -24,6 +24,7 @@ import SetupFilter from "../../features/setups/SetupFilter";
 import SetupView from "../../features/setups/SetupView";
 import {
     selectDefaultSetup,
+    selectProvidedSetup,
     selectSetupOnId,
     selectSetupsByDocument,
 } from "../../features/setups/setupsSlice";
@@ -53,24 +54,23 @@ const CustomIconMenuButton = styled(IconButton)({
 
 const Analysis = () => {
     const { documentId } = useParams();
-
+    const { state } = useLocation();
     const [currentSetup, setCurrentSetup] = useState();
     const [openAddSetup, setOpenAddSetup] = useState(false);
 
     // NOTE: handle Errors
-    const { setupsByDocument, defaultSetup, actualSetup } = useGetSetupsQuery(
-        undefined,
-        {
+    const { setupsByDocument, defaultSetup, providedSetup, actualSetup } =
+        useGetSetupsQuery(undefined, {
             selectFromResult: ({ data, isLoading, isError, isSuccess }) => ({
                 setupsByDocument: selectSetupsByDocument(data, documentId),
                 defaultSetup: selectDefaultSetup(data, documentId),
+                providedSetup: selectProvidedSetup(data, state?.setup.id),
                 actualSetup: selectSetupOnId(data, currentSetup?.id),
                 isLoading,
                 isError,
                 isSuccess,
             }),
-        }
-    );
+        });
 
     const [downloadPDFFile] = useDownloadPDFFileMutation();
 
@@ -91,6 +91,7 @@ const Analysis = () => {
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "space-between",
+                    mb: 1,
                 }}
             >
                 <Typography variant="h5">
@@ -120,9 +121,7 @@ const Analysis = () => {
                             Export
                         </MenuButton>
                     </Tooltip>
-                    <SetupFilter
-                        setup={actualSetup ? actualSetup : defaultSetup}
-                    />
+                    <SetupFilter setup={actualSetup} />
                     <Button
                         color="primary"
                         variant="contained"
@@ -155,7 +154,7 @@ const Analysis = () => {
                         Compare
                     </MenuButton>
                     <SetupDropdown
-                        defaultSetup={defaultSetup}
+                        defaultSetup={providedSetup || defaultSetup}
                         setups={setupsByDocument}
                         changeSetup={setCurrentSetup}
                     />
@@ -168,8 +167,8 @@ const Analysis = () => {
                 </Box>
             </Box>
 
-            <Divider sx={{ my: 2 }} />
-            <SetupView setup={actualSetup ? actualSetup : defaultSetup} />
+            {/* <Divider sx={{ my: 2 }} /> */}
+            <SetupView setup={actualSetup} />
             <AddSetupDialog
                 openAddDialog={openAddSetup}
                 handleAddDialogClose={handleAddDialogClose}

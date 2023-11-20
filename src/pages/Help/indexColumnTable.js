@@ -21,6 +21,8 @@ const rows = [
     createData("Risk Reward Ratio", "Number", "col_rr", "col_rr"),
     createData("Stop Loss", "Number", "col_sl", "col_sl"),
     createData("Take Profit", "Number", "col_tp", "col_tp"),
+    createData("Timeframe", "Text", "col_t", "col_t"),
+    createData("Direction", "Long OR Short", "col_d", "col_d"),
     createData("Metric", "Custom *", "col_m_{...}", "col_m_Above 21 EMA"),
     createData("Date", "Date", "col_d_{...}", "col_d_Open Date"),
     createData("RR Result", "Number", "col_r_{...}", "col_r_Result at 1.6"),
@@ -31,8 +33,7 @@ const rows = [
         "col_p_Result at 1.6"
     ),
     createData("Value Result", "Number", "col_v_{...}", "col_v_Result at 1.6"),
-    createData("Value Result", "Number", "col_v_{...}", "col_v_Result at 1.6"),
-    createData("Notes", "Test", "note", "note"),
+    createData("Notes", "Text", "note", "note"),
     createData("Images", "URL", "imgs", "imgs"),
 ];
 

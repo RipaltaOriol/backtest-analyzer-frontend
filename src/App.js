@@ -11,6 +11,7 @@ import Layout from "./common/Layout";
 import PersistLogin from "./common/PersistLogin";
 import RequireAuth from "./common/RequireAuth";
 import AllDocuments from "./features/documents/AllDocuments";
+import CreateDocument from "./features/documents/CreateDocument";
 import UpdateDocument from "./features/documents/UpdateDocument";
 import AllSetups from "./features/setups/AllSetups";
 import SetupCalendar from "./features/setups/SetupCalendar";
@@ -21,6 +22,8 @@ import Home from "./pages/Home";
 import Features from "./pages/features";
 import Login from "./pages/login";
 import Settings from "./pages/settings";
+import SupportChat from "./pages/support";
+import Templates from "./pages/templates";
 import Upload from "./pages/upload";
 
 function App() {
@@ -30,10 +33,12 @@ function App() {
                 <Router>
                     <Routes>
                         <Route path="/" exact element={<Home />} />
+                        <Route path="/support-chat" element={<SupportChat />} />
                         <Route element={<HomeBar />}>
                             <Route path="/login" element={<Login />} />
                             <Route path="/guide" element={<Help />} />
                             <Route path="/features" element={<Features />} />
+                            <Route path="/templates" element={<Templates />} />
                         </Route>
 
                         <Route element={<PersistLogin />}>
@@ -43,6 +48,10 @@ function App() {
                                     <Route
                                         path="files"
                                         element={<AllDocuments />}
+                                    />
+                                    <Route
+                                        path="files/create"
+                                        element={<CreateDocument />}
                                     />
                                     <Route
                                         path="files/update/:documentId"

@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 
 import FilterAltRoundedIcon from "@mui/icons-material/FilterAltRounded";
@@ -13,6 +14,7 @@ import Select from "@mui/material/Select";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { styled } from "@mui/system";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
 import { useAddFilterSetupMutation } from "features/setups/setupsSlice";
 
@@ -72,6 +74,8 @@ const SetupFilter = ({ setup }) => {
     const [action, setAction] = useState([null, "None"]);
     const [values, setValues] = useState([]);
     const [number, setNumber] = useState("None");
+    const [dateFrom, setDateFrom] = useState(null);
+    const [dateTo, setDateTo] = useState(null);
     const [filterOptionIdx, setFilterOptionIdx] = useState(-1);
 
     const [addFilterSetup] = useAddFilterSetupMutation();
@@ -108,13 +112,21 @@ const SetupFilter = ({ setup }) => {
             action: action[0],
         };
 
-        if (
+        if (filter.action === "date") {
+            if (!dateFrom || !dateTo) {
+                return false;
+            }
+            // assume it is a date filter
+            filter.value = [
+                dateFrom.format("MM/DD/YYYY"),
+                dateTo.format("MM/DD/YYYY"),
+            ];
+        } else if (
             filterOptionIdx !== -1 &&
             setup.options[filterOptionIdx].type === "number"
         ) {
             filter.value = [Number(number)];
-        }
-        if (
+        } else if (
             filterOptionIdx !== -1 &&
             setup.options[filterOptionIdx].type === "string"
         ) {
@@ -140,6 +152,181 @@ const SetupFilter = ({ setup }) => {
         setNumber("None");
         setFilterOptionIdx(-1);
     }, [setup?.documentId]);
+
+    const displayFilterValueOptions = (filterType) => {
+        if (!filterType) {
+            return false;
+        }
+        if (filterType === "string") {
+            return (
+                <Select
+                    size="small"
+                    autoFocus={false}
+                    multiple
+                    value={values}
+                    disabled={filterOptionIdx === -1}
+                    renderValue={(values) => (
+                        <>
+                            <Typography
+                                display="inline-block"
+                                sx={{
+                                    minWidth: 60,
+                                    color: "#9AA6AC",
+                                    fontSize: "14px",
+                                }}
+                            >
+                                Value
+                            </Typography>
+                            {values.map((value, idx) => (
+                                <Typography
+                                    display="inline"
+                                    sx={{ fontSize: "14px" }}
+                                >
+                                    {value},&nbsp;
+                                </Typography>
+                            ))}
+                        </>
+                    )}
+                    onChange={handleValueChange}
+                    label={null}
+                    MenuListProps={{
+                        select: { "&:focus": { borderColor: "red" } },
+                    }}
+                    sx={{
+                        my: 1,
+                        "& legend": { display: "none" },
+                        "& fieldset": { top: 0 },
+                        width: "100%",
+                        "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                            borderColor: "inherit",
+                            borderWidth: "1px",
+                        },
+                    }}
+                    InputLabelProps={{ shrink: false }}
+                    IconComponent={(props) => (
+                        <KeyboardArrowDownRoundedIcon {...props} />
+                    )}
+                >
+                    {setup.options[filterOptionIdx].values.map((value, idx) => (
+                        <FilterMenuItem key={idx} value={value}>
+                            <Checkbox
+                                checked={values.indexOf(value) > -1}
+                                size="small"
+                                sx={{ py: 0 }}
+                            />
+                            <FilterMenuItemMultiple primary={value} />
+                        </FilterMenuItem>
+                    ))}
+                </Select>
+            );
+        } else if (filterType === "date") {
+            return (
+                <Box
+                    sx={{
+                        display: "flex",
+                        // justifyContent: "space-between",
+                        alignItems: "center",
+                    }}
+                >
+                    <DatePicker
+                        label="Date From"
+                        value={dayjs(dateFrom) || null}
+                        onChange={(newValue) => setDateFrom(newValue)}
+                        sx={{
+                            my: 1,
+                            flexGrow: 1,
+                            "& input": {
+                                p: 1.1,
+                            },
+                            borderRadius: "4px",
+                            "&:hover": {
+                                color: "rgba(0, 0, 0, 0.87)",
+                            },
+                            "& .MuiOutlinedInput-root": {
+                                fontSize: "14px",
+                                "&.Mui-focused .MuiOutlinedInput-notchedOutline":
+                                    {
+                                        borderWidth: "1px",
+                                        borderColor: "inherit",
+                                    },
+                            },
+                        }}
+                    />
+                    <Box sx={{ mx: 4 }}>-</Box>
+                    <DatePicker
+                        label="Date To"
+                        value={dayjs(dateTo) || null}
+                        onChange={(newValue) => setDateTo(newValue)}
+                        sx={{
+                            my: 1,
+                            flexGrow: 1,
+                            "& input": {
+                                p: 1.1,
+                            },
+                            "& .MuiDayCalendar-weekDayLabel": {
+                                background: "red",
+                            },
+                            borderRadius: "4px",
+                            "&:hover": {
+                                color: "rgba(0, 0, 0, 0.87)",
+                            },
+                            "& .MuiOutlinedInput-root": {
+                                fontSize: "14px",
+                                "&.Mui-focused .MuiOutlinedInput-notchedOutline":
+                                    {
+                                        borderWidth: "1px",
+                                        borderColor: "inherit",
+                                    },
+                            },
+                        }}
+                    />
+                </Box>
+            );
+        } else {
+            return (
+                <TextField
+                    fullWidth
+                    value={number}
+                    size="small"
+                    type="number"
+                    label={null}
+                    variant="outlined"
+                    sx={{
+                        my: 1,
+                        borderRadius: "4px",
+                        "&:hover": {
+                            color: "rgba(0, 0, 0, 0.87)",
+                        },
+                        "& .MuiOutlinedInput-root": {
+                            fontSize: "14px",
+                            "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                borderWidth: "1px",
+                                borderColor: "inherit",
+                            },
+                        },
+                    }}
+                    InputLabelProps={{ shrink: false }}
+                    onChange={(e) => setNumber(e.target.value)}
+                    InputProps={{
+                        startAdornment: (
+                            <InputAdornment position="start">
+                                <Typography
+                                    display="inline-block"
+                                    sx={{
+                                        minWidth: 60,
+                                        color: "#9AA6AC",
+                                        fontSize: "14px",
+                                    }}
+                                >
+                                    Value
+                                </Typography>
+                            </InputAdornment>
+                        ),
+                    }}
+                />
+            );
+        }
+    };
 
     return (
         <>
@@ -213,6 +400,8 @@ const SetupFilter = ({ setup }) => {
                             setAction([null, "None"]);
                             setNumber("None");
                             setValues([]);
+                            if (e.target.value[0].startsWith("col_d_"))
+                                setAction(["date", null]);
                         }}
                         label={null}
                         sx={{
@@ -242,93 +431,13 @@ const SetupFilter = ({ setup }) => {
                               ))
                             : null}
                     </Select>
-                    <Select
-                        size="small"
-                        autoFocus={false}
-                        value={action}
-                        disabled={filterOptionIdx === -1}
-                        renderValue={(value) => (
-                            <>
-                                <Typography
-                                    display="inline-block"
-                                    sx={{
-                                        minWidth: 60,
-                                        color: "#9AA6AC",
-                                        fontSize: "14px",
-                                    }}
-                                >
-                                    Action
-                                </Typography>
-                                <Typography
-                                    display="inline"
-                                    sx={{ fontSize: "14px" }}
-                                >
-                                    {value[1]}
-                                </Typography>
-                            </>
-                        )}
-                        onChange={(e) => setAction(e.target.value)}
-                        label={null}
-                        MenuListProps={{
-                            select: { "&:focus": { borderColor: "red" } },
-                        }}
-                        sx={{
-                            my: 1,
-                            "& legend": { display: "none" },
-                            "& fieldset": { top: 0 },
-                            width: "100%",
-                            "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                borderColor: "inherit",
-                                borderWidth: "1px",
-                            },
-                        }}
-                        InputLabelProps={{ shrink: false }}
-                        IconComponent={(props) => (
-                            <KeyboardArrowDownRoundedIcon {...props} />
-                        )}
-                    >
-                        {filterOptionIdx !== -1 ? (
-                            setup.options[filterOptionIdx].type === "number" ? (
-                                Object.keys(operations.numeric).map(
-                                    (item, idx) => (
-                                        <FilterMenuItem
-                                            key={idx}
-                                            value={[
-                                                item,
-                                                operations.numeric[item],
-                                            ]}
-                                        >
-                                            {operations.numeric[item]}
-                                        </FilterMenuItem>
-                                    )
-                                )
-                            ) : (
-                                Object.keys(operations.string).map(
-                                    (item, idx) => (
-                                        <FilterMenuItem
-                                            key={idx}
-                                            value={[
-                                                item,
-                                                operations.string[item],
-                                            ]}
-                                        >
-                                            {operations.string[item]}
-                                        </FilterMenuItem>
-                                    )
-                                )
-                            )
-                        ) : (
-                            <></>
-                        )}
-                    </Select>
-                    {setup?.options[filterOptionIdx]?.type === "string" ? (
+                    {setup?.options[filterOptionIdx]?.type !== "date" && (
                         <Select
                             size="small"
                             autoFocus={false}
-                            multiple
-                            value={values}
+                            value={action}
                             disabled={filterOptionIdx === -1}
-                            renderValue={(values) => (
+                            renderValue={(value) => (
                                 <>
                                     <Typography
                                         display="inline-block"
@@ -338,19 +447,17 @@ const SetupFilter = ({ setup }) => {
                                             fontSize: "14px",
                                         }}
                                     >
-                                        Value
+                                        Action
                                     </Typography>
-                                    {values.map((value, idx) => (
-                                        <Typography
-                                            display="inline"
-                                            sx={{ fontSize: "14px" }}
-                                        >
-                                            {value},&nbsp;
-                                        </Typography>
-                                    ))}
+                                    <Typography
+                                        display="inline"
+                                        sx={{ fontSize: "14px" }}
+                                    >
+                                        {value[1]}
+                                    </Typography>
                                 </>
                             )}
-                            onChange={handleValueChange}
+                            onChange={(e) => setAction(e.target.value)}
                             label={null}
                             MenuListProps={{
                                 select: { "&:focus": { borderColor: "red" } },
@@ -371,63 +478,45 @@ const SetupFilter = ({ setup }) => {
                                 <KeyboardArrowDownRoundedIcon {...props} />
                             )}
                         >
-                            {setup.options[filterOptionIdx].values.map(
-                                (value, idx) => (
-                                    <FilterMenuItem key={idx} value={value}>
-                                        <Checkbox
-                                            checked={values.indexOf(value) > -1}
-                                            size="small"
-                                            sx={{ py: 0 }}
-                                        />
-                                        <FilterMenuItemMultiple
-                                            primary={value}
-                                        />
-                                    </FilterMenuItem>
+                            {filterOptionIdx !== -1 ? (
+                                setup.options[filterOptionIdx].type ===
+                                "number" ? (
+                                    Object.keys(operations.numeric).map(
+                                        (item, idx) => (
+                                            <FilterMenuItem
+                                                key={idx}
+                                                value={[
+                                                    item,
+                                                    operations.numeric[item],
+                                                ]}
+                                            >
+                                                {operations.numeric[item]}
+                                            </FilterMenuItem>
+                                        )
+                                    )
+                                ) : (
+                                    Object.keys(operations.string).map(
+                                        (item, idx) => (
+                                            <FilterMenuItem
+                                                key={idx}
+                                                value={[
+                                                    item,
+                                                    operations.string[item],
+                                                ]}
+                                            >
+                                                {operations.string[item]}
+                                            </FilterMenuItem>
+                                        )
+                                    )
                                 )
+                            ) : (
+                                <></>
                             )}
                         </Select>
-                    ) : (
-                        <TextField
-                            fullWidth
-                            value={number}
-                            size="small"
-                            type="number"
-                            label={null}
-                            variant="outlined"
-                            sx={{
-                                my: 1,
-                                borderRadius: "4px",
-                                "&:hover": {
-                                    color: "rgba(0, 0, 0, 0.87)",
-                                },
-                                "& .MuiOutlinedInput-root": {
-                                    fontSize: "14px",
-                                    "&.Mui-focused .MuiOutlinedInput-notchedOutline":
-                                        {
-                                            borderWidth: "1px",
-                                            borderColor: "inherit",
-                                        },
-                                },
-                            }}
-                            InputLabelProps={{ shrink: false }}
-                            onChange={(e) => setNumber(e.target.value)}
-                            InputProps={{
-                                startAdornment: (
-                                    <InputAdornment position="start">
-                                        <Typography
-                                            display="inline-block"
-                                            sx={{
-                                                minWidth: 60,
-                                                color: "#9AA6AC",
-                                                fontSize: "14px",
-                                            }}
-                                        >
-                                            Value
-                                        </Typography>
-                                    </InputAdornment>
-                                ),
-                            }}
-                        />
+                    )}
+                    {/* FILTER VALUE OPTIONS */}
+                    {displayFilterValueOptions(
+                        setup?.options[filterOptionIdx]?.type
                     )}
 
                     <Box display="flex" justifyContent="center" sx={{ mt: 1 }}>

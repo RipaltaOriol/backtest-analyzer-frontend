@@ -8,12 +8,14 @@ import {
     Tooltip,
 } from "chart.js";
 import autocolors from "chartjs-plugin-autocolors";
+import { CustomSelect } from "common/CustomComponents";
+import { ErrorFeedback } from "common/ErrorFeedback";
 import { Bar } from "react-chartjs-2";
 import { useDispatch, useSelector } from "react-redux";
 
+import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
 import Box from "@mui/material/Box";
 import MenuItem from "@mui/material/MenuItem";
-import Select from "@mui/material/Select";
 import Typography from "@mui/material/Typography";
 import { styled } from "@mui/material/styles";
 
@@ -96,7 +98,7 @@ const BarGraph = ({ setupId }) => {
         currentMetric: currentMetric,
     });
 
-    if (isSuccess) {
+    if (isSuccess && data?.success) {
         barData.labels = data?.dataLabels;
         let barDatasets = [];
         data?.data.forEach((dataset, idx) => {
@@ -110,49 +112,47 @@ const BarGraph = ({ setupId }) => {
     }
 
     return (
-        <Box sx={{ border: "1px solid #E5E9EB", borderRadius: "6px", p: 2 }}>
-            <Box
-                sx={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    position: "relative",
-                    my: 1,
-                }}
-            >
-                <Typography align="center">
-                    {data?.labels?.title || "Loading"}
-                </Typography>
-                <Select
-                    size="small"
-                    value={data?.active_metric || ""}
-                    onChange={(e) =>
-                        dispatch(
-                            setCurrentMetric({ currentMetric: e.target.value })
-                        )
-                    }
-                    sx={{
-                        "& legend": { display: "none" },
-                        "& fieldset": { top: 0 },
-                        "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                            borderColor: "inherit",
-                            borderWidth: "1px",
-                        },
-                        position: "absolute",
-                        right: 0,
-                    }}
-                >
-                    {data
-                        ? data?.metric_list.map(([metric, parsedDate], idx) => (
-                              <FilterMenuItem key={idx} id={idx} value={metric}>
-                                  {parsedDate}
-                              </FilterMenuItem>
-                          ))
-                        : null}
-                </Select>
-            </Box>
+        <Box>
+            {!data?.success && <ErrorFeedback msg={data?.msg} />}
 
-            <Bar options={options} data={barData} />
+            {data?.success && (
+                <>
+                    <CustomSelect
+                        size="small"
+                        IconComponent={KeyboardArrowDownRoundedIcon}
+                        value={data?.active_metric || ""}
+                        onChange={(e) =>
+                            dispatch(
+                                setCurrentMetric({
+                                    currentMetric: e.target.value,
+                                })
+                            )
+                        }
+                        sx={{
+                            mr: 0.8,
+                        }}
+                    >
+                        {data
+                            ? data?.metric_list.map(
+                                  ([metric, parsedDate], idx) => (
+                                      <FilterMenuItem
+                                          key={idx}
+                                          id={idx}
+                                          value={metric}
+                                      >
+                                          {parsedDate}
+                                      </FilterMenuItem>
+                                  )
+                              )
+                            : null}
+                    </CustomSelect>{" "}
+                    <Typography variant="h6" component="span" gutterBottom>
+                        by Result
+                    </Typography>
+                </>
+            )}
+
+            {data?.success && <Bar options={options} data={barData} />}
         </Box>
     );
 };

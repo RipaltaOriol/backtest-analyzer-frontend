@@ -26,6 +26,14 @@ export const documentsApiSlice = apiSlice.injectEndpoints({
             query: ({ documentId }) => `/documents/${documentId}`,
             providesTags: ["DocumentTable"],
         }),
+        postDocument: builder.mutation({
+            query: ({ name, fields, checkbox }) => ({
+                url: "/documents",
+                method: "POST",
+                body: { name, fields, checkbox },
+            }),
+            invalidatesTags: [{ type: "Document", id: "LIST" }, "Setup"],
+        }),
         updateDocument: builder.mutation({
             query: ({ id, method, data }) => ({
                 url: `/documents/${id}/update`,
@@ -41,11 +49,33 @@ export const documentsApiSlice = apiSlice.injectEndpoints({
                 "Charts",
             ], // maybe not invalidate all setups
         }),
+        refetchDocument: builder.mutation({
+            query: ({ id }) => ({
+                url: `/documents/${id}/refetch`,
+                method: "PUT",
+            }),
+            invalidatesTags: [
+                "DocumentTable",
+                "CalendarTable",
+                "Setup",
+                "Stats",
+                "Graphs",
+                "Charts",
+            ], // maybe not invalidate all setups
+        }),
         uploadDocument: builder.mutation({
             query: (file) => ({
                 url: "/documents/upload",
                 method: "POST",
                 body: file,
+            }),
+            invalidatesTags: [{ type: "Document", id: "LIST" }, "Setup"],
+        }),
+        connectDcoument: builder.mutation({
+            query: ({ account, password, server }) => ({
+                url: "/documents/fetch",
+                method: "POST",
+                body: { account, password, server },
             }),
             invalidatesTags: [{ type: "Document", id: "LIST" }, "Setup"],
         }),
@@ -73,6 +103,17 @@ export const documentsApiSlice = apiSlice.injectEndpoints({
             }),
             invalidatesTags: [{ type: "Document", id: "LIST" }],
         }),
+        assignDocumentTemplate: builder.mutation({
+            query: ({ documentId, templateId, mappings }) => ({
+                url: `/documents/${documentId}/templates/${templateId}`,
+                method: "POST",
+                body: { mappings },
+            }),
+            invalidatesTags: (result, error, arg) => [
+                { type: "Document", id: arg.documentId },
+                "Setup",
+            ],
+        }),
         getDocumentColumns: builder.query({
             query: ({ documentId }) => `/documents/${documentId}/columns`,
         }),
@@ -83,16 +124,6 @@ export const documentsApiSlice = apiSlice.injectEndpoints({
             }),
             providesTags: ["CompareSetups"],
         }),
-        getCalendarTable: builder.query({
-            query: ({ documentId, metric = null, date = null }) => ({
-                url: `/documents/${documentId}/calendar`,
-                params: {
-                    metric: metric ? metric : undefined,
-                    date: date ? date : undefined,
-                },
-            }),
-            providesTags: ["CalendarTable"],
-        }),
     }),
 });
 
@@ -100,13 +131,16 @@ export const {
     useGetDocumentQuery,
     useGetDocumentsQuery,
     useUpdateDocumentMutation,
+    useRefetchDocumentMutation,
     useUploadDocumentMutation,
+    useConnectDcoumentMutation,
     useCloneDocumentMutation,
     useRenameDocumentMutation,
+    usePostDocumentMutation,
     useDeleteDocumentMutation,
     useCompareDocumentSetupsQuery,
-    useGetCalendarTableQuery,
     useGetDocumentColumnsQuery,
+    useAssignDocumentTemplateMutation,
 } = documentsApiSlice;
 
 // returns the query result object

@@ -1,6 +1,5 @@
 import dayjs from "dayjs";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
 import { getResultAdornment } from "utils";
 
 import { Typography } from "@mui/material";
@@ -10,13 +9,8 @@ import { styled } from "@mui/material/styles";
 
 import {
     selectCurrentDate,
-    selectDateFormat,
-    selectResultDisplay,
     setSelectedTrade,
 } from "features/calendar/calendarSlice";
-import { useGetCalendarTableQuery } from "features/documents/documentSlice";
-
-import "./index.css";
 
 const GRID_X_LENGTH = 6;
 const GRID_Y_LENGTH = 5;
@@ -32,27 +26,20 @@ const Item = styled(Box)({
     },
 });
 
-const Day = ({ day, rowIdx, cellIdx }) => {
-    const { documentId } = useParams();
-
+const Day = ({ day, rowIdx, cellIdx, calendarData }) => {
     const dispatch = useDispatch();
 
     const currentDate = useSelector(selectCurrentDate);
-    const dateFormat = useSelector(selectDateFormat);
-    const resultDisplay = useSelector(selectResultDisplay);
-
-    const { data } = useGetCalendarTableQuery({
-        documentId,
-        date: dateFormat,
-        metric: resultDisplay,
-    });
 
     let trades = [];
 
-    if (data) {
-        trades = data?.table.reduce((filtered, trade) => {
+    // const dateFormat = useSelector(selectDateFormat);
+    // const resultDisplay = useSelector(selectResultDisplay);
+
+    if (calendarData) {
+        trades = calendarData?.table.reduce((filtered, trade) => {
             if (
-                dayjs(trade[data?.active_date]).format("DD-MM-YYYY") ===
+                dayjs(trade[calendarData?.active_date]).format("DD-MM-YYYY") ===
                 day.format("DD-MM-YYYY")
             ) {
                 filtered.push(trade);
@@ -112,6 +99,7 @@ const Day = ({ day, rowIdx, cellIdx }) => {
 
     return (
         <Grid item xs={1}>
+            {/* TODO I can potentially move this outside here */}
             {rowIdx === 0 && (
                 <Box sx={{ mb: 1 }}>
                     <Typography variant="caption">
@@ -120,7 +108,7 @@ const Day = ({ day, rowIdx, cellIdx }) => {
                 </Box>
             )}
             <Item
-                className={`calendar-grid  ${getIsNotCurrentMonthClass()} ${assignBorders(
+                className={`calendar-grid-item  ${getIsNotCurrentMonthClass()} ${assignBorders(
                     cellIdx,
                     rowIdx
                 )}`}
@@ -147,18 +135,18 @@ const Day = ({ day, rowIdx, cellIdx }) => {
                                 justifyContent: "space-between",
                             }}
                             className={`trade ${getTradeClass(
-                                trade[data?.active_metric]
+                                trade[calendarData?.active_metric]
                             )}`}
                             onClick={() => openSingleTrade(trade)}
                         >
                             <Typography>
                                 {trade[PAIR_METRIC].toUpperCase()}
                             </Typography>
-                            <Typography
-                                onClick={() => console.log(data?.active_metric)}
-                            >
-                                {trade[data?.active_metric]}{" "}
-                                {getResultAdornment(data?.active_metric)}
+                            <Typography>
+                                {trade[calendarData?.active_metric]}{" "}
+                                {getResultAdornment(
+                                    calendarData?.active_metric
+                                )}
                             </Typography>
                         </Box>
                     ))}

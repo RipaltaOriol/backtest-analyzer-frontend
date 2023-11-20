@@ -2,17 +2,20 @@ import Message from "common/Message";
 import Upload from "pages/upload";
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
+import ContentPasteSearchRoundedIcon from "@mui/icons-material/ContentPasteSearchRounded";
 import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
 import DriveFileRenameOutlineRoundedIcon from "@mui/icons-material/DriveFileRenameOutlineRounded";
 import FileCopyRoundedIcon from "@mui/icons-material/FileCopyRounded";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import SensorsIcon from "@mui/icons-material/Sensors";
 import TextSnippetIcon from "@mui/icons-material/TextSnippet";
 import UpdateRoundedIcon from "@mui/icons-material/UpdateRounded";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
+import CircularProgress from "@mui/material/CircularProgress";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -29,11 +32,13 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { styled } from "@mui/system";
 
+import TemplateSelection from "./TemplateSelection";
 import { selectAllDocuments } from "./documentSlice";
 import {
     useCloneDocumentMutation,
     useDeleteDocumentMutation,
     useGetDocumentsQuery,
+    useRefetchDocumentMutation,
     useRenameDocumentMutation,
 } from "./documentSlice";
 
@@ -75,10 +80,12 @@ const DocumentSource = styled(Typography)({
 const AllDocuments = () => {
     let navigate = useNavigate();
     const [openDialog, setOpenDialog] = useState(false);
+    const [openSelectTemplate, setOpenSelectTemplate] = useState(false);
     const [msg, setMsg] = useState("");
+    const [isError, setIsError] = useState(false);
     const [newName, setNewName] = useState("");
     const [anchorEl, setAnchorEl] = useState(null);
-    const [documentId, setDocumentId] = useState(null);
+    const [selectedDocument, setSelectedDocument] = useState(null);
     const [openUpload, setOpenUpload] = useState(false);
     const open = Boolean(anchorEl);
 
@@ -90,48 +97,83 @@ const AllDocuments = () => {
         setOpenUpload(false);
     };
 
-    const handleClick = (id, event) => {
-        setDocumentId(id);
+    const handleClick = (document, event) => {
+        setSelectedDocument(document);
         setAnchorEl(event.currentTarget);
     };
 
     const handleClose = () => {
-        setDocumentId(null);
+        setSelectedDocument(null);
         setAnchorEl(null);
     };
 
-    const handleRenameClose = (id) => {
+    const handleRenameClose = () => {
         setAnchorEl(null);
         setOpenDialog(true);
     };
 
-    const handleCopyClose = (id) => {
-        cloneDocument({ id: documentId });
+    const handleSelectTemplateClose = () => {
+        setAnchorEl(null);
+        setOpenSelectTemplate(true);
+    };
+
+    const handleCopyClose = () => {
+        cloneDocument({ id: selectedDocument.id });
+        setSelectedDocument(null);
         setAnchorEl(null);
     };
 
     const handleDeleteClose = () => {
+        deleteDocument({ id: selectedDocument.id });
+        setSelectedDocument(null);
         setAnchorEl(null);
-        deleteDocument({ id: documentId });
     };
 
     const handleDialogClose = () => {
-        setDocumentId(null);
+        setSelectedDocument(null);
         setNewName("");
         setOpenDialog(false);
     };
 
+    const handleRefetch = () => {
+        setAnchorEl(null);
+        refetchDocument({ id: selectedDocument.id })
+            .unwrap()
+            .then((response) => {
+                setIsError(!response.success);
+                setMsg(response.msg);
+            })
+            .catch((err) => {
+                console.error(err);
+            });
+    };
+
     const handleChangeName = () => {
-        renameDocument({ id: documentId, name: newName });
+        renameDocument({ id: selectedDocument.id, name: newName });
+        setSelectedDocument(null);
         setOpenDialog(false);
     };
 
-    const { isLoading, isSuccess, isError, error } = useGetDocumentsQuery();
+    const {
+        isLoading,
+        isSuccess,
+        isError: isFailure,
+        error,
+    } = useGetDocumentsQuery();
 
     const orderedDocuments = useSelector(selectAllDocuments);
 
     const [cloneDocument] = useCloneDocumentMutation();
-    const [renameDocument] = useRenameDocumentMutation();
+    const [
+        renameDocument,
+        {
+            data: renameResponse,
+            isSuccess: isRenameSuccess,
+            reset: resetRename,
+        },
+    ] = useRenameDocumentMutation();
+    const [refetchDocument, { isLoading: isFetching }] =
+        useRefetchDocumentMutation();
     const [
         deleteDocument,
         { data: deleteResponse, isSuccess: isDeleteSuccess, reset },
@@ -151,7 +193,14 @@ const AllDocuments = () => {
                 xl={3}
                 sx={{ backgroundColor: "none" }}
             >
-                <DocumentItem>
+                <DocumentItem
+                    sx={{
+                        backgroundColor:
+                            selectedDocument?.id === doc.id
+                                ? "#D7EDFF"
+                                : "transparent",
+                    }}
+                >
                     <Box sx={{ display: "flex", alignItems: "center" }}>
                         <Box
                             sx={{
@@ -176,43 +225,89 @@ const AllDocuments = () => {
                         }
                         aria-haspopup="true"
                         aria-expanded={open ? "true" : undefined}
-                        onClick={(e) => handleClick(doc.id, e)}
+                        onClick={(e) => handleClick(doc, e)}
                     >
                         <MoreHorizIcon sx={{ color: "#252C32" }} />
                     </IconButton>
                 </DocumentItem>
             </Grid>
         ));
-    } else if (isError) {
+    } else if (isFailure) {
         content = <p>{error}</p>;
     }
 
     if (isDeleteSuccess) {
+        setIsError(isDeleteSuccess.success);
         setMsg(deleteResponse.msg);
         reset();
+    }
+
+    if (isRenameSuccess) {
+        setIsError(isRenameSuccess.success);
+        setMsg(renameResponse.msg);
+        resetRename();
     }
 
     return (
         <Box>
             <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                <Typography variant="h5">All Documents</Typography>
-                <Button
-                    color="primary"
-                    variant="contained"
-                    onClick={handleUploadOpen}
-                >
-                    Upload New Document
-                </Button>
+                <Typography variant="h5">All Accounts</Typography>
+                <Box>
+                    <Button
+                        color="primary"
+                        variant="contained"
+                        component={Link}
+                        to="/files/create"
+                        sx={{ mr: 2 }}
+                    >
+                        Creaete Manually
+                    </Button>
+                    <Button
+                        color="primary"
+                        variant="contained"
+                        onClick={handleUploadOpen}
+                    >
+                        Upload New Document
+                    </Button>
+                </Box>
             </Box>
             <Divider sx={{ mt: 2, mb: 3 }} />
             {msg && (
-                <Message message={msg} setMessage={setMsg} sx={{ my: 1 }} />
+                <Message
+                    message={msg}
+                    setMessage={setMsg}
+                    isError={isError}
+                    sx={{ my: 1 }}
+                />
             )}
             <Box sx={{ flexGrow: 1 }}>
                 {content.length > 0 && (
                     <DocumentGrid container>{content}</DocumentGrid>
                 )}
             </Box>
+            <Dialog open={isFetching}>
+                <Box
+                    sx={{
+                        background: "#F6F8F9",
+                        borderRadius: "8px",
+                    }}
+                >
+                    <Box
+                        sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "center",
+                            color: "#5B6871",
+                            p: 4,
+                        }}
+                    >
+                        <Typography sx={{ mb: 5 }}>
+                            Please wait. This might take a few minutes.
+                        </Typography>
+                        <CircularProgress size={80} sx={{ mb: 1 }} />
+                    </Box>
+                </Box>
+            </Dialog>
             <Upload open={openUpload} onClose={handleUploadClose} />
             <Dialog open={openDialog} onClose={handleDialogClose}>
                 <DialogTitle sx={{ color: "inherit" }}>
@@ -245,6 +340,11 @@ const AllDocuments = () => {
                     </Button>
                 </DialogActions>
             </Dialog>
+            <TemplateSelection
+                open={openSelectTemplate}
+                handleCloseDialog={() => setOpenSelectTemplate(false)}
+                document={selectedDocument}
+            />
             <Menu
                 anchorEl={anchorEl}
                 open={open}
@@ -265,12 +365,26 @@ const AllDocuments = () => {
                     <ListItemText>Rename</ListItemText>
                 </DocumentMenuItem>
                 <DocumentMenuItem
-                    onClick={() => navigate("update/" + documentId)}
+                    onClick={() => navigate("update/" + selectedDocument.id)}
                 >
                     <ListItemIcon sx={{ minWidth: "30px !important" }}>
                         <UpdateRoundedIcon fontSize="small" />
                     </ListItemIcon>
-                    <ListItemText>Update</ListItemText>
+                    <ListItemText>Modify</ListItemText>
+                </DocumentMenuItem>
+                {selectedDocument?.source === "MT4 API" && (
+                    <DocumentMenuItem onClick={handleRefetch}>
+                        <ListItemIcon sx={{ minWidth: "30px !important" }}>
+                            <SensorsIcon fontSize="small" />
+                        </ListItemIcon>
+                        <ListItemText>Update</ListItemText>
+                    </DocumentMenuItem>
+                )}
+                <DocumentMenuItem onClick={handleSelectTemplateClose}>
+                    <ListItemIcon sx={{ minWidth: "30px !important" }}>
+                        <ContentPasteSearchRoundedIcon fontSize="small" />
+                    </ListItemIcon>
+                    <ListItemText>Select Template</ListItemText>
                 </DocumentMenuItem>
                 <DocumentMenuItem onClick={handleCopyClose}>
                     <ListItemIcon sx={{ minWidth: "30px !important" }}>

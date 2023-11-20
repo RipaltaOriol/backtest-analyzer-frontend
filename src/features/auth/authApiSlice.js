@@ -20,8 +20,33 @@ export const authApiSlice = apiSlice.injectEndpoints({
         refreshToken: builder.mutation({
             query: () => "/refresh",
         }),
+        updatePassword: builder.mutation({
+            query: ({ newPassword }) => ({
+                url: "/update-password",
+                method: "PUT",
+                body: { password: newPassword },
+            }),
+        }),
+        // TODO: this should be relocated or included with auth
+        getUserSettings: builder.query({
+            query: () => "/users",
+            providesTags: ["User"],
+        }),
+        addTemplateUserSettings: builder.mutation({
+            query: ({ templateId }) => ({
+                url: `/users/templates/${templateId}`,
+                method: "POST",
+            }),
+            invalidatesTags: ["User"],
+        }),
     }),
 });
 
-export const { useLoginMutation, useLogoutMutation, useRefreshTokenMutation } =
-    authApiSlice;
+export const {
+    useLoginMutation,
+    useLogoutMutation,
+    useRefreshTokenMutation,
+    useUpdatePasswordMutation,
+    useGetUserSettingsQuery,
+    useAddTemplateUserSettingsMutation,
+} = authApiSlice;

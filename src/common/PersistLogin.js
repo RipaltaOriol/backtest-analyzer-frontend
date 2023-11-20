@@ -1,3 +1,4 @@
+import LoadingPage from "pages/loading";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Outlet } from "react-router-dom";
@@ -35,7 +36,7 @@ const PersistLogin = () => {
         return () => (isMounted = false);
     }, [token, dispatch, refreshToken]);
 
-    return <>{isWorking ? <p>Loading...</p> : <Outlet />}</>;
+    return <>{isWorking ? <LoadingPage /> : <Outlet />}</>;
 };
 
 export default PersistLogin;

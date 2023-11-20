@@ -158,7 +158,7 @@ const AllSetups = () => {
     return (
         <Box>
             <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                <Typography variant="h5">All Setups</Typography>
+                <Typography variant="h5">All Versions</Typography>
                 <Button
                     color="primary"
                     variant="contained"

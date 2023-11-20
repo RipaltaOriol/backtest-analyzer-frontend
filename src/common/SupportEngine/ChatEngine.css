@@ -1,0 +1,116 @@
+.ce-chat-title-text {
+    color: #0e73f6;
+}
+
+.ce-chat-subtitle-text {
+    color: #0e73f6;
+}
+
+.ce-chat-title-container {
+    background-color: #e5e9eb;
+    opacity: 0.9;
+}
+
+.ce-avatar-dot:first-child {
+    background-color: black !important;
+}
+.ce-avatar-dot:nth-child(2) {
+    background-color: #0e73f6 !important;
+}
+
+.support-logo {
+    max-width: 18px;
+    filter: invert(1);
+}
+
+.chat-info {
+    background-color: #0e73f6;
+    display: flex;
+    align-items: center;
+    color: lightgray;
+}
+
+.messages-container {
+    padding: 10px 10px 0px 10px;
+    height: calc(100% - 112px); /* update this accurately */
+    overflow-y: scroll;
+}
+
+.messages-container::-webkit-scrollbar {
+    background-color: white;
+    width: 0px;
+}
+
+.message {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 15px;
+    margin-top: 10px;
+}
+
+.messageInfo {
+    display: flex;
+    flex-direction: column;
+    color: gray;
+    font-weight: 300;
+    font-size: 12px;
+}
+
+.message span {
+    color: gray;
+    font-weight: 300;
+    font-size: 12px;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.messageContent {
+    max-width: 80%;
+}
+
+.messageContent p {
+    background-color: #e5e9eb;
+    padding: 8px 12px;
+    border-radius: 0px 5px 5px 5px;
+    max-width: max-content;
+    font-size: 14px;
+    margin: 5px;
+}
+
+.message.owner {
+    flex-direction: row-reverse;
+}
+
+.message.owner .messageContent {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.message.owner .messageContent p {
+    background-color: #e5e9eb;
+    color: black;
+    border-radius: 5px 0px 5px 5px;
+}
+
+.support-input {
+    height: 46px;
+    background-color: #d7edff;
+    display: flex;
+    border-radius: 5px;
+    /* justify-content: space-between; */
+}
+
+.support-input input {
+    width: 100%;
+    margin: 8px;
+    border: none;
+    outline: none;
+    color: #2f2d52;
+    background-color: #d7edff;
+    font-size: 14px;
+}
+
+.support-input input::placeholder {
+    color: gray;
+}

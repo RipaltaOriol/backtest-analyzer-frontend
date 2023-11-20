@@ -90,6 +90,14 @@ function isMetric(metric) {
     return true;
 }
 
+function parseColumnValue(value, metric) {
+    if (metric.startsWith("col_d_")) {
+        return value.replace(/T.*/, "").split("-").reverse().join("-");
+    } else {
+        return value;
+    }
+}
+
 function isResultColumn(column) {
     return new RegExp("col_[vpr]_").test(column);
 }
@@ -160,8 +168,6 @@ function SingleRecordDialog({
     const removeImage = (idx) => {
         var newImages = [...images];
         newImages.splice(idx, 1);
-        console.log(idx);
-        console.log(newImages);
         setImages(newImages);
     };
 
@@ -280,15 +286,7 @@ function SingleRecordDialog({
                                                             {parseColumnName(
                                                                 key
                                                             )}
-                                                            <HighlightText
-                                                                onClick={() =>
-                                                                    console.log(
-                                                                        getResultAdornment(
-                                                                            key
-                                                                        )
-                                                                    )
-                                                                }
-                                                            >
+                                                            <HighlightText>
                                                                 {/* todo: change this */}
                                                                 {value}{" "}
                                                                 {getResultAdornment(
@@ -327,7 +325,10 @@ function SingleRecordDialog({
                                                                 key
                                                             )}
                                                             <HighlightText>
-                                                                {value}
+                                                                {parseColumnValue(
+                                                                    value,
+                                                                    key
+                                                                )}
                                                             </HighlightText>
                                                         </FieldText>
                                                     </Grid>

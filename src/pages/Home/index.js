@@ -1,14 +1,20 @@
-import GraphUpIcon from "assets/svg/graph_up.svg";
-import MultipleUsersIcon from "assets/svg/multiple_users.svg";
-import RoundedStatsIcon from "assets/svg/rounded_stats.svg";
 import LogoIcon from "assets/svg/trade_sharpener_logo.svg";
 import LogoTitle from "common/LogoTitle";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
-import ArrowForwardIosRoundedIcon from "@mui/icons-material/ArrowForwardIosRounded";
+import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
+import CompareIcon from "@mui/icons-material/Compare";
+import DashboardCustomizeIcon from "@mui/icons-material/DashboardCustomize";
+import LoopRoundedIcon from "@mui/icons-material/LoopRounded";
 import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
+import PieChartRoundedIcon from "@mui/icons-material/PieChartRounded";
+import QueueIcon from "@mui/icons-material/Queue";
+import TroubleshootIcon from "@mui/icons-material/Troubleshoot";
+import TroubleshootRoundedIcon from "@mui/icons-material/TroubleshootRounded";
+import TuneIcon from "@mui/icons-material/Tune";
 import AppBar from "@mui/material/AppBar";
+import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
@@ -22,60 +28,65 @@ import { styled } from "@mui/material/styles";
 import useScrollTrigger from "@mui/material/useScrollTrigger";
 import { makeStyles } from "@mui/styles";
 
-import HomeFilter from "../../assets/images/home-filter.png";
-import HomeObserve from "../../assets/images/home-observe.png";
+import HomeAnalytics from "../../assets/images/home-analytics.png";
+import HomeCreate from "../../assets/images/home-create.png";
+import HomeCustomization from "../../assets/images/home-customization.png";
 import HomePage from "../../assets/images/home-page.png";
-import HomeVisualise from "../../assets/images/home-visualise.png";
 import Footer from "../../common/Footer";
 import FAQ from "./FAQ";
 import "./Home.css";
 import { LoginButtonMobile, NavButtonMobile } from "./HomeComponents";
 
-// TODO: is this paper necessary?
-const Item = styled(Box)({
-    display: "flex",
-    flexDirection: "column",
-    background: "#FFFFFF",
-    borderRadius: "12px",
-    border: "1px solid #E1E4E8",
-});
-
-const OrangeButton = styled(Button)({
-    background: "#FF9C00",
-    borderRadius: "4px",
+const MainButton = styled(Button)({
+    background: "white",
+    borderRadius: "5px",
+    color: "#2b61ff",
     "&:hover": {
-        backgroundColor: "#FF9C00",
+        backgroundColor: "#f5f5f5",
+        color: "#252C32",
     },
 });
 
 const LearnButton = styled(Button)({
-    background: "#F8F8F8",
-    border: "1px solid #E1E4E8",
-    borderRadius: "4px",
-    color: "#494556",
+    color: "#000",
+    padding: 0,
+    fontWeight: 600,
+    fontSize: 16,
     "&:hover": {
-        color: "#2B61FF",
-        border: "1px solid rgba(75, 78, 252, 0.25)",
+        background: "none",
+        color: "#2b61ff",
+    },
+    "&:focus": {
+        background: "none",
+    },
+});
+
+const LearnMoreButton = styled(Button)({
+    background: "transparent",
+    border: "2px solid white",
+    borderRadius: "5px",
+    color: "white",
+    "&:hover": {
+        backgroundColor: "transparent",
     },
 });
 
 const LoginButton = styled(Button, {
     shouldForwardProp: (prop) => prop !== "trigger",
 })(({ trigger, theme }) => ({
-    color: "#252C32",
-    backgroundColor: "#FFFFFF",
-    borderRadius: "6px",
-    padding: "4px 24px",
-    fontSize: "0.875rem",
+    background: "white",
+    borderRadius: "5px",
+    color: "#2b61ff",
     "&:hover": {
-        backgroundColor: "#f5f5f5",
-        color: "#252C32",
+        backgroundColor: "white",
+        color: "#2b61ff",
     },
     ...(trigger && {
-        color: "#F6F8F9",
-        backgroundColor: "#4094F7",
+        border: "2px solid #2b61ff",
+        color: "#2b61ff",
         "&:hover": {
-            backgroundColor: "inheirt",
+            backgroundColor: "white",
+            color: "#2b61ff",
         },
     }),
 }));
@@ -86,22 +97,19 @@ const NavButton = styled(Button, {
     color: "#FFF",
     backgroundColor: "transparent",
     boxShadow: "none",
-    fontWeight: "400",
+    fontWeight: "500",
     borderRadius: "6px",
-    padding: "4px 24px",
-    fontSize: "0.875rem",
+    fontSize: "16px",
     "&:hover": {
         backgroundColor: "transparent",
         boxShadow: "none",
     },
     ...(trigger && {
-        color: "#252C32",
-        backgroundColor: "#FFF",
-        boxShadow:
-            "0px 3px 1px -2px rgba(0,0,0,0.2), 0px 2px 2px 0px rgba(0,0,0,0.14), 0px 1px 5px 0px rgba(0,0,0,0.12);",
+        color: "#000",
         "&:hover": {
-            backgroundColor: "#f5f5f5",
-            color: "#252C32",
+            backgroundColor: "transparent",
+            color: "#000",
+            boxShadow: "none",
         },
     }),
 }));
@@ -122,7 +130,7 @@ const HomeAppbar = (props) => {
     const [openDrawer, setOpenDrawer] = useState(false);
 
     // NOTE: this treshold should be responsive
-    let threshold = 50;
+    let threshold = 200;
 
     const trigger = useScrollTrigger({
         disableHysteresis: true,
@@ -148,42 +156,71 @@ const HomeAppbar = (props) => {
 
     return (
         <AppBar
-            elevation={0}
+            elevation={trigger ? 1 : 0}
             sx={{
-                py: 1,
-                px: {
-                    xs: 1,
-                    md: 2,
-                    lg: 5,
-                },
-                background: trigger ? "default" : "transparent",
+                background: trigger ? "#fff" : "transparent",
             }}
         >
-            <Toolbar>
+            <Toolbar component={Container} sx={{ py: 3 }}>
                 <Box
-                    sx={{ flexGrow: 1, display: "inline-flex" }}
+                    sx={{
+                        flexGrow: 1,
+                        display: "inline-flex",
+                        alignItems: "center",
+                    }}
                     component={Link}
                     to="/"
                     className={classes.logoLink}
                 >
-                    <img
-                        alt="Trade Sharpener Logo"
-                        src={LogoIcon}
-                        className={`logo-icon ${
-                            trigger ? "logo-icon-scrollable" : null
-                        }`}
-                    />
-                    <LogoTitle
-                        first="Trade"
-                        second="Sharpener"
-                        variant="h6"
-                        component="p"
-                        weight="700"
-                        firstColor={trigger ? undefined : "#fff"}
-                        color={trigger ? "#000" : "#fff"}
-                    />
+                    <Box sx={{ mr: 4 }}>
+                        <img
+                            alt="Trade Sharpener Logo"
+                            src={LogoIcon}
+                            className={`logo-icon ${
+                                trigger ? "logo-icon-scrollable" : null
+                            }`}
+                        />
+                        <LogoTitle
+                            first="Trade"
+                            second="Sharpener"
+                            variant="h6"
+                            component="p"
+                            weight="700"
+                            firstColor={trigger ? undefined : "#fff"}
+                            color={trigger ? "#000" : "#fff"}
+                        />
+                    </Box>
+                    <Box sx={{ display: { xs: "none", md: "block" } }}>
+                        <NavButton
+                            component={Link}
+                            to="/features"
+                            variant="contained"
+                            trigger={trigger}
+                        >
+                            Features
+                        </NavButton>
+                        <NavButton
+                            sx={{ ml: 1.5 }}
+                            component={Link}
+                            to="/guide"
+                            variant="contained"
+                            trigger={trigger}
+                        >
+                            Guide
+                        </NavButton>
+
+                        <NavButton
+                            sx={{ ml: 1.5 }}
+                            component={Link}
+                            to="https://t.me/TradeSharpener_Support"
+                            variant="contained"
+                            trigger={trigger}
+                        >
+                            Support
+                        </NavButton>
+                    </Box>
                 </Box>
-                <Box sx={{ display: { xs: "block", sm: "none" } }}>
+                <Box sx={{ display: { xs: "block", md: "none" } }}>
                     <IconButton onClick={toggleDrawer(true)}>
                         <MenuRoundedIcon
                             sx={{ color: trigger ? "#000" : "#fff" }}
@@ -224,6 +261,15 @@ const HomeAppbar = (props) => {
                             >
                                 Guide
                             </NavButtonMobile>
+                            <NavButtonMobile
+                                className="guide-btn"
+                                sx={{ mb: 1 }}
+                                component={Link}
+                                to="https://t.me/TradeSharpener_Support"
+                                variant="contained"
+                            >
+                                Support
+                            </NavButtonMobile>
                             <LoginButtonMobile
                                 component={Link}
                                 to="/login"
@@ -235,27 +281,9 @@ const HomeAppbar = (props) => {
                         </Box>
                     </SwipeableDrawer>
                 </Box>
-                <Box sx={{ display: { xs: "none", sm: "block" } }}>
-                    <NavButton
-                        component={Link}
-                        to="/features"
-                        variant="contained"
-                        trigger={trigger}
-                    >
-                        Features
-                    </NavButton>
-                    <NavButton
-                        sx={{ ml: 1.5 }}
-                        component={Link}
-                        to="/guide"
-                        variant="contained"
-                        trigger={trigger}
-                    >
-                        Guide
-                    </NavButton>
-
+                <Box sx={{ display: { xs: "none", md: "block" } }}>
                     <LoginButton
-                        sx={{ ml: 1.5 }}
+                        sx={{ px: 3, py: 1 }}
                         component={Link}
                         to="/login"
                         variant="contained"
@@ -270,6 +298,17 @@ const HomeAppbar = (props) => {
 };
 
 const Home = (props) => {
+    // useEffect(() => {
+    //     const script = document.createElement("script");
+    //     script.src = "//code.tidio.co/ky4jajarj9ghialebwkpxjyqz3qjls4g.js";
+    //     script.async = true;
+    //     document.body.appendChild(script);
+
+    //     return () => {
+    //         document.body.removeChild(script);
+    //     };
+    // }, []);
+
     return (
         <Box
             sx={{
@@ -281,6 +320,7 @@ const Home = (props) => {
             <Box id="section-1" sx={{ mb: 5 }}>
                 <HomeAppbar {...props} />
                 <Toolbar />
+                <Toolbar />
                 <Container sx={{ p: 3, pt: 4 }}>
                     <Box
                         sx={{
@@ -289,32 +329,58 @@ const Home = (props) => {
                             alignItems: "center",
                         }}
                     >
-                        <Typography variant="h1" sx={{ mb: 2.5 }}>
+                        <Typography
+                            variant="h1"
+                            sx={{ mb: 2.5 }}
+                            align="center"
+                        >
                             Trade Sharpener
                         </Typography>
                         <Typography
                             compoenent="h2"
+                            align="center"
                             sx={{
                                 color: "rgba(255, 255, 255)",
                                 fontWeight: "400",
-                                fontSize: "1.3rem",
+                                fontSize: "1.2rem",
                                 lineHeight: "24px",
                                 mb: 4,
                             }}
                         >
                             Explore and Learn from your Trading Data
                         </Typography>
-                        <OrangeButton
-                            variant="contained"
-                            size="large"
-                            sx={{ px: 3, py: 1 }}
-                            component={Link}
-                            to="/login"
+                        <Box
+                            sx={{
+                                display: "flex",
+                                gap: "1rem",
+                                flexWrap: "wrap",
+                                justifyContent: "center",
+                            }}
                         >
-                            Get Sarted
-                        </OrangeButton>
+                            <MainButton
+                                variant="contained"
+                                sx={{ px: 3, py: 1 }}
+                                component={Link}
+                                to="/login"
+                            >
+                                Get Started
+                            </MainButton>
+                            <LearnMoreButton
+                                variant="contained"
+                                disableRipple
+                                sx={{ px: 3, py: 1 }}
+                                component={Link}
+                                to="/features"
+                            >
+                                Learn More
+                            </LearnMoreButton>
+                        </Box>
                         <Paper sx={{ my: 4 }}>
-                            <img src={HomePage} alt="App Demo" />
+                            <img
+                                src={HomePage}
+                                className="home-img"
+                                alt="App Demo"
+                            />
                         </Paper>
                     </Box>
                 </Container>
@@ -328,252 +394,322 @@ const Home = (props) => {
                             display: "flex",
                             flexDirection: "column",
                             alignItems: "center",
+                            mb: 6,
                         }}
                     >
                         <span className="span-buble">Features</span>
                         <Typography
                             component="h2"
                             className="h2-subtitle"
-                            sx={{ mt: 2, mb: 4 }}
+                            align="center"
+                            sx={{ mt: 2 }}
                         >
-                            Easy and Intuitive{" "}
+                            Discover Powerful{" "}
                             <span className="blue-highlights">Features</span>
                         </Typography>
+                        <Typography variant="body2" align="center">
+                            Unleash the power of our platform with a multitude
+                            of powerful features, empowering you to achieve your
+                            goals
+                        </Typography>
                     </Box>
-                    <Box className="card-section">
-                        <Item sx={{ p: 3 }}>
-                            <Typography variant="h4">1. Filter</Typography>
-                            <Box sx={{ my: 1.5 }}>
-                                <img src={HomeFilter} alt="Change" />
-                            </Box>
-                            <Typography sx={{ mb: 2 }}>
+                    <Box className="home-features-1">
+                        <Box
+                            sx={{
+                                backgroundColor: "#2b61ff1a",
+                                p: 3,
+                                borderRadius: "6px",
+                            }}
+                        >
+                            <Avatar
+                                sx={{
+                                    backgroundColor: "#2b61ff",
+                                    p: 1,
+                                    mb: 2,
+                                }}
+                            >
+                                <PieChartRoundedIcon
+                                    fontSize="large"
+                                    sx={{ color: "white" }}
+                                />
+                            </Avatar>
+                            <Typography variant="h4" gutterBottom>
+                                Advanced Analytics
+                            </Typography>
+                            <Typography variant="body2" gutterBottom>
+                                Experience advanced analytics capabilities that
+                                enable you to dive deep into data, uncover
+                                meaningful patterns, and derive actionable
+                                insights for informed decision-making.
+                            </Typography>
+                            <LearnButton
+                                omponent={Link}
+                                to="/guide"
+                                endIcon={<ArrowForwardRoundedIcon />}
+                                disableRipple
+                            >
+                                Learn more
+                            </LearnButton>
+                            <img
+                                className="home-features left"
+                                src={HomeAnalytics}
+                                alt="Change"
+                            />
+                        </Box>
+                        <Box
+                            sx={{
+                                backgroundColor: "#2b61ff1a",
+                                p: 3,
+                                borderRadius: "6px",
+                            }}
+                        >
+                            <Avatar
+                                sx={{
+                                    backgroundColor: "#FDB52A",
+                                    p: 1,
+                                    mb: 2,
+                                }}
+                            >
+                                <DashboardCustomizeIcon
+                                    fontSize="large"
+                                    sx={{ color: "white" }}
+                                />
+                            </Avatar>
+                            <Typography variant="h4" gutterBottom>
+                                Personalised Structure
+                            </Typography>
+                            <Typography variant="body2" gutterBottom>
+                                Our personalized table structure and templates
+                                feature is designed to empower you with the
+                                flexibility and adaptability you need to
+                                organize and display your data exactly the way
+                                you want it.
+                            </Typography>
+                            <LearnButton
+                                component={Link}
+                                to="/guide"
+                                endIcon={<ArrowForwardRoundedIcon />}
+                                disableRipple
+                            >
+                                Learn more
+                            </LearnButton>
+                            <img
+                                className="home-features right"
+                                src={HomeCustomization}
+                                alt="Change"
+                            />
+                        </Box>
+                    </Box>
+                    <Box className="home-features-2">
+                        <Box
+                            sx={{
+                                backgroundColor: "#2b61ff1a",
+                                p: 3,
+                                borderRadius: "6px",
+                            }}
+                        >
+                            <Avatar
+                                sx={{
+                                    backgroundColor: "#FA5B68",
+                                    p: 1,
+                                    mb: 2,
+                                }}
+                            >
+                                <TuneIcon
+                                    fontSize="large"
+                                    sx={{ color: "white" }}
+                                />
+                            </Avatar>
+                            <Typography variant="h4" gutterBottom>
+                                Custom Filtering
+                            </Typography>
+                            <Typography variant="body2" gutterBottom>
                                 Dive deep into your data and isolate different
                                 metrics to differentiate what is working from
-                                what is not.
+                                what is not. Apply different layers and generate
+                                multiple scenarios to generate leads.
                             </Typography>
-                            <Typography>
-                                Apply different layers and generate multiple
-                                scenarios to generate leads.
+                        </Box>
+                        <Box
+                            sx={{
+                                backgroundColor: "#2b61ff1a",
+                                p: 3,
+                                borderRadius: "6px",
+                            }}
+                        >
+                            <Avatar
+                                sx={{
+                                    backgroundColor: "#FDB52A",
+                                    p: 1,
+                                    mb: 2,
+                                }}
+                            >
+                                <TroubleshootIcon
+                                    fontSize="large"
+                                    sx={{ color: "white" }}
+                                />
+                            </Avatar>
+                            <Typography variant="h4" gutterBottom>
+                                Deep Observation
                             </Typography>
-                        </Item>
-                        <Item sx={{ p: 3 }}>
-                            <Typography variant="h4">2. Observe</Typography>
-                            <Box sx={{ my: 1.5 }}>
-                                <img src={HomeObserve} alt="Change" />
-                            </Box>
-                            <Typography sx={{ mb: 2 }}>
+                            <Typography variant="body2" gutterBottom>
                                 Use our representative tables to observe what is
                                 your data and find what you are looking for.
-                            </Typography>
-                            <Typography>
                                 Write custom notes to record your thought
                                 process and keep track of what you are looking
                                 for.
                             </Typography>
-                        </Item>
-                        <Item sx={{ p: 3 }}>
-                            <Typography variant="h4">3. Interpret</Typography>
-                            <Box sx={{ my: 1.5 }}>
-                                <img src={HomeVisualise} alt="Change" />
-                            </Box>
-                            <Typography sx={{ mb: 2 }}>
-                                Be able to visualize your data through our
-                                graphs and get a better sense of what your data
-                                looks like.
+                        </Box>
+                        <Box
+                            sx={{
+                                backgroundColor: "#2b61ff1a",
+                                p: 3,
+                                borderRadius: "6px",
+                            }}
+                        >
+                            <Avatar
+                                sx={{
+                                    backgroundColor: "#2b61ff",
+                                    p: 1,
+                                    mb: 2,
+                                }}
+                            >
+                                <CompareIcon
+                                    fontSize="large"
+                                    sx={{ color: "white" }}
+                                />
+                            </Avatar>
+                            <Typography variant="h4" gutterBottom>
+                                Compare Results
                             </Typography>
-                            <Typography>
-                                If you also have screenshots of your trades we
-                                offer image embedding to look at them as you
-                                work on through your data.
+                            <Typography variant="body2" gutterBottom>
+                                Visualize your data through our graphs and get a
+                                better sense of what your data looks like. We
+                                also offer image embedding to look at them as
+                                you work on through your data.
                             </Typography>
-                        </Item>
+                        </Box>
                     </Box>
                 </Container>
             </Box>
 
-            <Divider sx={{ m: 2, borderColor: "transparent" }} />
             <Box id="section-3">
-                <Container sx={{ pt: 5 }}>
+                <Container sx={{ p: 5 }}>
                     <Box
                         sx={{
                             display: "flex",
                             flexDirection: "column",
                             alignItems: "center",
-                            mb: 4,
+                            mb: 6,
                         }}
                     >
                         <span className="span-buble">Workflow</span>
                         <Typography
                             component="h2"
                             className="h2-subtitle"
+                            align="center"
                             sx={{ mt: 2 }}
                         >
-                            Create your own{" "}
+                            Create Your Own{" "}
                             <span className="blue-highlights">Workflow</span>
                         </Typography>
+                        <Typography variant="body2" align="center">
+                            Discover how it works by leveraging advanced
+                            algorithms and data analysis techniques
+                        </Typography>
                     </Box>
-                    <Box className="card-section">
-                        {/* TODO: custom links to ID with 'Learn More' */}
-                        <Box
-                            sx={{
-                                border: "1px solid #E1E4E8",
-                                borderRadius: "12px",
-                                display: "flex",
-                                flexDirection: "column",
-                                p: 3,
-                            }}
-                        >
-                            <img
-                                src={MultipleUsersIcon}
-                                className="workflow-grid-icons"
-                                alt="workflow-user-icons"
-                            />
-                            <Typography
-                                variant="h4"
-                                sx={{ fontSize: "1.8rem", my: 2 }}
-                            >
-                                Create Multiple Instances
-                            </Typography>
-                            <Typography sx={{ mb: 3 }}>
-                                Generate different versions of your backtest
-                                data and study them individually
-                            </Typography>
-                            <Box sx={{ flexGrow: 1, display: "flex" }}>
-                                <LearnButton
+                    <Box className="section-3">
+                        <Box sx={{ flexGrow: 1 }}>
+                            <Box sx={{ display: "flex", mb: 6 }}>
+                                <Avatar
                                     sx={{
-                                        px: 1.5,
-                                        alignSelf: "flex-end",
+                                        border: "1px solid #E1E4E8",
+                                        backgroundColor: "transparent",
+                                        p: 1,
+                                        mr: 2,
                                     }}
-                                    size="small"
-                                    component={Link}
-                                    to="/features"
-                                    // hash="#versioning"
-
-                                    disableRipple
-                                    endIcon={
-                                        <ArrowForwardIosRoundedIcon fontSize="small" />
-                                    }
                                 >
-                                    Learn More
-                                </LearnButton>
+                                    <QueueIcon
+                                        fontSize="large"
+                                        sx={{ color: "black" }}
+                                    />
+                                </Avatar>
+                                <Box>
+                                    <Typography variant="h4" gutterBottom>
+                                        Create Multiple Instances
+                                    </Typography>
+                                    <Typography variant="body2">
+                                        Generate different versions of your
+                                        backtest data and study them
+                                        individually
+                                    </Typography>
+                                </Box>
+                            </Box>
+                            <Box sx={{ display: "flex", mb: 6 }}>
+                                <Avatar
+                                    sx={{
+                                        border: "1px solid #E1E4E8",
+                                        backgroundColor: "transparent",
+                                        p: 1,
+                                        mr: 2,
+                                    }}
+                                >
+                                    <TroubleshootRoundedIcon
+                                        fontSize="large"
+                                        sx={{ color: "black" }}
+                                    />
+                                </Avatar>
+                                <Box>
+                                    <Typography variant="h4" gutterBottom>
+                                        Study Your Data
+                                    </Typography>
+                                    <Typography variant="body2">
+                                        Utilize all of our tools to study your
+                                        data in the way that best fits your
+                                        needs
+                                    </Typography>
+                                </Box>
+                            </Box>
+                            <Box sx={{ display: "flex", mb: 4 }}>
+                                <Avatar
+                                    sx={{
+                                        border: "1px solid #E1E4E8",
+                                        backgroundColor: "transparent",
+                                        p: 1,
+                                        mr: 2,
+                                    }}
+                                >
+                                    <LoopRoundedIcon
+                                        fontSize="large"
+                                        sx={{ color: "black" }}
+                                    />
+                                </Avatar>
+                                <Box>
+                                    <Typography variant="h4" gutterBottom>
+                                        Improve and Repeat
+                                    </Typography>
+                                    <Typography variant="body2">
+                                        Come up with leads for your next
+                                        backtest and improve your strategy
+                                    </Typography>
+                                </Box>
                             </Box>
                         </Box>
                         <Box
                             sx={{
-                                border: "1px solid #E1E4E8",
-                                borderRadius: "12px",
+                                backgroundColor: "#2b61ff",
+                                borderRadius: "6px",
                                 display: "flex",
-                                flexDirection: "column",
-                                p: 3,
+                                alignItems: "end",
+                                px: 2,
+                                pt: 2,
                             }}
                         >
                             <img
-                                src={RoundedStatsIcon}
-                                className="workflow-grid-icons"
-                                alt="workflow-rounded-stats-icons"
+                                className="home-workflow"
+                                src={HomeCreate}
+                                alt="Change"
                             />
-                            <Typography
-                                variant="h4"
-                                sx={{ fontSize: "1.8rem", my: 2 }}
-                            >
-                                Study your Data
-                            </Typography>
-                            <Typography sx={{ mb: 3 }}>
-                                Utilize all of our tools to study your backtest
-                                in the way that best fits your needs
-                            </Typography>
-                            <Box sx={{ flexGrow: 1, display: "flex" }}>
-                                <LearnButton
-                                    sx={{
-                                        px: 1.5,
-                                        alignSelf: "flex-end",
-                                    }}
-                                    size="small"
-                                    component={Link}
-                                    to="/features"
-                                    // hash="#detail"
-                                    disableRipple
-                                    endIcon={
-                                        <ArrowForwardIosRoundedIcon fontSize="small" />
-                                    }
-                                >
-                                    Learn More
-                                </LearnButton>
-                            </Box>
-                        </Box>
-                        <Box
-                            sx={{
-                                border: "1px solid #E1E4E8",
-                                borderRadius: "12px",
-                                display: "flex",
-                                flexDirection: "column",
-                                p: 3,
-                            }}
-                        >
-                            <img
-                                src={GraphUpIcon}
-                                className="workflow-grid-icons"
-                                alt="workflow-graph-up-icons"
-                            />
-                            <Typography
-                                variant="h4"
-                                sx={{ fontSize: "1.8rem", my: 2 }}
-                            >
-                                Improve and Repeat
-                            </Typography>
-                            <Typography sx={{ mb: 3 }}>
-                                Come up with leads for your next backtest and
-                                improve your strategy
-                            </Typography>
-                            <Box sx={{ flexGrow: 1, display: "flex" }}>
-                                <LearnButton
-                                    sx={{
-                                        px: 1.5,
-                                        alignSelf: "flex-end",
-                                    }}
-                                    size="small"
-                                    component={Link}
-                                    to="/features"
-                                    disableRipple
-                                    endIcon={
-                                        <ArrowForwardIosRoundedIcon fontSize="small" />
-                                    }
-                                >
-                                    Learn More
-                                </LearnButton>
-                            </Box>
-                        </Box>
-                    </Box>
-                </Container>
-            </Box>
-
-            <Divider sx={{ m: 3, borderColor: "transparent" }} />
-            <Box id="section-4">
-                <Container sx={{ pt: 5 }}>
-                    <Box sx={{ backgroundColor: "#2B61FF" }}>
-                        <Box className="blue-modal">
-                            <Box>
-                                <Typography className="h4-subtitle">
-                                    So What's Next?
-                                </Typography>
-                                <Typography
-                                    component="h2"
-                                    className="h2-subtitle"
-                                    sx={{ color: "white" }}
-                                >
-                                    Start Keeping Track of Your Data!
-                                </Typography>
-                            </Box>
-                            {/* TODO: link to signup */}
-                            <LoginButton
-                                variant="contained"
-                                // className="modal-login-btn"
-                                component={Link}
-                                to="/login"
-                                sx={{ py: 1, mt: { xs: 2, md: 0 } }}
-                            >
-                                Get Started
-                            </LoginButton>
                         </Box>
                     </Box>
                 </Container>
@@ -582,15 +718,62 @@ const Home = (props) => {
             <Divider sx={{ m: 3, borderColor: "transparent" }} />
             <Box id="section-4">
                 <Container>
-                    <Typography
-                        component="h2"
-                        className="h2-subtitle"
-                        align="center"
-                        sx={{ mt: 2, mb: 4 }}
+                    <Box
+                        sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "center",
+                        }}
                     >
-                        Frequently Asked Questions
-                    </Typography>
+                        <span className="span-buble">FAQs</span>
+
+                        <Typography
+                            component="h2"
+                            className="h2-subtitle"
+                            align="center"
+                            gutterBottom
+                            sx={{ mt: 2 }}
+                        >
+                            Frequently Asked Questions
+                        </Typography>
+                        <Typography
+                            variant="body2"
+                            sx={{ mb: 4 }}
+                            align="center"
+                        >
+                            Find answers to commonly asked questions about Trade
+                            Sharpener
+                        </Typography>
+                    </Box>
                     <FAQ />
+                </Container>
+            </Box>
+
+            <Box id="section-5">
+                <Container sx={{ pt: 5 }}>
+                    <Box className="blue-modal">
+                        <Box>
+                            <Typography className="h4-subtitle">
+                                So What's Next?
+                            </Typography>
+                            <Typography
+                                component="h2"
+                                className="h2-subtitle white"
+                            >
+                                Start Keeping Track of Your Data!
+                            </Typography>
+                        </Box>
+                        {/* TODO: link to signup */}
+                        <LoginButton
+                            variant="contained"
+                            // className="modal-login-btn"
+                            component={Link}
+                            to="/login"
+                            sx={{ py: 1, mt: { xs: 2, md: 0 } }}
+                        >
+                            Get Started
+                        </LoginButton>
+                    </Box>
                 </Container>
             </Box>
 

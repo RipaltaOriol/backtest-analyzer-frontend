@@ -9,65 +9,111 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import { styled } from "@mui/system";
 
-import { useGetStatisticsQuery } from "../features/statistics/statisticsApiSlice";
+// eslint-disable-next-line no-unused-vars
+const STATS_METRICS = [
+    ["Total Trades", "count"],
+    ["Net Return", "total"],
+    ["Avg. Trade", "mean"],
+    ["Avg. Win", "avg_win"],
+    ["Avg. Loss", "avg_loss"],
+    ["Drawdown", "drawdown"],
+    ["Win Rate", "win_rate"],
+    ["Expectancy", "expectancy"],
+    ["Profit Factor", "profit_factor"],
+    ["Max Win", "max_win"],
+    ["Max Consec. Losses", "max_consec_loss"],
+    ["Wins", "wins"],
+    ["Losses", "losses"],
+    ["Break Evens", "breakEvens"],
+];
 
 const TablePaper = styled(Paper)({
     boxShadow: "none",
 });
 
-const SimpleTable = ({ id }) => {
+const HeaderCell = styled(TableCell)({
+    borderLeft: "1px solid rgb(224, 224, 224)",
+    "&:first-child": {
+        border: "none",
+    },
+});
+
+const RowCell = styled(TableCell)({
+    borderLeft: "1px solid rgb(224, 224, 224)",
+    "&:first-child": {
+        border: "none",
+    },
+});
+
+const MetricRow = styled(TableRow)({
+    "&:last-child ": {
+        border: "none",
+    },
+});
+
+const SimpleTable = ({ statsData }) => {
     let tableRows = [];
     let tableData = [];
 
-    const { data, isSuccess } = useGetStatisticsQuery({ setupId: id });
-
-    if (isSuccess) {
-        if (data) {
-            tableRows.push(<TableCell>Metric</TableCell>);
-            for (const prop in data[0]) {
-                if (prop !== "stat") {
-                    tableRows.push(
-                        <TableCell align="center">
-                            {parseColumnName(prop)}
-                        </TableCell>
-                    );
-                }
-            }
-            tableData = data;
-        }
-    }
+    // if (isSuccess) {
+    //     if (data) {
+    //         tableRows.push(<TableCell>Metric</TableCell>);
+    //         for (const prop in data[0]) {
+    //             if (prop !== "stat") {
+    //                 tableRows.push(
+    //                     <TableCell align="center">
+    //                         {parseColumnName(prop)}
+    //                     </TableCell>
+    //                 );
+    //             }
+    //         }
+    //         tableData = data;
+    //     }
+    // }
 
     return (
         <TableContainer component={TablePaper}>
             <Table size="small">
                 <TableHead>
-                    <TableRow sx={{ fontSize: "14px" }}>{tableRows}</TableRow>
+                    <TableRow sx={{ fontSize: "14px" }}>
+                        <HeaderCell>Metric</HeaderCell>
+                        {statsData &&
+                            Object.keys(statsData).map((col) => (
+                                <HeaderCell align="center">
+                                    {parseColumnName(col)}
+                                </HeaderCell>
+                            ))}
+                    </TableRow>
                 </TableHead>
                 <TableBody>
                     {/* optimise this loop */}
-                    {tableData.map((row, idx) => (
-                        <TableRow key={idx} hover>
-                            <TableCell>{row.stat}</TableCell>
-                            {Object.keys(row).reduce((result, cell, idx) => {
-                                if (cell !== "stat") {
-                                    result.push(
-                                        <TableCell
-                                            key={idx}
-                                            align="center"
-                                            sx={{
-                                                color:
-                                                    row[cell] < 0
-                                                        ? "red"
-                                                        : "inherit",
-                                            }}
-                                        >
-                                            {row[cell].toFixed(3)}
-                                        </TableCell>
-                                    );
-                                }
-                                return result;
-                            }, [])}
-                        </TableRow>
+                    {STATS_METRICS.map(([name, prop]) => (
+                        <MetricRow
+                            key={prop}
+                            hover
+                            sx={{
+                                "&.MuiTableRow-hover:hover": {
+                                    backgroundColor: "rgb(229, 246, 253)",
+                                },
+                            }}
+                        >
+                            <RowCell>{name}</RowCell>
+                            {statsData &&
+                                Object.keys(statsData).map((col, i) => (
+                                    <RowCell
+                                        key={i}
+                                        align="center"
+                                        sx={{
+                                            color:
+                                                statsData[col][prop] < 0
+                                                    ? "red"
+                                                    : "inherit",
+                                        }}
+                                    >
+                                        {statsData[col][prop].toFixed(3)}
+                                    </RowCell>
+                                ))}
+                        </MetricRow>
                     ))}
                 </TableBody>
             </Table>

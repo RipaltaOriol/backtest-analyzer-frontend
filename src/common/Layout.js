@@ -8,6 +8,7 @@ import HelpIcon from "@mui/icons-material/Help";
 import Inventory2RoundedIcon from "@mui/icons-material/Inventory2Rounded";
 import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
 import LogoutIcon from "@mui/icons-material/Logout";
+import PermPhoneMsgIcon from "@mui/icons-material/PermPhoneMsg";
 import SettingsIcon from "@mui/icons-material/Settings";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -29,6 +30,7 @@ import DocumentBar from "../features/documents/DocumentBar";
 import { setLoginMsg } from "../features/messages/messagesSlice";
 import Upload from "../pages/upload";
 import LogoTitle from "./LogoTitle";
+import SupportEngine from "./SupportEngine";
 
 const drawerWidth = 240;
 
@@ -78,13 +80,13 @@ const useStyles = makeStyles((theme) =>
 const features = [
     {
         id: "files",
-        name: "All Documents",
+        name: "All Accounts",
         url: "/files",
         icon: <LibraryBooksIcon />,
     },
     {
         id: "setups",
-        name: "All Setups",
+        name: "All Versions",
         url: "/setups",
         icon: <Inventory2RoundedIcon />,
     },
@@ -96,12 +98,21 @@ const assistance = [
         name: "Help",
         url: "/help",
         icon: <HelpIcon />,
+        target: "_self",
+    },
+    {
+        id: "contact",
+        name: "Contact",
+        url: "https://t.me/TradeSharpener_Support",
+        icon: <PermPhoneMsgIcon />,
+        target: "_blank",
     },
     {
         id: "settings",
         name: "Settings",
         url: "/settings",
         icon: <SettingsIcon />,
+        target: "_self",
     },
 ];
 
@@ -164,6 +175,7 @@ export default function Layout() {
                 variant="permanent"
                 sx={{
                     width: drawerWidth,
+                    height: "100vh",
                     flexShrink: 0,
                     "& .MuiDrawer-paper": {
                         width: drawerWidth,
@@ -209,19 +221,21 @@ export default function Layout() {
                 </List>
                 <Divider sx={{ m: 1 }} />
                 {/* Files */}
-                <List>
+                <List sx={{ overflowY: "scroll" }}>
                     <Typography sx={{ px: 3 }} variant="subtitle1">
-                        Files
+                        Accounts
                     </Typography>
                     <DocumentBar />
                 </List>
-                <List sx={{ mt: "auto", mb: 1 }}>
+
+                <List sx={{ mt: "auto" }}>
                     <Divider sx={{ mx: 1, mb: 1 }} />
                     {assistance.map((feat) => (
                         <DrawerItemButton
                             key={feat.name}
                             component={Link}
                             to={feat.url}
+                            target={feat.target}
                             selected={location.pathname === feat.url}
                             disableRipple
                         >
@@ -257,6 +271,7 @@ export default function Layout() {
                     <Outlet />
                 </Box>
                 <Upload open={openUpload} onClose={handleUploadClose} />
+                <SupportEngine />
             </Box>
         </Box>
     );

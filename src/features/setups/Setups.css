@@ -1,3 +1,5 @@
+/* ########## SETUP TABS CSS ########## */
+
 .setup-dashboard {
     display: grid;
     grid-template-columns: repeat(12, 1fr);
@@ -39,6 +41,178 @@
     order: 7;
 }
 
+/* ########## GENERAL ########## */
+
+.setup-general {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 1rem;
+}
+
+.setup-overview {
+    grid-column: span 12;
+    order: 1;
+    display: grid;
+    grid-template-columns: 1fr 6fr;
+}
+
+.setup-open-trades {
+    grid-column: span 12;
+    order: 2;
+}
+
+.setup-notes {
+    grid-column: span 12;
+    order: 4;
+}
+
+.setup-pnl {
+    grid-column: span 12;
+    order: 3;
+}
+
+.setup-table {
+    grid-column: span 12;
+    order: 5;
+}
+
+@media (min-width: 1200px) {
+    /* Medium */
+    .setup-open-trades {
+        grid-column: span 6;
+        order: 2;
+    }
+
+    .setup-notes {
+        grid-column: span 6;
+        order: 3;
+    }
+
+    .setup-pnl {
+        order: 4;
+    }
+}
+
+/* ########## STATS ########## */
+
+.setup-stats-view {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 1rem;
+}
+
+.stats-cumulative {
+    grid-column: span 12;
+}
+
+.stats-outcome-pie {
+    grid-column: span 12;
+}
+
+.stats-net {
+    grid-column: span 12;
+}
+
+.stats-radar {
+    grid-column: span 12;
+}
+
+.stats-metric {
+    grid-column: span 12;
+}
+
+.stats-scatter {
+    grid-column: span 12;
+}
+
+.stats-daily-dist {
+    grid-column: span 12;
+}
+
+.stats-table {
+    grid-column: span 12;
+}
+
+@media (min-width: 600px) {
+    /* Small */
+}
+
+@media (min-width: 1200px) {
+    /* Large */
+    .stats-cumulative {
+        grid-column: span 6;
+        order: 1;
+    }
+
+    .stats-outcome-pie {
+        grid-column: span 6;
+        order: 2;
+    }
+
+    .stats-net {
+        grid-column: span 6;
+        order: 3;
+    }
+
+    .stats-radar {
+        grid-column: span 6;
+        order: 4;
+    }
+
+    .stats-metric {
+        grid-column: span 6;
+        order: 5;
+    }
+
+    .stats-scatter {
+        grid-column: span 6;
+        order: 6;
+    }
+
+    .stats-daily-dist {
+        grid-column: span 6;
+        order: 7;
+    }
+
+    .stats-table {
+        grid-column: span 6;
+        order: 8;
+    }
+}
+
+@media (min-width: 1536px) {
+    /* Extra Large */
+}
+
+@media screen and (min-width: 1920px) {
+    /* For Projectors or Higher Resolution Screens (Full HD) */
+}
+
+/* ########## TABLE ########## */
+
+.setup-table-view {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 1rem;
+}
+
+.setup-table-stats {
+    grid-column: span 6;
+    order: 2;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 1rem;
+}
+.setup-table-polar {
+    grid-column: span 3;
+    order: 1;
+}
+
+.setup-table-radar {
+    grid-column: span 3;
+    order: 2;
+}
+
 @media (min-width: 600px) {
     /* Small */
 }
@@ -69,10 +243,10 @@
         grid-column: span 6;
     }
 
-    .setup-notes {
+    /* .setup-notes {
         grid-column: span 6;
         order: 6;
-    }
+    } */
 }
 
 @media (min-width: 1536px) {
@@ -101,10 +275,10 @@
 }
 @media screen and (min-width: 3840px) {
     /* For 4K Displays (Ultra HD) */
-    .setup-notes {
+    /* .setup-notes {
         grid-column: span 3;
         order: 2;
-    }
+    } */
     .setup-bar {
         grid-column: span 4;
     }

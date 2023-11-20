@@ -1,3 +1,84 @@
+.mosaic {
+    display: grid;
+}
+
+.mosaic-item {
+    border-radius: 6px;
+    border: 1px solid lightgrey;
+}
+
+.mosaic-item:first-of-type {
+    grid-column: 2 / span 2;
+    grid-row: 1 / span 4;
+    z-index: 2;
+}
+
+.mosaic-item:last-of-type {
+    grid-column: 1 / span 2;
+    grid-row: 4 / span 2;
+}
+
+.features-phrases {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    padding: 45px 0;
+}
+.features-phrases div {
+    margin: 10px 20px;
+}
+
+.features-item {
+    align-items: center;
+    margin-bottom: 40px;
+    gap: 2rem;
+}
+
+.features-item img {
+    border: 1px solid lightgrey;
+    border-radius: 5px;
+}
+
+.features-item:nth-child(even) {
+    flex-direction: row-reverse;
+}
+
+ul.feature-ul {
+    list-style: none;
+    padding-left: 0px;
+    color: #64728f;
+}
+
+ul.feature-ul li {
+    margin-bottom: 24px;
+    display: flex;
+    align-items: flex-start;
+    font-weight: 400;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+ul.feature-ul li::before {
+    content: "";
+    font-weight: bold;
+    /* line-height: 1.5; */
+    border: 5px solid #2b61ff;
+    border-radius: 50px;
+    display: inline-block;
+    text-align: center;
+    padding: 5px;
+    margin-right: 10px;
+    margin-top: 2px;
+}
+
+/* li::marker {
+    color: #2b61ff;
+    content: url(assets/svg/circle_icon.svg);
+} */
+
+/* li:first-child::marker {
+    font-size: 2rem;
+} */
+
 .feature-feature {
     padding-bottom: 8px;
     border-bottom: 1px solid #0000001f;
@@ -26,6 +107,12 @@
 
 @media (min-width: 600px) {
     /* Small */
+    .features-phrases {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .features-phrases div {
+        margin: 20px 10px;
+    }
     .features-other {
         grid-template-columns: repeat(2, 1fr);
     }
@@ -33,6 +120,10 @@
 
 @media (min-width: 900px) {
     /* Medium */
+    .features-phrases {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
     .feature-feature {
         display: flex;
         padding-bottom: 8px;
@@ -58,4 +149,18 @@
 
 @media (min-width: 1200px) {
     /* Large */
+    .features-phrases div {
+        margin: 0;
+    }
+
+    .features-item {
+        display: flex;
+    }
+}
+
+@media (min-width: 1536px) {
+    /* Extra Large */
+    .features-item {
+        margin-bottom: 80px;
+    }
 }

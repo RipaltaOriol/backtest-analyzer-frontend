@@ -106,16 +106,18 @@ const SetupsCompare = () => {
                     {document ? document?.name : "Loading"}
                 </Typography>
                 <Box>
-                    <MenuButton
-                        color="secondary"
-                        sx={{ ml: 1 }}
-                        onClick={handleClick}
-                    >
-                        Compare:&nbsp;
-                        <MenuItemSelected>
-                            {data?.active || "Loading"}
-                        </MenuItemSelected>
-                    </MenuButton>
+                    {data?.success && (
+                        <MenuButton
+                            color="secondary"
+                            sx={{ ml: 1 }}
+                            onClick={handleClick}
+                        >
+                            Compare:&nbsp;
+                            <MenuItemSelected>
+                                {data?.active || "Loading"}
+                            </MenuItemSelected>
+                        </MenuButton>
+                    )}
                     <Button
                         color="primary"
                         variant="contained"
@@ -142,57 +144,63 @@ const SetupsCompare = () => {
 
             <Divider sx={{ my: 2 }} />
             {/* the margin top is aesthetic */}
-            <Box className="setups-compare">
-                {/* Missing IDS */}
-                {data
-                    ? data.data.map((setup) => (
-                          <SetupItem>
-                              <Box
-                                  sx={{
-                                      display: "flex",
-                                      alignItems: "center",
-                                      justifyContent: "space-between",
-                                      px: "16px",
-                                  }}
-                              >
-                                  <SetupTitle>{setup.name}</SetupTitle>
+            {!data?.success && (
+                <Typography sx={{ color: "red" }}>{data?.msg}</Typography>
+            )}
+            {data?.success && (
+                <Box className="setups-compare">
+                    {/* Missing IDS */}
+                    {data
+                        ? data.data.map((setup) => (
+                              <SetupItem>
+                                  <Box
+                                      sx={{
+                                          display: "flex",
+                                          alignItems: "center",
+                                          justifyContent: "space-between",
+                                          px: "16px",
+                                      }}
+                                  >
+                                      <SetupTitle>{setup.name}</SetupTitle>
 
-                                  {/* Implement in the future */}
-                                  {/* <Button
-                                        variant='text'
-                                        component={Link}
-                                        to={`/${documentId}`}
-                                        state={{
-                                            setup: setup.id 
-                                        }}
-                                        endIcon={<TrendingUpRoundedIcon />}
-                                        sx={{
-                                            textTransform: 'none',
-                                            py: 0
-                                        }}
-                                    >
-                                        Go To
-                                    </Button> */}
-                              </Box>
-                              <List sx={{ px: "16px" }}>
-                                  {setup.filters.map((filter) => (
-                                      <ListItem sx={{ p: 0 }}>
-                                          <ListItemIcon
-                                              sx={{ minWidth: 0, mr: 1 }}
-                                          >
-                                              <FilterAltRoundedIcon fontSize="small" />
-                                          </ListItemIcon>
-                                          <ListItemText
-                                              primary={filter}
-                                              primaryTypographyProps={{
-                                                  fontSize: "14px",
-                                              }}
-                                          />
-                                      </ListItem>
-                                  ))}
-                              </List>
-                              <Table size="small">
-                                  {/* <TableHead>
+                                      <Button
+                                          variant="text"
+                                          component={Link}
+                                          to={`/${documentId}`}
+                                          state={{
+                                              setup: {
+                                                  id: setup.id,
+                                                  parent: documentId,
+                                              },
+                                          }}
+                                          endIcon={<TrendingUpRoundedIcon />}
+                                          sx={{
+                                              textTransform: "none",
+                                              py: 0,
+                                          }}
+                                      >
+                                          Go To
+                                      </Button>
+                                  </Box>
+                                  <List sx={{ px: "16px" }}>
+                                      {setup.filters.map((filter) => (
+                                          <ListItem sx={{ p: 0 }}>
+                                              <ListItemIcon
+                                                  sx={{ minWidth: 0, mr: 1 }}
+                                              >
+                                                  <FilterAltRoundedIcon fontSize="small" />
+                                              </ListItemIcon>
+                                              <ListItemText
+                                                  primary={filter}
+                                                  primaryTypographyProps={{
+                                                      fontSize: "14px",
+                                                  }}
+                                              />
+                                          </ListItem>
+                                      ))}
+                                  </List>
+                                  <Table size="small">
+                                      {/* <TableHead>
                                       <TableRow>
                                           <TableCell></TableCell>
                                           {setup.stats.headers.map((header) => (
@@ -201,61 +209,66 @@ const SetupsCompare = () => {
                                       </TableRow>
                                   </TableHead> */}
 
-                                  <TableBody
+                                      <TableBody
+                                          sx={{
+                                              borderTop: "1px solid #E5E9EB",
+                                              borderBottom: "1px solid #E5E9EB",
+                                          }}
+                                      >
+                                          {setup.stats.data.map((row) => (
+                                              <TableRow>
+                                                  {row.map((cell) => (
+                                                      <TableCell>
+                                                          {cell}
+                                                      </TableCell>
+                                                  ))}
+                                              </TableRow>
+                                          ))}
+                                      </TableBody>
+                                  </Table>
+                                  <Box
                                       sx={{
-                                          borderTop: "1px solid #E5E9EB",
-                                          borderBottom: "1px solid #E5E9EB",
+                                          maxWidth: "50%",
+                                          mx: "auto",
+                                          mt: 2,
                                       }}
                                   >
-                                      {setup.stats.data.map((row) => (
-                                          <TableRow>
-                                              {row.map((cell) => (
-                                                  <TableCell>{cell}</TableCell>
-                                              ))}
-                                          </TableRow>
-                                      ))}
-                                  </TableBody>
-                              </Table>
-                              <Box
-                                  sx={{
-                                      maxWidth: "50%",
-                                      mx: "auto",
-                                      mt: 2,
-                                  }}
+                                      <PieChart
+                                          dataPieChart={setup.breakdown}
+                                          title={false}
+                                      />
+                                  </Box>
+                              </SetupItem>
+                          ))
+                        : null}
+                </Box>
+            )}
+            {data?.success && (
+                <Menu
+                    anchorEl={anchorEl}
+                    open={open}
+                    onClose={handleClose}
+                    autoFocus={false}
+                    anchorOrigin={{
+                        vertical: "bottom",
+                        horizontal: "left",
+                    }}
+                    transformOrigin={{
+                        vertical: "top",
+                        horizontal: "left",
+                    }}
+                >
+                    {data
+                        ? data.metrics.map(([metric, name]) => (
+                              <DropdownMenuItem
+                                  onClick={() => handleChangeMetric(metric)}
                               >
-                                  <PieChart
-                                      dataPieChart={setup.breakdown}
-                                      title={false}
-                                  />
-                              </Box>
-                          </SetupItem>
-                      ))
-                    : null}
-            </Box>
-            <Menu
-                anchorEl={anchorEl}
-                open={open}
-                onClose={handleClose}
-                autoFocus={false}
-                anchorOrigin={{
-                    vertical: "bottom",
-                    horizontal: "left",
-                }}
-                transformOrigin={{
-                    vertical: "top",
-                    horizontal: "left",
-                }}
-            >
-                {data
-                    ? data.metrics.map(([metric, name]) => (
-                          <DropdownMenuItem
-                              onClick={() => handleChangeMetric(metric)}
-                          >
-                              {name}
-                          </DropdownMenuItem>
-                      ))
-                    : null}
-            </Menu>
+                                  {name}
+                              </DropdownMenuItem>
+                          ))
+                        : null}
+                </Menu>
+            )}
         </Box>
     );
 };

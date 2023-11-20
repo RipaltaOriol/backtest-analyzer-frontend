@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
+import { Container } from "@mui/material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
@@ -61,13 +62,8 @@ const Login = () => {
     };
 
     return (
-        <Box
-            sx={{
-                display: "flex",
-                flexDirection: "column",
-                minHeight: "100vh",
-            }}
-        >
+        <Container>
+            <Toolbar />
             <Toolbar />
 
             <Box sx={{ m: 5 }}>
@@ -170,7 +166,7 @@ const Login = () => {
                 </Box>
             </Box>
             <Footer />
-        </Box>
+        </Container>
     );
 };
 

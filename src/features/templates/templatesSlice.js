@@ -2,13 +2,13 @@ import { apiSlice } from "../../api/apiSlice";
 
 export const templatesSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
-        getSetupRow: builder.query({
-            query: ({ setupId, rowId }) => `/setups/${setupId}/${rowId}`,
+        getRow: builder.query({
+            query: ({ documentId, rowId }) => `/setups/${documentId}/${rowId}`,
             providesTags: ["SetupRow"],
         }),
-        putSetupRow: builder.mutation({
-            query: ({ setupId, rowId, template }) => ({
-                url: `/setups/${setupId}/${rowId}`,
+        putRow: builder.mutation({
+            query: ({ documentId, rowId, template }) => ({
+                url: `/setups/${documentId}/${rowId}`,
                 method: "POST",
                 body: { row: template },
             }),
@@ -25,4 +25,4 @@ export const templatesSlice = apiSlice.injectEndpoints({
     }),
 });
 
-export const { useGetSetupRowQuery, usePutSetupRowMutation } = templatesSlice;
+export const { useGetRowQuery, usePutRowMutation } = templatesSlice;

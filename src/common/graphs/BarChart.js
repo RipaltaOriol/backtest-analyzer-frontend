@@ -1,13 +1,3 @@
-import {
-    BarElement,
-    CategoryScale,
-    Chart as ChartJS,
-    Legend,
-    LinearScale,
-    Title,
-    Tooltip,
-} from "chart.js";
-import autocolors from "chartjs-plugin-autocolors";
 import { ErrorFeedback } from "common/ErrorFeedback";
 import { Bar } from "react-chartjs-2";
 
@@ -33,7 +23,9 @@ const BarChart = ({ chartData }) => {
         responsive: true,
         plugins: {
             legend: {
-                display: false,
+                labels: {
+                    usePointStyle: true,
+                },
             },
             autocolors: {
                 offset: 8,

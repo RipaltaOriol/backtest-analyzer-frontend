@@ -1,8 +1,16 @@
 import { createSlice } from "@reduxjs/toolkit";
 import dayjs from "dayjs";
 
+function stringToDate(str) {
+    return dayjs(str);
+}
+
+function dateToString(date) {
+    return date.toString();
+}
+
 const initialState = {
-    currentDate: dayjs(),
+    currentDate: dayjs().toString(),
     selectedTrade: null,
     dateFormat: null,
     resultDisplay: null,
@@ -13,13 +21,17 @@ export const calendarSlice = createSlice({
     initialState,
     reducers: {
         getToday: (state) => {
-            state.currentDate = dayjs();
+            state.currentDate = dateToString(dayjs());
         },
         increaseMonth: (state) => {
-            state.currentDate = state.currentDate.add(1, "month");
+            state.currentDate = dateToString(
+                stringToDate(state.currentDate).add(1, "month")
+            );
         },
         decreaseMonth: (state) => {
-            state.currentDate = state.currentDate.add(-1, "month");
+            state.currentDate = dateToString(
+                stringToDate(state.currentDate).add(-1, "month")
+            );
         },
         setSelectedTrade: (state, action) => {
             const { trade } = action.payload;
@@ -49,8 +61,10 @@ export const {
     setResultDisplay,
 } = calendarSlice.actions;
 
-export const selectCurrentDate = (state) => state.calendar.currentDate;
-export const selectMonthIndex = (state) => state.calendar.currentDate.month();
+export const selectCurrentDate = (state) =>
+    stringToDate(state.calendar.currentDate);
+export const selectMonthIndex = (state) =>
+    stringToDate(state.calendar.currentDate).month();
 export const selectSelectedTrade = (state) => state.calendar.selectedTrade;
 export const selectDateFormat = (state) => state.calendar.dateFormat;
 export const selectResultDisplay = (state) => state.calendar.resultDisplay;

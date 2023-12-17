@@ -163,7 +163,10 @@ const AllDocuments = () => {
 
     const orderedDocuments = useSelector(selectAllDocuments);
 
-    const [cloneDocument] = useCloneDocumentMutation();
+    const [
+        cloneDocument,
+        { data: cloneResponse, isSuccess: isCloneSuccess, reset: resetClone },
+    ] = useCloneDocumentMutation();
     const [
         renameDocument,
         {
@@ -187,6 +190,7 @@ const AllDocuments = () => {
         content = orderedDocuments.map((doc, idx) => (
             <Grid
                 item
+                key={idx}
                 xs={12}
                 sm={6}
                 lg={4}
@@ -246,6 +250,12 @@ const AllDocuments = () => {
         setIsError(isRenameSuccess.success);
         setMsg(renameResponse.msg);
         resetRename();
+    }
+
+    if (isCloneSuccess) {
+        setIsError(isCloneSuccess.success);
+        setMsg(cloneResponse.msg);
+        resetClone();
     }
 
     return (

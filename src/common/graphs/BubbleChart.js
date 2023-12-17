@@ -1,42 +1,25 @@
 import {
-    CategoryScale,
     Chart as ChartJS,
     Legend,
-    LineElement,
     LinearScale,
     PointElement,
-    Title,
     Tooltip,
 } from "chart.js";
 import autocolors from "chartjs-plugin-autocolors";
+import { CustomSelect } from "common/CustomComponents";
 import { ErrorFeedback } from "common/ErrorFeedback";
-import { Line } from "react-chartjs-2";
-import { useDispatch, useSelector } from "react-redux";
+import { useState } from "react";
+import { Bubble } from "react-chartjs-2";
 
 import Box from "@mui/material/Box";
 import MenuItem from "@mui/material/MenuItem";
-import Select from "@mui/material/Select";
 import Skeleton from "@mui/material/Skeleton";
 import Typography from "@mui/material/Typography";
 import { styled } from "@mui/material/styles";
 
-import {
-    selectCurrentMetric,
-    setCurrentMetric,
-} from "features/graphs/lineGraphSlice";
+import { useGetBubbleQuery } from "features/graphs/graphsSlice";
 
-import { useGetGraphQuery } from "./graphsSlice";
-
-ChartJS.register(
-    CategoryScale,
-    LinearScale,
-    PointElement,
-    LineElement,
-    Title,
-    Tooltip,
-    Legend,
-    autocolors
-);
+ChartJS.register(LinearScale, PointElement, Tooltip, Legend, autocolors);
 
 const FilterMenuItem = styled(MenuItem)({
     fontSize: "14px",
@@ -61,76 +44,72 @@ const FilterMenuItem = styled(MenuItem)({
     },
 });
 
-const LineGraph = ({ setupId }) => {
-    const dispatch = useDispatch();
-    const currentMetric = useSelector(selectCurrentMetric);
+const RadarChart = ({ setupId }) => {
+    let bubbleData = {
+        datasets: [],
+    };
 
-    let options = {
-        maintainAspectRatio: false,
+    const [currentMetric, setCurrentMetric] = useState(null);
+
+    const options = {
         responsive: true,
         scales: {
             y: {
+                beginAtZero: true,
                 title: {
                     display: true,
-                    text: "Equity",
+                    text: "Result",
                 },
             },
             x: {
+                beginAtZero: true,
                 title: {
                     display: true,
                     text: "",
                 },
-                ticks: {
-                    autoSkip: true,
-                    maxRotation: 0,
-                },
             },
         },
         plugins: {
+            tooltip: {
+                callbacks: {
+                    label: (context) => {
+                        return `Risk-Reward: ${(context.raw.r / 5).toFixed(2)}`;
+                    },
+                },
+            },
             legend: {
                 labels: {
                     usePointStyle: true,
                 },
             },
+            autocolors: {
+                offset: 30,
+            },
         },
     };
 
-    const { data, isLoading, isUninitialized } = useGetGraphQuery(
+    const { data, isLoading, isUninitialized } = useGetBubbleQuery(
         {
             setupId,
-            type: "line",
-            currentMetric: currentMetric,
+            currentMetric,
         },
         { skip: !setupId }
     );
 
-    const lineData = {
-        labels: [],
-        datasets: [],
-    };
     if (data?.success) {
-        lineData.labels = data?.xLabels;
-
-        let lineDatasets = [];
+        let bubbleDatasets = [];
         data?.data.forEach((dataset, idx) => {
-            lineDatasets.push({
+            bubbleDatasets.push({
                 ...dataset,
             });
         });
-        lineData.datasets = lineDatasets;
-        options.scales.x.title.text = String(data.labels.axes);
+        bubbleData.datasets = bubbleDatasets;
+
+        options.scales.x.title.text = data.labels.axes;
     }
 
     return (
-        <Box
-            sx={{
-                border: "1px solid #E5E9EB",
-                borderRadius: "5px",
-                p: 2,
-                pb: 6,
-                maxHeight: "500px",
-            }}
-        >
+        <Box>
             {isLoading || isUninitialized ? (
                 <Skeleton variant="rounded" height={60} />
             ) : data?.success ? (
@@ -138,26 +117,18 @@ const LineGraph = ({ setupId }) => {
                     <Box
                         sx={{
                             display: "flex",
-                            justifyContent: "center",
                             alignItems: "center",
                             position: "relative",
-                            my: 1,
+                            mb: 1,
                         }}
                     >
-                        <Typography align="center">
+                        <Typography variant="h6">
                             {data?.labels?.title || "Loading"}
                         </Typography>
-
-                        <Select
+                        <CustomSelect
                             size="small"
                             value={data?.active_metric || ""}
-                            onChange={(e) =>
-                                dispatch(
-                                    setCurrentMetric({
-                                        currentMetric: e.target.value,
-                                    })
-                                )
-                            }
+                            onChange={(e) => setCurrentMetric(e.target.value)}
                             sx={{
                                 "& legend": { display: "none" },
                                 "& fieldset": { top: 0 },
@@ -183,9 +154,9 @@ const LineGraph = ({ setupId }) => {
                                       )
                                   )
                                 : null}
-                        </Select>
+                        </CustomSelect>
                     </Box>
-                    <Line data={lineData} options={options} />
+                    <Bubble options={options} data={bubbleData} />
                 </>
             ) : (
                 <ErrorFeedback msg={data?.msg} />
@@ -194,4 +165,4 @@ const LineGraph = ({ setupId }) => {
     );
 };
 
-export default LineGraph;
+export default RadarChart;

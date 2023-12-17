@@ -28,7 +28,7 @@ const DocumentBar = () => {
         content = <></>;
     } else if (isSuccess) {
         content = orderedDocuments.map((doc, idx) => (
-            <Tooltip title={doc.name} placement="right-end">
+            <Tooltip title={doc.name} placement="right-end" key={idx}>
                 <DrawerItemButton
                     key={doc.id}
                     component={Link}

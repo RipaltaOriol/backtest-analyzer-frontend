@@ -14,15 +14,15 @@ import Risk from "./PPTTemplate/Risk";
 import SetupAndValues from "./PPTTemplate/SetupAndValues";
 import Technical from "./PPTTemplate/Technical";
 import "./Templates.css";
-import { useGetSetupRowQuery, usePutSetupRowMutation } from "./templatesSlice";
+import { useGetRowQuery, usePutRowMutation } from "./templatesSlice";
 
-const PPTTemplate = ({ setupId, rowId, open, onClose }) => {
-    const { data: row } = useGetSetupRowQuery(
-        { setupId, rowId },
-        { skip: !(setupId && rowId) }
+const PPTTemplate = ({ documentId, rowId, open, onClose }) => {
+    const { data: row } = useGetRowQuery(
+        { documentId, rowId },
+        { skip: !(documentId && rowId) }
     );
 
-    const [putSetupRow] = usePutSetupRowMutation();
+    const [putSetupRow] = usePutRowMutation();
     const [template, setTemplate] = useState(row);
 
     useEffect(() => {
@@ -44,7 +44,7 @@ const PPTTemplate = ({ setupId, rowId, open, onClose }) => {
 
     const handleSubmit = async () => {
         await putSetupRow({
-            setupId: row.document["$oid"], //TODO: this has to be changed
+            documentId,
             rowId: row.row_id,
             template,
         });
@@ -79,7 +79,7 @@ const PPTTemplate = ({ setupId, rowId, open, onClose }) => {
 
     return (
         <Box>
-            {row && (
+            {template && (
                 <Dialog
                     onClose={handleClose}
                     open={open}

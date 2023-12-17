@@ -19,11 +19,15 @@ import {
 
 const RESULT_SATES = ["Win", "Loss", "Break Even"];
 const REVIEW_SATES = ["Correct", "Incorrect", "Not Known"];
-const reviewOptions = REVIEW_SATES.map((state) => (
-    <CustomMenuItem value={state}>{state}</CustomMenuItem>
+const reviewOptions = REVIEW_SATES.map((state, idx) => (
+    <CustomMenuItem key={idx} value={state}>
+        {state}
+    </CustomMenuItem>
 ));
-const resultOptions = RESULT_SATES.map((state) => (
-    <CustomMenuItem value={state}>{state}</CustomMenuItem>
+const resultOptions = RESULT_SATES.map((state, idx) => (
+    <CustomMenuItem key={idx} value={state}>
+        {state}
+    </CustomMenuItem>
 ));
 const Close = ({ template, onChangeField }) => {
     const [endImage, setEndImage] = useState("");

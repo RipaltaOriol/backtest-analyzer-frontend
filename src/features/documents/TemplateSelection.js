@@ -163,6 +163,7 @@ const TemplateSelection = ({ open, handleCloseDialog, document }) => {
                 {data
                     ? data.templates.map(({ name, id }) => (
                           <DropdownMenuItem
+                              key={id}
                               onClick={() => handleChangeTempalte({ id, name })}
                           >
                               {name}
@@ -222,8 +223,9 @@ const TemplateSelection = ({ open, handleCloseDialog, document }) => {
                             }}
                         >
                             {Object.entries(templateFields.constants).map(
-                                ([field, id]) => (
+                                ([field, id], idx) => (
                                     <FormControlLabel
+                                        key={idx}
                                         control={<Switch />}
                                         label={parseColumnName(field)}
                                         checked={mappings[id]}
@@ -237,8 +239,9 @@ const TemplateSelection = ({ open, handleCloseDialog, document }) => {
                         </Box>
                         {templateFields &&
                             Object.entries(templateFields.variables).map(
-                                ([field, group]) => (
+                                ([field, group], idx) => (
                                     <Box
+                                        key={idx}
                                         sx={{
                                             display: "flex",
                                             my: 2,
@@ -323,12 +326,13 @@ const TemplateSelection = ({ open, handleCloseDialog, document }) => {
                 >
                     <Box>
                         <Button onClick={handleClose} variant="text">
-                            CANCEL
+                            Cancel
                         </Button>
                         <Button
                             color="inherit"
                             disabled={activeStep === 0}
                             onClick={handleBack}
+                            sx={{ textTransform: "none" }}
                         >
                             Back
                         </Button>
@@ -336,12 +340,16 @@ const TemplateSelection = ({ open, handleCloseDialog, document }) => {
 
                     <Box sx={{ flex: "1 1 auto" }} />
                     <Button onClick={handleNext} sx={{ mr: 1 }}>
-                        NEXT
+                        Next
                     </Button>
                     <Button
                         onClick={handleApplyTemplate}
                         variant="outlined"
-                        disabled={Object.keys(documentTemplate).length === 0}
+                        disabled={
+                            Object.keys(documentTemplate).length === 0 ||
+                            activeStep !== 2
+                        }
+                        sx={{ textTransform: "none" }}
                     >
                         Apply
                     </Button>

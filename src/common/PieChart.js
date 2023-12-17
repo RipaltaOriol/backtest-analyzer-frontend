@@ -6,7 +6,12 @@ import Typography from "@mui/material/Typography";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-const PieChart = ({ dataPieChart = [], title = true, success = true }) => {
+const PieChart = ({
+    dataPieChart = [],
+    title = true,
+    success = true,
+    position = "bottom",
+}) => {
     let data = {
         labels: [],
         datasets: [],
@@ -55,10 +60,11 @@ const PieChart = ({ dataPieChart = [], title = true, success = true }) => {
                                     labels: {
                                         usePointStyle: true,
                                     },
-                                    position: "bottom",
+                                    position,
                                 },
                             },
                             responsive: true,
+                            maintainAspectRatio: false,
                         }}
                     />
                 )}

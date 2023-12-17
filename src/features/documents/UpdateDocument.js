@@ -172,6 +172,12 @@ const UpdateDocument = () => {
         });
         setMsg(res.data.msg);
         setMsgStatus(res.data.success);
+
+        if (res.data.success) {
+            editor?.commands.setContent("");
+            setSelectedRow({});
+            setRowValues({});
+        }
     };
 
     const addNewImage = () => {
@@ -210,9 +216,8 @@ const UpdateDocument = () => {
         if (column.name !== "note" && column.name !== "imgs") {
             if (column.id.startsWith("col_d_")) {
                 return (
-                    <Grid item>
+                    <Grid item key={idx}>
                         <DateTimeField
-                            key={idx}
                             variant="outlined"
                             size="small"
                             value={
@@ -230,9 +235,8 @@ const UpdateDocument = () => {
                 );
             } else {
                 return (
-                    <Grid item>
+                    <Grid item key={idx}>
                         <TextField
-                            key={idx}
                             label={column.name}
                             type={column.type}
                             error={
@@ -281,7 +285,7 @@ const UpdateDocument = () => {
                 />
             )}
 
-            {/* Buttons to add go here */}
+            {/* buttons to add go here */}
             <UpdateBox
                 sx={{
                     mb: 3,

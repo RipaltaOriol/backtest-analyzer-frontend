@@ -125,6 +125,7 @@ const Day = ({ day, rowIdx, cellIdx, calendarData }) => {
                     </Box>
                     {trades?.map((trade) => (
                         <Box
+                            key={trade.index}
                             sx={{
                                 mx: 1.5,
                                 px: 1,

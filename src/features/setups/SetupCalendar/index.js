@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 
 import Box from "@mui/material/Box";
+import Skeleton from "@mui/material/Skeleton";
 
 import {
     deselectTrade,
@@ -36,7 +37,11 @@ const SetupCalendar = (props) => {
     const dateFormat = useSelector(selectDateFormat);
     const resultDisplay = useSelector(selectResultDisplay);
 
-    const { data: calendarData } = useGetCalendarTableQuery(
+    const {
+        data: calendarData,
+        isLoading,
+        isUninitialized,
+    } = useGetCalendarTableQuery(
         {
             setupId: setup?.id,
             date: dateFormat,
@@ -54,7 +59,13 @@ const SetupCalendar = (props) => {
             {...other}
         >
             {/* TODO: this might be best as a grid - but have to test widths */}
-            {calendarData?.success ? (
+            {isLoading || isUninitialized ? (
+                <Skeleton
+                    variant="rounded"
+                    className="setup-overview"
+                    height={200}
+                />
+            ) : calendarData?.success ? (
                 <Box className="calendar-tab" sx={{ mt: 3 }}>
                     <CalendarGrid calendarData={calendarData} />
 

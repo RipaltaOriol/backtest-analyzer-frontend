@@ -2,10 +2,10 @@ import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import Box from "@mui/material/Box";
 import Dialog from "@mui/material/Dialog";
 import IconButton from "@mui/material/IconButton";
+import LinearProgress from "@mui/material/LinearProgress";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 
-import Spinner from "../../../common/Spinner";
 import { useDeleteFilterSetupMutation } from "../setupsSlice";
 
 const FilterList = ({ setupId, filters }) => {
@@ -24,8 +24,9 @@ const FilterList = ({ setupId, filters }) => {
             <Box>
                 {filters && filters.length > 0 && (
                     <Stack direction="row" spacing={1} sx={{ mb: 2 }}>
-                        {filters.map((filter) => (
+                        {filters.map((filter, idx) => (
                             <Box
+                                key={idx}
                                 sx={{
                                     display: "flex",
                                     alignItems: "center",
@@ -52,7 +53,12 @@ const FilterList = ({ setupId, filters }) => {
                 )}
             </Box>
             <Dialog open={isLoading} fullWidth={true}>
-                <Spinner />
+                <Box sx={{ m: 2 }}>
+                    <Typography variant="body2" sx={{ mb: 2 }}>
+                        Removing filter from version. Please wait...
+                    </Typography>
+                    <LinearProgress color="info" />
+                </Box>
             </Dialog>
         </>
     );

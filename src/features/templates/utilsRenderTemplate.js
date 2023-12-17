@@ -3,7 +3,7 @@ import PPTTemplate from "features/templates/PPTTemplate";
 
 export const renderTemplate = (
     template,
-    setupId,
+    documentId,
     rowContents,
     open,
     setOpen
@@ -11,7 +11,7 @@ export const renderTemplate = (
     if (template === "PPT") {
         return (
             <PPTTemplate
-                setupId={setupId}
+                documentId={documentId}
                 rowId={rowContents.rowId}
                 open={open}
                 onClose={() => setOpen(false)}
@@ -22,7 +22,7 @@ export const renderTemplate = (
             <SingleRecordDialog
                 open={open}
                 onClose={() => setOpen(false)}
-                setupId={setupId}
+                documentId={documentId}
                 rowRecord={rowContents}
             />
         );

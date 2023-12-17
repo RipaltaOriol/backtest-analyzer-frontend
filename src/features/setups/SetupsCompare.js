@@ -228,14 +228,16 @@ const SetupsCompare = () => {
                                   </Table>
                                   <Box
                                       sx={{
-                                          maxWidth: "50%",
-                                          mx: "auto",
+                                          //   maxWidth: "50%",
+                                          //   mx: "auto",
                                           mt: 2,
+                                          mx: 2,
                                       }}
                                   >
                                       <PieChart
                                           dataPieChart={setup.breakdown}
                                           title={false}
+                                          position="left"
                                       />
                                   </Box>
                               </SetupItem>

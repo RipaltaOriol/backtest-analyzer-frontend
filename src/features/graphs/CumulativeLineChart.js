@@ -3,11 +3,16 @@ import { Line } from "react-chartjs-2";
 import parseColumnName from "utils/parseColumns";
 
 import Box from "@mui/material/Box";
+import Skeleton from "@mui/material/Skeleton";
 
 import { useGetCumulativeReturnQuery } from "features/graphs/graphsSlice";
 
 const CumulativeLineChart = ({ setupId }) => {
-    const { data: getCumulativeReturn } = useGetCumulativeReturnQuery(
+    const {
+        data: getCumulativeReturn,
+        isLoading,
+        isUninitialized,
+    } = useGetCumulativeReturnQuery(
         {
             setupId,
         },
@@ -47,7 +52,9 @@ const CumulativeLineChart = ({ setupId }) => {
 
     return (
         <Box>
-            {getCumulativeReturn?.success ? (
+            {isLoading || isUninitialized ? (
+                <Skeleton variant="rounded" height={60} />
+            ) : getCumulativeReturn?.success ? (
                 <Line options={options} data={data} />
             ) : (
                 <ErrorFeedback />

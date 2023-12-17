@@ -46,3 +46,12 @@ td {
     -khtml-user-select: none; /* webkit (konqueror) browsers */
     -ms-user-select: none; /* IE10+ */
 }
+
+.documentsBar {
+    overflow-y: scroll;
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none;
+}
+.documentsBar::-webkit-scrollbar {
+    display: none;
+}

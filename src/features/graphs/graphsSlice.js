@@ -32,6 +32,13 @@ export const graphsSlice = apiSlice.injectEndpoints({
             }),
             providesTags: ["CumulativeReturn"],
         }),
+        getBubble: builder.query({
+            query: ({ setupId, currentMetric }) => ({
+                url: `/setups/${setupId}/charts/bubble`,
+                method: "GET",
+            }),
+            providesTags: ["BubbleChart"],
+        }),
     }),
 });
 
@@ -40,4 +47,5 @@ export const {
     useGetDailyDistributionQuery,
     useGetNetReturnQuery,
     useGetCumulativeReturnQuery,
+    useGetBubbleQuery,
 } = graphsSlice;

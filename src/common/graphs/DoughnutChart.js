@@ -28,7 +28,7 @@ const DoughnutChart = ({ statsData }) => {
     if (statsData) {
         let dataSets = [];
 
-        for (const [key, value] of Object.entries(statsData)) {
+        for (const [key, value] of Object.entries(statsData?.data)) {
             dataSets.push({
                 label: key,
                 data: [value.wins, value.losses, value.breakEvens],
@@ -39,7 +39,7 @@ const DoughnutChart = ({ statsData }) => {
 
     return (
         <Box>
-            {Object.keys(statsData).length ? (
+            {Object.keys(statsData?.data).length ? (
                 <Doughnut data={data} options={options} />
             ) : (
                 <ErrorFeedback />

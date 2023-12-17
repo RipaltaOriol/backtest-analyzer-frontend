@@ -26,8 +26,10 @@ const getPairBaseNQuote = (pair, pos) => {
     else return "XXX";
 };
 
-const strengthOptions = CURRENCY_STATES.map((state) => (
-    <CustomMenuItem value={state}>{state}</CustomMenuItem>
+const strengthOptions = CURRENCY_STATES.map((state, idx) => (
+    <CustomMenuItem key={idx} value={state}>
+        {state}
+    </CustomMenuItem>
 ));
 
 const Fundamental = ({ template, onChangeField }) => {

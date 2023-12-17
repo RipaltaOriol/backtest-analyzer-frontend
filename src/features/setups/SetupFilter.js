@@ -166,7 +166,7 @@ const SetupFilter = ({ setup }) => {
                     value={values}
                     disabled={filterOptionIdx === -1}
                     renderValue={(values) => (
-                        <>
+                        <span>
                             <Typography
                                 display="inline-block"
                                 sx={{
@@ -185,13 +185,10 @@ const SetupFilter = ({ setup }) => {
                                     {value},&nbsp;
                                 </Typography>
                             ))}
-                        </>
+                        </span>
                     )}
                     onChange={handleValueChange}
                     label={null}
-                    MenuListProps={{
-                        select: { "&:focus": { borderColor: "red" } },
-                    }}
                     sx={{
                         my: 1,
                         "& legend": { display: "none" },
@@ -202,7 +199,6 @@ const SetupFilter = ({ setup }) => {
                             borderWidth: "1px",
                         },
                     }}
-                    InputLabelProps={{ shrink: false }}
                     IconComponent={(props) => (
                         <KeyboardArrowDownRoundedIcon {...props} />
                     )}
@@ -305,7 +301,6 @@ const SetupFilter = ({ setup }) => {
                             },
                         },
                     }}
-                    InputLabelProps={{ shrink: false }}
                     onChange={(e) => setNumber(e.target.value)}
                     InputProps={{
                         startAdornment: (
@@ -313,7 +308,7 @@ const SetupFilter = ({ setup }) => {
                                 <Typography
                                     display="inline-block"
                                     sx={{
-                                        minWidth: 60,
+                                        minWidth: 50,
                                         color: "#9AA6AC",
                                         fontSize: "14px",
                                     }}
@@ -375,7 +370,7 @@ const SetupFilter = ({ setup }) => {
                         size="small"
                         value={column}
                         renderValue={(value) => (
-                            <>
+                            <span>
                                 <Typography
                                     display="inline-block"
                                     sx={{
@@ -392,7 +387,7 @@ const SetupFilter = ({ setup }) => {
                                 >
                                     {value[1]}
                                 </Typography>
-                            </>
+                            </span>
                         )}
                         onChange={(e, child) => {
                             setColumn(e.target.value);
@@ -414,7 +409,6 @@ const SetupFilter = ({ setup }) => {
                                 borderWidth: "1px",
                             },
                         }}
-                        InputLabelProps={{ shrink: false }}
                         IconComponent={(props) => (
                             <KeyboardArrowDownRoundedIcon {...props} />
                         )}
@@ -438,7 +432,7 @@ const SetupFilter = ({ setup }) => {
                             value={action}
                             disabled={filterOptionIdx === -1}
                             renderValue={(value) => (
-                                <>
+                                <span>
                                     <Typography
                                         display="inline-block"
                                         sx={{
@@ -455,13 +449,10 @@ const SetupFilter = ({ setup }) => {
                                     >
                                         {value[1]}
                                     </Typography>
-                                </>
+                                </span>
                             )}
                             onChange={(e) => setAction(e.target.value)}
                             label={null}
-                            MenuListProps={{
-                                select: { "&:focus": { borderColor: "red" } },
-                            }}
                             sx={{
                                 my: 1,
                                 "& legend": { display: "none" },
@@ -473,45 +464,40 @@ const SetupFilter = ({ setup }) => {
                                         borderWidth: "1px",
                                     },
                             }}
-                            InputLabelProps={{ shrink: false }}
                             IconComponent={(props) => (
                                 <KeyboardArrowDownRoundedIcon {...props} />
                             )}
                         >
-                            {filterOptionIdx !== -1 ? (
-                                setup.options[filterOptionIdx].type ===
-                                "number" ? (
-                                    Object.keys(operations.numeric).map(
-                                        (item, idx) => (
-                                            <FilterMenuItem
-                                                key={idx}
-                                                value={[
-                                                    item,
-                                                    operations.numeric[item],
-                                                ]}
-                                            >
-                                                {operations.numeric[item]}
-                                            </FilterMenuItem>
-                                        )
-                                    )
-                                ) : (
-                                    Object.keys(operations.string).map(
-                                        (item, idx) => (
-                                            <FilterMenuItem
-                                                key={idx}
-                                                value={[
-                                                    item,
-                                                    operations.string[item],
-                                                ]}
-                                            >
-                                                {operations.string[item]}
-                                            </FilterMenuItem>
-                                        )
-                                    )
-                                )
-                            ) : (
-                                <></>
-                            )}
+                            {filterOptionIdx !== -1
+                                ? setup.options[filterOptionIdx].type ===
+                                  "number"
+                                    ? Object.keys(operations.numeric).map(
+                                          (item, idx) => (
+                                              <FilterMenuItem
+                                                  key={idx}
+                                                  value={[
+                                                      item,
+                                                      operations.numeric[item],
+                                                  ]}
+                                              >
+                                                  {operations.numeric[item]}
+                                              </FilterMenuItem>
+                                          )
+                                      )
+                                    : Object.keys(operations.string).map(
+                                          (item, idx) => (
+                                              <FilterMenuItem
+                                                  key={idx}
+                                                  value={[
+                                                      item,
+                                                      operations.string[item],
+                                                  ]}
+                                              >
+                                                  {operations.string[item]}
+                                              </FilterMenuItem>
+                                          )
+                                      )
+                                : null}
                         </Select>
                     )}
                     {/* FILTER VALUE OPTIONS */}

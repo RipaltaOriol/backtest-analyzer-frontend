@@ -71,12 +71,11 @@ let SetupView = ({ setup }) => {
             {/* popup to display a trade */}
             {renderTemplate(
                 setup?.template,
-                setup?.id,
+                setup?.documentId,
                 selectedRow,
                 open,
                 setOpen
             )}
-            <PPTTemplate />
         </Box>
     );
 };

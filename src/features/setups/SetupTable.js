@@ -5,6 +5,7 @@ import PolarChart from "common/graphs/PolarChart";
 import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
+import Skeleton from "@mui/material/Skeleton";
 import Typography from "@mui/material/Typography";
 
 import { useGetStatisticsQuery } from "features/statistics/statisticsApiSlice";
@@ -57,7 +58,11 @@ const SetupTable = (props) => {
                             <Typography variant="h6" gutterBottom>
                                 Profit Factor
                             </Typography>
-                            <PolarChart statsData={setupStatistics} />
+                            {setupStatistics?.success ? (
+                                <PolarChart statsData={setupStatistics} />
+                            ) : (
+                                <Skeleton variant="rounded" height={60} />
+                            )}
                         </Box>
                         <Box
                             className="setup-table-radar"
@@ -70,15 +75,23 @@ const SetupTable = (props) => {
                             <Typography variant="h6" gutterBottom>
                                 Win/Loss
                             </Typography>
-                            <DoghnutChart statsData={setupStatistics} />
+                            {setupStatistics?.success ? (
+                                <DoghnutChart statsData={setupStatistics} />
+                            ) : (
+                                <Skeleton variant="rounded" height={60} />
+                            )}
                         </Box>
                     </Box>
                     <Box className="setup-table">
-                        <StateTable
-                            setup={setup}
-                            // setOpen={setOpen}
-                            // setSelectedRow={setSelectedRow}
-                        />
+                        {setup?.id ? (
+                            <StateTable
+                                setup={setup}
+                                // setOpen={setOpen}
+                                // setSelectedRow={setSelectedRow}
+                            />
+                        ) : (
+                            <Skeleton variant="rounded" height={60} />
+                        )}
                     </Box>
                 </Box>
             )}

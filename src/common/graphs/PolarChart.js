@@ -46,7 +46,7 @@ const PolarChart = ({ statsData }) => {
         let maxValue = -Infinity;
         let minValue = Infinity;
 
-        for (const [key, value] of Object.entries(statsData)) {
+        for (const [key, value] of Object.entries(statsData?.data)) {
             dataValues.push(value.profit_factor);
             dataLabels.push(key);
             maxValue = Math.max(maxValue, value.profit_factor);
@@ -65,7 +65,7 @@ const PolarChart = ({ statsData }) => {
 
     return (
         <Box>
-            {Object.keys(statsData).length ? (
+            {Object.keys(statsData?.data).length ? (
                 <PolarArea data={data} options={options} />
             ) : (
                 <ErrorFeedback />

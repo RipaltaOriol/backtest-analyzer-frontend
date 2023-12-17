@@ -105,9 +105,9 @@ function isResultColumn(column) {
 function SingleRecordDialog({
     open,
     onClose,
-    setupId,
+    documentId,
     rowRecord,
-    isSetup = true,
+    // isSetup = true,
 }) {
     // TODO: change setupId to something like itemId
     const [imagePreview, setImagePreview] = useState(false);
@@ -133,28 +133,43 @@ function SingleRecordDialog({
 
     const handleSave = async () => {
         let res = null;
-        if (isSetup) {
-            res = await updateRowNoteSetup({
-                setupId,
-                rowId: rowRecord.rowId,
-                note: editor?.getHTML(),
-                images,
-                isSync,
-            });
-        } else {
-            let data = {
-                ...rowRecord,
-                note: editor?.getHTML(),
-                imgs: images,
-                rowId: rowRecord.index,
-            };
-            delete data["index"];
-            res = await updateDocument({
-                id: setupId,
-                method: "update",
-                data,
-            });
-        }
+        let data = {
+            ...rowRecord,
+            note: editor?.getHTML(),
+            imgs: images,
+            rowId: rowRecord.rowId, // NOTE: this has been changed from index to rowId. Be careful it it triggers more errors.
+        };
+
+        console.log(data);
+        console.log(rowRecord);
+        delete data["index"];
+        res = await updateDocument({
+            id: documentId,
+            method: "update",
+            data,
+        });
+        // if (isSetup) {
+        //     res = await updateRowNoteSetup({
+        //         setupId,
+        //         rowId: rowRecord.rowId,
+        //         note: editor?.getHTML(),
+        //         images,
+        //         isSync,
+        //     });
+        // } else {
+        //     let data = {
+        //         ...rowRecord,
+        //         note: editor?.getHTML(),
+        //         imgs: images,
+        //         rowId: rowRecord.index,
+        //     };
+        //     delete data["index"];
+        //     res = await updateDocument({
+        //         id: setupId,
+        //         method: "update",
+        //         data,
+        //     });
+        // }
 
         setMsg(res?.data.msg);
         setMsgStatus(res?.data.success);
@@ -216,7 +231,7 @@ function SingleRecordDialog({
                     >
                         Trade in {rowRecord["col_p"]?.toUpperCase() || ""}
                     </DialogTitle>
-                    {isSetup && (
+                    {/* {isSetup && (
                         <Tooltip
                             sx={{ maxWidth: 300 }}
                             title="Sync this changes with parent document"
@@ -233,7 +248,7 @@ function SingleRecordDialog({
                                 label="Sync"
                             />
                         </Tooltip>
-                    )}
+                    )} */}
                 </Box>
 
                 <DialogContent sx={{ p: 4, pt: msg ? 1 : 4 }}>
@@ -280,7 +295,10 @@ function SingleRecordDialog({
                                     {rowRecord &&
                                         Object.entries(rowRecord).map(
                                             ([key, value], idx) => {
-                                                if (isResultColumn(key)) {
+                                                if (
+                                                    isResultColumn(key) &&
+                                                    typeof value === "number"
+                                                ) {
                                                     return (
                                                         <FieldText key={idx}>
                                                             {parseColumnName(
@@ -311,7 +329,7 @@ function SingleRecordDialog({
                                         ([key, value], idx) => {
                                             if (isMetric(key)) {
                                                 return (
-                                                    <Grid item xs={6}>
+                                                    <Grid item xs={6} key={idx}>
                                                         {/* have this props in case a word is very large and cannot be wrapped */}
                                                         <FieldText
                                                             sx={{

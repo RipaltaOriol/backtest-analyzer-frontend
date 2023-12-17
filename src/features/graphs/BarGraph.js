@@ -16,6 +16,7 @@ import { useDispatch, useSelector } from "react-redux";
 import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
 import Box from "@mui/material/Box";
 import MenuItem from "@mui/material/MenuItem";
+import Skeleton from "@mui/material/Skeleton";
 import Typography from "@mui/material/Typography";
 import { styled } from "@mui/material/styles";
 
@@ -92,13 +93,16 @@ const BarGraph = ({ setupId }) => {
         datasets: [],
     };
 
-    const { data, isSuccess } = useGetGraphQuery({
-        setupId,
-        type: "bar",
-        currentMetric: currentMetric,
-    });
+    const { data, isLoading, isUninitialized } = useGetGraphQuery(
+        {
+            setupId,
+            type: "bar",
+            currentMetric: currentMetric,
+        },
+        { skip: !setupId }
+    );
 
-    if (isSuccess && data?.success) {
+    if (data?.success) {
         barData.labels = data?.dataLabels;
         let barDatasets = [];
         data?.data.forEach((dataset, idx) => {
@@ -113,9 +117,9 @@ const BarGraph = ({ setupId }) => {
 
     return (
         <Box>
-            {!data?.success && <ErrorFeedback msg={data?.msg} />}
-
-            {data?.success && (
+            {isLoading || isUninitialized ? (
+                <Skeleton variant="rounded" height={60} />
+            ) : data?.success ? (
                 <>
                     <CustomSelect
                         size="small"
@@ -149,10 +153,11 @@ const BarGraph = ({ setupId }) => {
                     <Typography variant="h6" component="span" gutterBottom>
                         by Result
                     </Typography>
+                    <Bar options={options} data={barData} />
                 </>
+            ) : (
+                <ErrorFeedback msg={data?.msg} />
             )}
-
-            {data?.success && <Bar options={options} data={barData} />}
         </Box>
     );
 };

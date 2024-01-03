@@ -39,6 +39,7 @@ let StateTable = ({ setup, setOpen, setSelectedRow }) => {
     const columnHelper = useMemo(() => createColumnHelper(), []);
 
     const reloadTable = useCallback(() => {
+        // NOTE: at this point it would be better to create a switch function and placed it in utils
         if (setup && setup.state && Object.keys(setup.state).length !== 0) {
             setColumns(
                 Object.keys(setup.state.fields).reduce((result, key) => {
@@ -56,6 +57,16 @@ let StateTable = ({ setup, setOpen, setSelectedRow }) => {
                                                   options
                                               )
                                             : info.getValue(),
+                                })
+                            );
+                        } else if (key.startsWith("col_p_")) {
+                            result.push(
+                                columnHelper.accessor(key, {
+                                    header: parseColumnName(key),
+                                    cell: (info) =>
+                                        Number(info.getValue() * 100).toFixed(
+                                            2
+                                        ) + "%",
                                 })
                             );
                         } else {

@@ -103,7 +103,8 @@ const Day = ({ day, rowIdx, cellIdx, calendarData }) => {
             {rowIdx === 0 && (
                 <Box sx={{ mb: 1 }}>
                     <Typography variant="caption">
-                        {day.format("dddd").toUpperCase()}
+                        {day.format("dddd")}
+                        {/* {day.format("dddd").toUpperCase()} */}
                     </Typography>
                 </Box>
             )}
@@ -141,7 +142,8 @@ const Day = ({ day, rowIdx, cellIdx, calendarData }) => {
                             onClick={() => openSingleTrade(trade)}
                         >
                             <Typography>
-                                {trade[PAIR_METRIC].toUpperCase()}
+                                FIX this
+                                {/* {trade[PAIR_METRIC].toUpperCase()} */}
                             </Typography>
                             <Typography>
                                 {trade[calendarData?.active_metric]}{" "}

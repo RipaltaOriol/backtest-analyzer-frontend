@@ -140,7 +140,12 @@ const Upload = memo(({ open, onClose }) => {
             fullWidth={true}
         >
             <DialogTitle sx={{ color: "inherit" }}>
-                <Typography align="center" variant="h5" sx={{ mt: 1 }}>
+                <Typography
+                    align="center"
+                    variant="h5"
+                    component="div"
+                    sx={{ mt: 1 }}
+                >
                     {fileSource === "mt4_api"
                         ? "Connect Meta Trader"
                         : "File Upload"}
@@ -286,7 +291,7 @@ const Upload = memo(({ open, onClose }) => {
                             />
                             <FormControlLabel
                                 value="mt4_api"
-                                control={<Radio size="small" />}
+                                control={<Radio size="small" disabled />}
                                 label="Connect MT4"
                             />
                         </RadioGroup>

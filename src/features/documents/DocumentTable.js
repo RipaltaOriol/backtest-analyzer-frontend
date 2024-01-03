@@ -57,6 +57,16 @@ let StateTable = ({ setup, setSelectedRow, setRowValues, updateEditor }) => {
                                             : info.getValue(),
                                 })
                             );
+                        } else if (key.startsWith("col_p_")) {
+                            result.push(
+                                columnHelper.accessor(key, {
+                                    header: parseColumnName(key),
+                                    cell: (info) =>
+                                        Number(info.getValue() * 100).toFixed(
+                                            2
+                                        ) + "%",
+                                })
+                            );
                         } else {
                             result.push(
                                 columnHelper.accessor(key, {

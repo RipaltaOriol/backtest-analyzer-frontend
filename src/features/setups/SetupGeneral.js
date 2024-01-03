@@ -2,7 +2,7 @@ import { CustomMenuItem } from "common/CustomComponents";
 import { ErrorFeedback } from "common/ErrorFeedback";
 import StateTable from "common/StateTable";
 import { useEffect, useState } from "react";
-import { getResultAdornment } from "utils";
+import { displayWinRate, parseDataValues } from "utils/displayUtils";
 import parseColumnName from "utils/parseColumns";
 
 import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
@@ -104,8 +104,10 @@ const SetupGeneral = (props) => {
                                     : "red"
                             }
                         >
-                            {setupStatistics?.data[resultMetric]?.total}
-                            {getResultAdornment(resultMetric)}
+                            {parseDataValues(
+                                resultMetric,
+                                setupStatistics?.data[resultMetric]?.total
+                            )}
                         </Typography>
                     </Box>
                     <Box align="center">
@@ -113,7 +115,9 @@ const SetupGeneral = (props) => {
                             Win %
                         </Typography>
                         <Typography variant="h3">
-                            {setupStatistics?.data[resultMetric]?.win_rate}
+                            {displayWinRate(
+                                setupStatistics?.data[resultMetric]?.win_rate
+                            )}
                         </Typography>
                     </Box>
                     <Box align="center">
@@ -129,8 +133,10 @@ const SetupGeneral = (props) => {
                                     : "red"
                             }
                         >
-                            {setupStatistics?.data[resultMetric]?.expectancy}
-                            {getResultAdornment(resultMetric)}
+                            {parseDataValues(
+                                resultMetric,
+                                setupStatistics?.data[resultMetric]?.expectancy
+                            )}
                         </Typography>
                     </Box>
                 </Box>

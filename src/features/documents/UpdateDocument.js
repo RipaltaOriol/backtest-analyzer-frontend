@@ -130,9 +130,11 @@ const UpdateDocument = () => {
 
     const handleChange = (key) => (event) => {
         let newValue = event.target.value;
-        if (event.target.type === "number") {
-            newValue = Number(newValue);
-        }
+        // NOTE: this is leading to some weird UX
+        // if (event.target.type === "number") {
+        //     console.log(newValue);
+        //     newValue = Number(newValue);
+        // }
 
         setRowValues({ ...rowValues, [key]: newValue });
     };
@@ -234,6 +236,7 @@ const UpdateDocument = () => {
                     </Grid>
                 );
             } else {
+                console.log(column.name, column.type);
                 return (
                     <Grid item key={idx}>
                         <TextField

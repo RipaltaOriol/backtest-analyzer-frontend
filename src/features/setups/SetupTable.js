@@ -1,6 +1,7 @@
 import StateTable from "common/StateTable";
 import DoghnutChart from "common/graphs/DoughnutChart";
 import PolarChart from "common/graphs/PolarChart";
+import { useState } from "react";
 
 import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
@@ -9,10 +10,12 @@ import Skeleton from "@mui/material/Skeleton";
 import Typography from "@mui/material/Typography";
 
 import { useGetStatisticsQuery } from "features/statistics/statisticsApiSlice";
+import { renderTemplate } from "features/templates/utilsRenderTemplate";
 
 const SetupTable = (props) => {
     const { children, value, setup, index, ...other } = props;
-
+    const [open, setOpen] = useState(false);
+    const [selectedRow, setSelectedRow] = useState({});
     const { data: setupStatistics } = useGetStatisticsQuery(
         {
             setupId: setup?.id,
@@ -86,14 +89,21 @@ const SetupTable = (props) => {
                         {setup?.id ? (
                             <StateTable
                                 setup={setup}
-                                // setOpen={setOpen}
-                                // setSelectedRow={setSelectedRow}
+                                setOpen={setOpen}
+                                setSelectedRow={setSelectedRow}
                             />
                         ) : (
                             <Skeleton variant="rounded" height={60} />
                         )}
                     </Box>
                 </Box>
+            )}
+            {renderTemplate(
+                setup?.template,
+                setup?.documentId,
+                selectedRow,
+                open,
+                setOpen
             )}
         </div>
     );

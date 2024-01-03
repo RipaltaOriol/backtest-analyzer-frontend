@@ -1,3 +1,4 @@
+import { parseStatsValues } from "utils/displayUtils";
 import parseColumnName from "utils/parseColumns";
 
 import Paper from "@mui/material/Paper";
@@ -33,32 +34,23 @@ const TablePaper = styled(Paper)({
 
 const HeaderCell = styled(TableCell)({
     borderLeft: "1px solid rgb(224, 224, 224)",
-    "&:first-child": {
+    "&:first-of-type": {
         border: "none",
     },
 });
 
 const RowCell = styled(TableCell)({
     borderLeft: "1px solid rgb(224, 224, 224)",
-    "&:first-child": {
+    "&:first-of-type": {
         border: "none",
     },
 });
 
 const MetricRow = styled(TableRow)({
-    "&:last-child ": {
+    "&:last-of-type ": {
         border: "none",
     },
 });
-
-// move this to utils & call it something like: add decorators
-const formatValue = (val, prop) => {
-    if (prop === "win_rate") {
-        return (val * 100).toString() + "%";
-    } else {
-        return val;
-    }
-};
 
 const SimpleTable = ({ statsData }) => {
     return (
@@ -67,8 +59,8 @@ const SimpleTable = ({ statsData }) => {
                 <TableHead>
                     <TableRow sx={{ fontSize: "14px" }}>
                         <HeaderCell>Metric</HeaderCell>
-                        {Object.keys(statsData?.data).map((col) => (
-                            <HeaderCell align="center">
+                        {Object.keys(statsData?.data).map((col, idx) => (
+                            <HeaderCell align="center" key={idx}>
                                 {parseColumnName(col)}
                             </HeaderCell>
                         ))}
@@ -98,7 +90,11 @@ const SimpleTable = ({ statsData }) => {
                                                 : "inherit",
                                     }}
                                 >
-                                    {formatValue(statsData?.data[col][prop])}
+                                    {parseStatsValues(
+                                        col,
+                                        prop,
+                                        statsData?.data[col][prop]
+                                    )}
                                 </RowCell>
                             ))}
                         </MetricRow>

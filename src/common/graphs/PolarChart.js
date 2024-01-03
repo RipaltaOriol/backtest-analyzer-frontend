@@ -8,6 +8,7 @@ import {
 import autocolors from "chartjs-plugin-autocolors";
 import { ErrorFeedback } from "common/ErrorFeedback";
 import { PolarArea } from "react-chartjs-2";
+import { parseColumnList } from "utils/displayUtils";
 
 import Box from "@mui/material/Box";
 
@@ -53,7 +54,7 @@ const PolarChart = ({ statsData }) => {
             minValue = Math.min(minValue, value.profit_factor);
         }
         data.datasets[0].data = dataValues;
-        data.labels = dataLabels;
+        data.labels = parseColumnList(dataLabels);
         options.scales.r = {
             min: minValue - 1,
             max: maxValue,

@@ -29,7 +29,7 @@ export const authApiSlice = apiSlice.injectEndpoints({
         }),
         // TODO: this should be relocated or included with auth
         getUserSettings: builder.query({
-            query: () => "/users",
+            query: () => "/users/details",
             providesTags: ["User"],
         }),
         addTemplateUserSettings: builder.mutation({

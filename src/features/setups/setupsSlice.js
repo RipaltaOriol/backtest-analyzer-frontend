@@ -26,17 +26,6 @@ export const setupsSlice = apiSlice.injectEndpoints({
                 method: "GET",
             }),
         }),
-        updateRowNoteSetup: builder.mutation({
-            query: ({ setupId, rowId, note, images, isSync }) => ({
-                url: `/setups/${setupId}/${rowId}`,
-                method: "POST",
-                body: { note, images, isSync },
-            }),
-            invalidatesTags: (result, error, arg) => [
-                { type: "Setup", id: arg.id },
-                "DocumentTable",
-            ],
-        }),
         addFilterSetup: builder.mutation({
             query: ({ setupId, filter }) => ({
                 url: `/setups/${setupId}/filters`,
@@ -112,7 +101,6 @@ export const {
     useAddSetupsMutation,
     useUpdateSetupsMutation,
     useDeleteSetupsMutation,
-    useUpdateRowNoteSetupMutation,
     useAddFilterSetupMutation,
     useGetCalendarTableQuery,
     useDeleteFilterSetupMutation,

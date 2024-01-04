@@ -69,7 +69,7 @@ export const documentsApiSlice = apiSlice.injectEndpoints({
                 method: "POST",
                 body: file,
             }),
-            invalidatesTags: [{ type: "Document", id: "LIST" }],
+            invalidatesTags: [{ type: "Document", id: "LIST" }, "Setup"],
         }),
         connectDcoument: builder.mutation({
             query: ({ account, password, server }) => ({

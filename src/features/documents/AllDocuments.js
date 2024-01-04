@@ -1,3 +1,4 @@
+import DeleteConfirmationDialog from "common/DeleteConfirmation";
 import Message from "common/Message";
 import Upload from "pages/upload";
 import { useState } from "react";
@@ -80,6 +81,8 @@ const DocumentSource = styled(Typography)({
 const AllDocuments = () => {
     let navigate = useNavigate();
     const [openDialog, setOpenDialog] = useState(false);
+    const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+
     const [openSelectTemplate, setOpenSelectTemplate] = useState(false);
     const [msg, setMsg] = useState("");
     const [isError, setIsError] = useState(false);
@@ -124,8 +127,7 @@ const AllDocuments = () => {
     };
 
     const handleDeleteClose = () => {
-        deleteDocument({ id: selectedDocument.id });
-        setSelectedDocument(null);
+        setOpenDeleteDialog(true);
         setAnchorEl(null);
     };
 
@@ -319,6 +321,17 @@ const AllDocuments = () => {
                 </Box>
             </Dialog>
             <Upload open={openUpload} onClose={handleUploadClose} />
+
+            <DeleteConfirmationDialog
+                open={openDeleteDialog}
+                onClose={() => setOpenDeleteDialog(false)}
+                onSubmit={() => {
+                    deleteDocument({ id: selectedDocument.id });
+                    setSelectedDocument(null);
+                }}
+                itemName={"document"}
+            />
+
             <Dialog open={openDialog} onClose={handleDialogClose}>
                 <DialogTitle sx={{ color: "inherit" }}>
                     <Typography variant="h5" sx={{ mt: 1 }}>

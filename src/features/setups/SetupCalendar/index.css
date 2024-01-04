@@ -92,3 +92,8 @@
     background-color: #ffe9cc;
     color: black;
 }
+
+.trade-missing {
+    background-color: #e5f6fd;
+    color: black;
+}

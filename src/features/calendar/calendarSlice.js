@@ -12,6 +12,7 @@ function dateToString(date) {
 const initialState = {
     currentDate: dayjs().toString(),
     selectedTrade: null,
+    isTradeSelected: false,
     dateFormat: null,
     resultDisplay: null,
 };
@@ -36,8 +37,10 @@ export const calendarSlice = createSlice({
         setSelectedTrade: (state, action) => {
             const { trade } = action.payload;
             state.selectedTrade = trade;
+            state.isTradeSelected = true;
         },
         deselectTrade: (state) => {
+            state.isTradeSelected = false;
             state.selectedTrade = null;
         },
         setDateFormat: (state, action) => {
@@ -66,6 +69,7 @@ export const selectCurrentDate = (state) =>
 export const selectMonthIndex = (state) =>
     stringToDate(state.calendar.currentDate).month();
 export const selectSelectedTrade = (state) => state.calendar.selectedTrade;
+export const isTradeSelected = (state) => state.calendar.isTradeSelected;
 export const selectDateFormat = (state) => state.calendar.dateFormat;
 export const selectResultDisplay = (state) => state.calendar.resultDisplay;
 

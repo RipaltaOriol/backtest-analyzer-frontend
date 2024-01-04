@@ -18,6 +18,10 @@ export const setupsSlice = apiSlice.injectEndpoints({
             providesTags: (result, error, arg) => [
                 { type: "Setup", id: "LIST" },
                 ...result.ids.map((id) => ({ type: "Setup", id })),
+                ...Object.values(result.entities).map((entity) => ({
+                    type: "Document",
+                    id: entity.documentId,
+                })),
             ],
         }),
         getSetup: builder.query({
@@ -38,6 +42,7 @@ export const setupsSlice = apiSlice.injectEndpoints({
                 "Graphs",
                 "Charts",
                 "CompareSetups",
+                "CalendarTable",
             ],
         }),
         deleteFilterSetup: builder.mutation({
@@ -51,6 +56,7 @@ export const setupsSlice = apiSlice.injectEndpoints({
                 "Graphs",
                 "Charts",
                 "CompareSetups",
+                "CalendarTable",
             ],
         }),
         addSetups: builder.mutation({

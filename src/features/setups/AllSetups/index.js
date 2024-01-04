@@ -1,3 +1,4 @@
+import DeleteConfirmationDialog from "common/DeleteConfirmation";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 
@@ -41,6 +42,7 @@ const DocumentItem = styled(Card)({
 
 const AllSetups = () => {
     const [openRenameDialog, setOpenRenameDialog] = useState(false);
+    const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
     const [openAddDialog, setOpenAddDialog] = useState(false);
     const [anchorEl, setAnchorEl] = useState(null);
     const [setupId, setSetupId] = useState(null);
@@ -63,7 +65,7 @@ const AllSetups = () => {
 
     const handleDelete = () => {
         setAnchorEl(null);
-        deleteSetups({ setupId });
+        setOpenDeleteDialog(true);
     };
 
     const handleRenameDialogClose = () => {
@@ -182,6 +184,12 @@ const AllSetups = () => {
                       ))
                     : null}
             </Box>
+            <DeleteConfirmationDialog
+                open={openDeleteDialog}
+                onClose={() => setOpenDeleteDialog(false)}
+                onSubmit={() => deleteSetups({ setupId })}
+                itemName={"setup"}
+            />
             <RenameSetupDialog
                 setupId={setupId}
                 openRenameDialog={openRenameDialog}

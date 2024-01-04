@@ -86,7 +86,7 @@ function isMetric(metric) {
 }
 
 function parseColumnValue(value, metric) {
-    if (metric.startsWith("col_d_")) {
+    if (metric.startsWith("col_d_") && value) {
         return value.replace(/T.*/, "").split("-").reverse().join("-");
     } else {
         return value;

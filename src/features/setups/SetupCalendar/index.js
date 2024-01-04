@@ -7,6 +7,7 @@ import Skeleton from "@mui/material/Skeleton";
 
 import {
     deselectTrade,
+    isTradeSelected,
     selectSelectedTrade,
 } from "features/calendar/calendarSlice";
 import {
@@ -17,8 +18,8 @@ import CalendarDrawer from "features/setups/SetupCalendar/CalendarDrawer";
 import CalendarGrid from "features/setups/SetupCalendar/CalendarGrid";
 import "features/setups/SetupCalendar/index.css";
 // import CalendarHeader from "features/setups/SetupCalendar/CalendarHeader"; TO REMOVE
-import SingleRecordDialog from "features/setups/SingleSetup/SingleRecordDialog";
 import { useGetCalendarTableQuery } from "features/setups/setupsSlice";
+import { renderTemplate } from "features/templates/utilsRenderTemplate";
 
 import "./index.css";
 
@@ -35,6 +36,7 @@ const SetupCalendar = (props) => {
     };
 
     const dateFormat = useSelector(selectDateFormat);
+    const isOpen = useSelector(isTradeSelected);
     const resultDisplay = useSelector(selectResultDisplay);
 
     const {
@@ -75,16 +77,16 @@ const SetupCalendar = (props) => {
                 <ErrorFeedback msg={calendarData?.msg} />
             )}
 
-            {/* Single Setup Dialog */}
-            {currentTrade && (
-                <SingleRecordDialog
-                    open={Boolean(currentTrade)}
-                    onClose={closeDialog}
-                    setupId={documentId}
-                    rowRecord={currentTrade}
-                    isSetup={false}
-                />
-            )}
+            {/* Single Setup */}
+            {/* TODO: cannot figure out why we need the `isOpen` */}
+            {isOpen &&
+                renderTemplate(
+                    setup?.template,
+                    documentId,
+                    currentTrade,
+                    isOpen,
+                    closeDialog
+                )}
         </Box>
     );
 };

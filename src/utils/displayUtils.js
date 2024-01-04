@@ -16,7 +16,7 @@ function parseDataValuesDecorator(column, value, decorator) {
     }
 }
 
-function parseStatsValues(column, metric, value) {
+function getResultDecorator(column) {
     let decorator = "";
     switch (true) {
         case column.startsWith("col_p_"):
@@ -31,6 +31,11 @@ function parseStatsValues(column, metric, value) {
         default:
             decorator = "";
     }
+    return decorator;
+}
+
+function parseStatsValues(column, metric, value) {
+    let decorator = getResultDecorator(column);
 
     switch (true) {
         case metric === "total":
@@ -102,6 +107,7 @@ export {
     parseColumnList,
     parseColumn,
     parseStatsValues,
+    getResultDecorator,
 };
 
 export default parseDataValues;

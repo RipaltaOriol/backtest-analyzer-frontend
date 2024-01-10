@@ -2,7 +2,6 @@ import ImagesCarousel from "common/ImageCarousel";
 import ImagePreviewDialog from "common/ImagePreviewDialog";
 import Message from "common/Message";
 import TipTapEditor, { useTextEditor } from "common/TipTapEditor";
-import dayjs from "dayjs";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
@@ -17,9 +16,13 @@ import InputAdornment from "@mui/material/InputAdornment";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { styled } from "@mui/system";
-import { DateTimeField } from "@mui/x-date-pickers/DateTimeField";
 
 import DocumentTable from "features/documents/DocumentTable";
+import {
+    updateDateInput,
+    updateNumberInput,
+    updateTextInput,
+} from "features/documents/UpdateDocumentHelper";
 import { selectDocumentById } from "features/documents/documentSlice";
 import {
     useGetDocumentColumnsQuery,
@@ -128,16 +131,14 @@ const UpdateDocument = () => {
         }
     }
 
-    const handleChange = (key) => (event) => {
-        let newValue = event.target.value;
-        // NOTE: this is leading to some weird UX
-        // if (event.target.type === "number") {
-        //     console.log(newValue);
-        //     newValue = Number(newValue);
-        // }
-
-        setRowValues({ ...rowValues, [key]: newValue });
-    };
+    const handleChange =
+        (key, type = "string") =>
+        (event) => {
+            let newValue = event.target.value;
+            if (type === "number" && newValue)
+                newValue = event.target.valueAsNumber;
+            setRowValues({ ...rowValues, [key]: newValue });
+        };
 
     const handleDateTimeChange = (key, newValue) => {
         try {
@@ -172,10 +173,11 @@ const UpdateDocument = () => {
             method,
             data: { ...rowValues, note: editor?.getHTML() },
         });
-        setMsg(res.data.msg);
-        setMsgStatus(res.data.success);
 
-        if (res.data.success) {
+        setMsgStatus(res.data?.success || false);
+        setMsg(res.data?.msg || "Something went wrong. Try again later.");
+
+        if (res.data?.success) {
             editor?.commands.setContent("");
             setSelectedRow({});
             setRowValues({});
@@ -203,6 +205,7 @@ const UpdateDocument = () => {
         });
     };
 
+    // TODO: probably I want a function here asbtractin some of this behaviour
     const checkDirectionValue = () => {
         let direction = rowValues.col_d;
         if (direction) {
@@ -214,54 +217,45 @@ const UpdateDocument = () => {
         return false;
     };
 
-    function updateDocumentTextField(column, idx) {
-        if (column.name !== "note" && column.name !== "imgs") {
-            if (column.id.startsWith("col_d_")) {
+    function generateDocumentInputs(column, idx) {
+        switch (true) {
+            case column.name === "note":
+                return null;
+            case column.name === "imgs":
+                return null;
+            case column.type === "number":
                 return (
                     <Grid item key={idx}>
-                        <DateTimeField
-                            variant="outlined"
-                            size="small"
-                            value={
-                                rowValues[column.id] == null
-                                    ? null
-                                    : dayjs(rowValues[column.id]) || null
-                            }
-                            onChange={(newValue) =>
-                                handleDateTimeChange(column.id, newValue)
-                            }
-                            label={column.name}
-                            step={0.5}
-                        />
+                        {updateNumberInput(
+                            column,
+                            rowValues?.[column.id],
+                            handleChange
+                        )}
                     </Grid>
                 );
-            } else {
-                console.log(column.name, column.type);
+            case column.type === "string":
                 return (
                     <Grid item key={idx}>
-                        <TextField
-                            label={column.name}
-                            type={column.type}
-                            error={
-                                column.id === "col_d"
-                                    ? checkDirectionValue()
-                                    : false
-                            }
-                            variant="outlined"
-                            value={
-                                rowValues?.[column.id] === 0
-                                    ? 0
-                                    : rowValues[column.id] || ""
-                            }
-                            onChange={handleChange(column.id)}
-                            size="small"
-                            step={0.5}
-                        />
+                        {updateTextInput(
+                            column,
+                            rowValues?.[column.id],
+                            handleChange
+                        )}
                     </Grid>
                 );
-            }
-        } else {
-            return null;
+            case column.id.startsWith("col_d_"):
+                return (
+                    <Grid item key={idx}>
+                        {updateDateInput(
+                            column,
+                            rowValues?.[column.id],
+                            handleDateTimeChange
+                        )}
+                    </Grid>
+                );
+
+            default:
+                return null;
         }
     }
 
@@ -314,12 +308,9 @@ const UpdateDocument = () => {
                             >
                                 {/* have one for ID which cannot be changed */}
                                 {data
-                                    ? data.map((column, idx) => {
-                                          return updateDocumentTextField(
-                                              column,
-                                              idx
-                                          );
-                                      })
+                                    ? data.map((column, idx) =>
+                                          generateDocumentInputs(column, idx)
+                                      )
                                     : null}
                             </Grid>
                         </Grid>

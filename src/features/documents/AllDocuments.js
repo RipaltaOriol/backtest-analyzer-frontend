@@ -272,7 +272,7 @@ const AllDocuments = () => {
                         to="/files/create"
                         sx={{ mr: 2 }}
                     >
-                        Creaete Manually
+                        Create Manually
                     </Button>
                     <Button
                         color="primary"

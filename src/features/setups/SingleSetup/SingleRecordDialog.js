@@ -129,8 +129,6 @@ function SingleRecordDialog({
             rowId: rowRecord.rowId, // NOTE: this has been changed from index to rowId. Be careful it it triggers more errors.
         };
 
-        console.log(data);
-        console.log(rowRecord);
         delete data["index"];
         res = await updateDocument({
             id: documentId,

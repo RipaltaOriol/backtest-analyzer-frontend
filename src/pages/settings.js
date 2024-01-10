@@ -36,7 +36,6 @@ function stringAvatar(name) {
 }
 
 const nameToPreview = (name) => {
-    console.log(name);
     if (name === "Default") {
         return defaultTemplateImg;
     } else if (name === "PPT") {
@@ -63,7 +62,6 @@ const Settings = () => {
     };
 
     const handlePreview = (isOpen, key) => {
-        console.log(key);
         setOpenPreview({ ...openPreview, [key]: isOpen });
     };
 

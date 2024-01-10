@@ -7,6 +7,7 @@ import {
     useReactTable,
 } from "@tanstack/react-table";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { displayPercent } from "utils/displayUtils";
 import parseColumnName from "utils/parseColumns";
 
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
@@ -49,14 +50,14 @@ let StateTable = ({ setup, setOpen, setSelectedRow }) => {
                                 columnHelper.accessor(key, {
                                     header: parseColumnName(key),
                                     cell: (info) =>
-                                        key.startsWith("col_d")
+                                        info.getValue()
                                             ? new Date(
                                                   info.getValue()
                                               ).toLocaleDateString(
                                                   "en-EN",
                                                   options
                                               )
-                                            : info.getValue(),
+                                            : null,
                                 })
                             );
                         } else if (key.startsWith("col_p_")) {
@@ -64,9 +65,7 @@ let StateTable = ({ setup, setOpen, setSelectedRow }) => {
                                 columnHelper.accessor(key, {
                                     header: parseColumnName(key),
                                     cell: (info) =>
-                                        Number(info.getValue() * 100).toFixed(
-                                            2
-                                        ) + "%",
+                                        displayPercent(info.getValue()),
                                 })
                             );
                         } else {

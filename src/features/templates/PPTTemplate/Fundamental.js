@@ -59,7 +59,7 @@ const Fundamental = ({ template, onChangeField }) => {
                         <Box flexGrow={1}>
                             <CustomSelect
                                 size="small"
-                                value={template?.direction}
+                                value={template?.direction ?? " "}
                                 onChange={(e) =>
                                     onChangeField("direction", e.target.value)
                                 }
@@ -88,7 +88,7 @@ const Fundamental = ({ template, onChangeField }) => {
                         <Box flexGrow={1}>
                             <CustomSelect
                                 size="small"
-                                value={template?.base_ppt}
+                                value={template?.base_ppt ?? " "}
                                 onChange={(e) =>
                                     onChangeField("base_ppt", e.target.value)
                                 }
@@ -104,7 +104,7 @@ const Fundamental = ({ template, onChangeField }) => {
                         <Box flexGrow={1}>
                             <CustomSelect
                                 size="small"
-                                value={template?.quote_ppt}
+                                value={template?.quote_ppt ?? " "}
                                 onChange={(e) =>
                                     onChangeField("quote_ppt", e.target.value)
                                 }
@@ -128,7 +128,7 @@ const Fundamental = ({ template, onChangeField }) => {
                         <Box flexGrow={1}>
                             <CustomSelect
                                 size="small"
-                                value={template?.base_fundamental}
+                                value={template?.base_fundamental ?? " "}
                                 onChange={(e) =>
                                     onChangeField(
                                         "base_fundamental",
@@ -147,7 +147,7 @@ const Fundamental = ({ template, onChangeField }) => {
                         <Box flexGrow={1}>
                             <CustomSelect
                                 size="small"
-                                value={template?.quote_fundamental}
+                                value={template?.quote_fundamental ?? " "}
                                 onChange={(e) =>
                                     onChangeField(
                                         "quote_fundamental",

@@ -18,7 +18,7 @@ import {
 } from "features/templates/templateCustomComponents";
 
 const RESULT_SATES = ["Win", "Loss", "Break Even"];
-const REVIEW_SATES = ["Correct", "Incorrect", "Not Known"];
+const REVIEW_SATES = ["Correct", "Incorrect", "Unknown"];
 const reviewOptions = REVIEW_SATES.map((state, idx) => (
     <CustomMenuItem key={idx} value={state}>
         {state}
@@ -48,7 +48,7 @@ const Close = ({ template, onChangeField }) => {
                     <CustomTextField
                         multiline
                         minRows={3}
-                        value={template?.target_area}
+                        value={template?.target_area || ""}
                         onChange={(e) =>
                             onChangeField("target_area", e.target.value)
                         }
@@ -68,6 +68,10 @@ const Close = ({ template, onChangeField }) => {
                 <CustomTextField
                     multiline
                     minRows={3}
+                    value={template?.close_reason || ""}
+                    onChange={(e) =>
+                        onChangeField("close_reason", e.target.value)
+                    }
                     sx={{
                         "& .MuiInputBase-multiline": { p: 1 },
                         "& textarea": { fontSize: 14 },
@@ -96,7 +100,7 @@ const Close = ({ template, onChangeField }) => {
                             size="small"
                             variant="outlined"
                             type="number"
-                            value={template?.return_percentage}
+                            value={template?.return_percentage || ""}
                             onChange={(e) =>
                                 onChangeField(
                                     "return_percentage",
@@ -113,7 +117,7 @@ const Close = ({ template, onChangeField }) => {
                             size="small"
                             variant="outlined"
                             type="number"
-                            value={template?.return_value}
+                            value={template?.return_value || ""}
                             onChange={(e) =>
                                 onChangeField("return_value", e.target.value)
                             }
@@ -125,7 +129,7 @@ const Close = ({ template, onChangeField }) => {
                         <Typography sx={{ mr: 2 }}>Direction</Typography>
                         <CustomSelect
                             size="small"
-                            value={template?.direction_result}
+                            value={template?.direction_result || ""}
                             onChange={(e) =>
                                 onChangeField(
                                     "direction_result",
@@ -200,6 +204,10 @@ const Close = ({ template, onChangeField }) => {
                 <CustomTextField
                     multiline
                     minRows={3}
+                    value={template?.post_trade_comment || ""}
+                    onChange={(e) =>
+                        onChangeField("post_trade_comment", e.target.value)
+                    }
                     sx={{
                         "& .MuiInputBase-multiline": { p: 1 },
                         "& textarea": { fontSize: 14 },

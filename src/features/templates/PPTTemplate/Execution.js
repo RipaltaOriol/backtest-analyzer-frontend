@@ -20,7 +20,7 @@ const Execution = ({ template, onChangeField }) => {
                     </Typography>
                     <CustomDateTimeField
                         format="L HH:mm"
-                        value={dayjs(template?.date_executed)}
+                        value={dayjs(template?.date_executed) || null}
                         onChange={(newValue) =>
                             onChangeField(
                                 "date_executed",

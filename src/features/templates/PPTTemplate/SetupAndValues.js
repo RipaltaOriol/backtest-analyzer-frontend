@@ -19,8 +19,10 @@ const ORDER_TYPES = [
     "Sell Stop",
 ];
 
-const orderOptions = ORDER_TYPES.map((state) => (
-    <CustomMenuItem value={state}>{state}</CustomMenuItem>
+const orderOptions = ORDER_TYPES.map((state, idx) => (
+    <CustomMenuItem key={idx} value={state}>
+        {state}
+    </CustomMenuItem>
 ));
 
 const SetupAndValues = ({ template, onChangeField, onChangeFieldArray }) => {
@@ -69,7 +71,7 @@ const SetupAndValues = ({ template, onChangeField, onChangeFieldArray }) => {
                     <Box>Risk Reward</Box>
                 </Box>
                 {template.positions.map((position, i) => (
-                    <Box className="position-grid">
+                    <Box className="position-grid" key={i}>
                         <Box>Entry Position {i + 1}</Box>
                         <Box>
                             <CustomSelect
@@ -167,7 +169,7 @@ const SetupAndValues = ({ template, onChangeField, onChangeFieldArray }) => {
                                 size="small"
                                 variant="outlined"
                                 type="number"
-                                value={template.stop_loss}
+                                value={template.stop_loss || ""}
                                 onChange={(e) =>
                                     onChangeField("stop_loss", e.target.value)
                                 }
@@ -177,7 +179,12 @@ const SetupAndValues = ({ template, onChangeField, onChangeFieldArray }) => {
                 </Box>
                 <Box>
                     {template?.take_profit.map((tp, i) => (
-                        <Box display="flex" alignItems="center" sx={{ mb: 1 }}>
+                        <Box
+                            display="flex"
+                            alignItems="center"
+                            sx={{ mb: 1 }}
+                            key={i}
+                        >
                             <Typography sx={{ mr: 2 }}>
                                 Take Profit {tp.take_profit_number + 1}
                             </Typography>

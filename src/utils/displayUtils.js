@@ -63,6 +63,10 @@ function displayWinRate(value) {
     return Number(value * 100).toFixed(2) + "%";
 }
 
+function displayPercent(value) {
+    return value ? Number(value * 100).toFixed(2) + "%" : null;
+}
+
 function parseColumn(column) {
     // TODO: simplify this using RegExp
     if (column === "index") {
@@ -104,6 +108,7 @@ function parseColumnList(columnList) {
 export {
     parseDataValues,
     displayWinRate,
+    displayPercent,
     parseColumnList,
     parseColumn,
     parseStatsValues,

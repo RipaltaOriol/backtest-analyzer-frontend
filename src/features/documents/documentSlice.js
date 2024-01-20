@@ -44,6 +44,7 @@ export const documentsApiSlice = apiSlice.injectEndpoints({
                 "DocumentTable",
                 "CalendarTable",
                 "Setup",
+                "SetupRow",
                 "Stats",
                 "Graphs",
                 "Charts",

@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 import { useDispatch, useSelector } from "react-redux";
-import { getResultAdornment } from "utils";
+import { getResultDecorator } from "utils/displayUtils";
 
 import { Typography } from "@mui/material";
 import Box from "@mui/material/Box";
@@ -61,12 +61,15 @@ const Day = ({ day, rowIdx, cellIdx, calendarData }) => {
     }
 
     function getTradeClass(tradeResult) {
+        tradeResult = parseInt(tradeResult);
         if (tradeResult > 0) {
             return "trade-win";
         } else if (tradeResult < 0) {
             return "trade-loss";
-        } else {
+        } else if (tradeResult === 0) {
             return "trade-be";
+        } else {
+            return "trade-missing";
         }
     }
 
@@ -103,7 +106,8 @@ const Day = ({ day, rowIdx, cellIdx, calendarData }) => {
             {rowIdx === 0 && (
                 <Box sx={{ mb: 1 }}>
                     <Typography variant="caption">
-                        {day.format("dddd").toUpperCase()}
+                        {day.format("dddd")}
+                        {/* {day.format("dddd").toUpperCase()} */}
                     </Typography>
                 </Box>
             )}
@@ -123,8 +127,9 @@ const Day = ({ day, rowIdx, cellIdx, calendarData }) => {
                             {day.format("DD")}
                         </Typography>
                     </Box>
-                    {trades?.map((trade) => (
+                    {trades?.map((trade, idx) => (
                         <Box
+                            key={idx}
                             sx={{
                                 mx: 1.5,
                                 px: 1,
@@ -140,11 +145,12 @@ const Day = ({ day, rowIdx, cellIdx, calendarData }) => {
                             onClick={() => openSingleTrade(trade)}
                         >
                             <Typography>
-                                {trade[PAIR_METRIC].toUpperCase()}
+                                {trade[PAIR_METRIC] &&
+                                    trade[PAIR_METRIC].toUpperCase()}
                             </Typography>
                             <Typography>
-                                {trade[calendarData?.active_metric]}{" "}
-                                {getResultAdornment(
+                                {trade[calendarData?.active_metric]}
+                                {getResultDecorator(
                                     calendarData?.active_metric
                                 )}
                             </Typography>

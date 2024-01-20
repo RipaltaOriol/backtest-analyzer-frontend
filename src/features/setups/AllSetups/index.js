@@ -1,3 +1,4 @@
+import DeleteConfirmationDialog from "common/DeleteConfirmation";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 
@@ -41,6 +42,7 @@ const DocumentItem = styled(Card)({
 
 const AllSetups = () => {
     const [openRenameDialog, setOpenRenameDialog] = useState(false);
+    const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
     const [openAddDialog, setOpenAddDialog] = useState(false);
     const [anchorEl, setAnchorEl] = useState(null);
     const [setupId, setSetupId] = useState(null);
@@ -63,7 +65,7 @@ const AllSetups = () => {
 
     const handleDelete = () => {
         setAnchorEl(null);
-        deleteSetups({ setupId });
+        setOpenDeleteDialog(true);
     };
 
     const handleRenameDialogClose = () => {
@@ -89,9 +91,10 @@ const AllSetups = () => {
         return (
             <DocumentGrid container sx={{ mb: 3 }}>
                 {setups
-                    ? setups.map((setup) => (
+                    ? setups.map((setup, id) => (
                           <Grid
                               item
+                              key={id}
                               xs={6}
                               lg={4}
                               xl={3}
@@ -170,8 +173,8 @@ const AllSetups = () => {
             <Divider sx={{ mt: 2, mb: 4 }} />
             <Box sx={{ flexGrow: 1 }}>
                 {orderedDocuments
-                    ? orderedDocuments.map((doc) => (
-                          <Box>
+                    ? orderedDocuments.map((doc, id) => (
+                          <Box key={id}>
                               <Box sx={{ mb: 1 }}>
                                   <Typography variant="caption">
                                       {doc.name}
@@ -182,6 +185,12 @@ const AllSetups = () => {
                       ))
                     : null}
             </Box>
+            <DeleteConfirmationDialog
+                open={openDeleteDialog}
+                onClose={() => setOpenDeleteDialog(false)}
+                onSubmit={() => deleteSetups({ setupId })}
+                itemName={"setup"}
+            />
             <RenameSetupDialog
                 setupId={setupId}
                 openRenameDialog={openRenameDialog}

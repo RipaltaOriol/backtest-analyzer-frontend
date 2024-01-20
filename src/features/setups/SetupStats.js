@@ -1,12 +1,9 @@
-import StateTable from "common/StateTable";
 import BarChart from "common/graphs/BarChart";
+import RadarChart from "common/graphs/BubbleChart";
 import HorizontalBarChart from "common/graphs/HorizontalBarChart";
-import RadarChart from "common/graphs/RadarChart";
 
-import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
-import Divider from "@mui/material/Divider";
-import LinearProgress from "@mui/material/LinearProgress";
+import Skeleton from "@mui/material/Skeleton";
 import Typography from "@mui/material/Typography";
 
 import CumulativeLineChart from "features/graphs/CumulativeLineChart";
@@ -21,13 +18,21 @@ import ScatterGraph from "../graphs/ScatterGraph";
 const SetupStats = (props) => {
     const { children, value, setup, index, ...other } = props;
 
-    const { data: setupStatistics } = useGetStatisticsQuery(
+    const {
+        data: setupStatistics,
+        isLoading: statsLoading,
+        isUninitialized: statsMissing,
+    } = useGetStatisticsQuery(
         {
             setupId: setup?.id,
         },
         { skip: !setup?.id }
     );
-    const { data: dailyDistribution } = useGetDailyDistributionQuery(
+    const {
+        data: dailyDistribution,
+        isLoading,
+        isUninitialized,
+    } = useGetDailyDistributionQuery(
         {
             setupId: setup?.id,
         },
@@ -68,7 +73,11 @@ const SetupStats = (props) => {
                         <Typography variant="h6" gutterBottom>
                             Win Rate
                         </Typography>
-                        <HorizontalBarChart statsData={setupStatistics} />
+                        {statsLoading || statsMissing ? (
+                            <Skeleton variant="rounded" height={60} />
+                        ) : (
+                            <HorizontalBarChart statsData={setupStatistics} />
+                        )}
                     </Box>
                     <Box
                         className="stats-net"
@@ -91,10 +100,7 @@ const SetupStats = (props) => {
                             p: 3,
                         }}
                     >
-                        <Typography variant="h6" gutterBottom>
-                            Performance Radar - TO BE BUILD
-                        </Typography>
-                        <RadarChart statsData={setupStatistics} />
+                        <RadarChart setupId={setup?.id} />
                     </Box>
                     <Box
                         className="stats-metric"
@@ -104,7 +110,7 @@ const SetupStats = (props) => {
                             p: 3,
                         }}
                     >
-                        {setup?.id && <BarGraph setupId={setup?.id} />}
+                        <BarGraph setupId={setup?.id} />
                     </Box>
                     <Box
                         className="stats-scatter"
@@ -114,7 +120,7 @@ const SetupStats = (props) => {
                             p: 3,
                         }}
                     >
-                        {setup?.id && <ScatterGraph setupId={setup?.id} />}
+                        <ScatterGraph setupId={setup?.id} />
                     </Box>
                     <Box
                         className="stats-daily-dist"
@@ -127,7 +133,11 @@ const SetupStats = (props) => {
                         <Typography variant="h6" gutterBottom>
                             Daily Distribution
                         </Typography>
-                        <BarChart chartData={dailyDistribution} />
+                        {isLoading || isUninitialized ? (
+                            <Skeleton variant="rounded" height={60} />
+                        ) : (
+                            <BarChart chartData={dailyDistribution} />
+                        )}
                     </Box>
                     <Box
                         className="stats-table"
@@ -140,7 +150,11 @@ const SetupStats = (props) => {
                         <Typography variant="h6" gutterBottom>
                             Stats Table
                         </Typography>
-                        <SimpleTable statsData={setupStatistics} />
+                        {statsLoading || statsMissing ? (
+                            <Skeleton variant="rounded" height={60} />
+                        ) : (
+                            <SimpleTable statsData={setupStatistics} />
+                        )}
                     </Box>
                 </Box>
             )}

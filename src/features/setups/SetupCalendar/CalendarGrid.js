@@ -25,6 +25,7 @@ const CalendarGrid = ({ calendarData }) => {
                     {row.map((day, cellIdx) => (
                         <Day
                             day={day}
+                            key={cellIdx}
                             rowIdx={rowIdx}
                             cellIdx={cellIdx}
                             calendarData={calendarData}

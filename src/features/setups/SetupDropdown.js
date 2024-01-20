@@ -76,6 +76,7 @@ let SetupDropdown = ({ defaultSetup, setups, changeSetup }) => {
             >
                 {setups.map((setup) => (
                     <SetupMenuItem
+                        key={setup.id}
                         onClick={() => {
                             handleClose();
                             handleChangeSetup(setup.id);

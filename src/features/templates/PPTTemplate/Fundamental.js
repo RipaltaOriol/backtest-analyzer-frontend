@@ -15,7 +15,7 @@ const CURRENCY_STATES = [
     "Weak Bullish",
     "Neutral",
     "Weak Bearish",
-    "Strong Bullish",
+    "Strong Bearish",
 ];
 
 const getPairBaseNQuote = (pair, pos) => {
@@ -26,8 +26,10 @@ const getPairBaseNQuote = (pair, pos) => {
     else return "XXX";
 };
 
-const strengthOptions = CURRENCY_STATES.map((state) => (
-    <CustomMenuItem value={state}>{state}</CustomMenuItem>
+const strengthOptions = CURRENCY_STATES.map((state, idx) => (
+    <CustomMenuItem key={idx} value={state}>
+        {state}
+    </CustomMenuItem>
 ));
 
 const Fundamental = ({ template, onChangeField }) => {
@@ -57,15 +59,15 @@ const Fundamental = ({ template, onChangeField }) => {
                         <Box flexGrow={1}>
                             <CustomSelect
                                 size="small"
-                                value={template?.direction}
+                                value={template?.direction ?? " "}
                                 onChange={(e) =>
                                     onChangeField("direction", e.target.value)
                                 }
                             >
-                                <CustomMenuItem value={"long"}>
+                                <CustomMenuItem value={"Long"}>
                                     Long
                                 </CustomMenuItem>
-                                <CustomMenuItem value={"short"}>
+                                <CustomMenuItem value={"Short"}>
                                     Short
                                 </CustomMenuItem>
                             </CustomSelect>
@@ -86,7 +88,7 @@ const Fundamental = ({ template, onChangeField }) => {
                         <Box flexGrow={1}>
                             <CustomSelect
                                 size="small"
-                                value={template?.base_ppt}
+                                value={template?.base_ppt ?? " "}
                                 onChange={(e) =>
                                     onChangeField("base_ppt", e.target.value)
                                 }
@@ -102,7 +104,7 @@ const Fundamental = ({ template, onChangeField }) => {
                         <Box flexGrow={1}>
                             <CustomSelect
                                 size="small"
-                                value={template?.quote_ppt}
+                                value={template?.quote_ppt ?? " "}
                                 onChange={(e) =>
                                     onChangeField("quote_ppt", e.target.value)
                                 }
@@ -126,7 +128,7 @@ const Fundamental = ({ template, onChangeField }) => {
                         <Box flexGrow={1}>
                             <CustomSelect
                                 size="small"
-                                value={template?.base_fundamental}
+                                value={template?.base_fundamental ?? " "}
                                 onChange={(e) =>
                                     onChangeField(
                                         "base_fundamental",
@@ -145,7 +147,7 @@ const Fundamental = ({ template, onChangeField }) => {
                         <Box flexGrow={1}>
                             <CustomSelect
                                 size="small"
-                                value={template?.quote_fundamental}
+                                value={template?.quote_fundamental ?? " "}
                                 onChange={(e) =>
                                     onChangeField(
                                         "quote_fundamental",

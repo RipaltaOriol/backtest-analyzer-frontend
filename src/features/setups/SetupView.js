@@ -9,7 +9,6 @@ import SetupCalendar from "features/setups/SetupCalendar";
 import SetupGeneral from "features/setups/SetupGeneral";
 import SetupStats from "features/setups/SetupStats";
 import SetupTable from "features/setups/SetupTable";
-import PPTTemplate from "features/templates/PPTTemplate";
 import { renderTemplate } from "features/templates/utilsRenderTemplate";
 
 import "./Setups.css";
@@ -71,12 +70,11 @@ let SetupView = ({ setup }) => {
             {/* popup to display a trade */}
             {renderTemplate(
                 setup?.template,
-                setup?.id,
+                setup?.documentId,
                 selectedRow,
                 open,
                 setOpen
             )}
-            <PPTTemplate />
         </Box>
     );
 };

@@ -61,10 +61,10 @@ const HorizontalBarChart = ({ statsData }) => {
         },
     };
 
-    if (statsData) {
+    if (statsData?.success) {
         let dataValues = [];
         let dataLabels = [];
-        for (const [key, value] of Object.entries(statsData)) {
+        for (const [key, value] of Object.entries(statsData?.data)) {
             dataValues.push(value.win_rate);
             dataLabels.push(parseColumnName(key));
         }
@@ -74,7 +74,7 @@ const HorizontalBarChart = ({ statsData }) => {
 
     return (
         <Box>
-            {Object.keys(statsData).length ? (
+            {statsData?.success ? (
                 <Bar data={data} options={options} />
             ) : (
                 <ErrorFeedback />

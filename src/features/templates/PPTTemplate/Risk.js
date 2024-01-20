@@ -15,7 +15,7 @@ const Risk = ({ template, onChangeField, onChangeFieldArray }) => {
         let week = [...template.event_risk_date];
 
         week.push({
-            position_number: week.length,
+            // position_number: week.length, // IT LOOKS LIKE THIS IS NOT NEEDED AND WRONG
             event_date: dayjs().toISOString(),
             monday: "",
             tuesday: "",
@@ -40,7 +40,7 @@ const Risk = ({ template, onChangeField, onChangeFieldArray }) => {
                 <CustomTextField
                     multiline
                     minRows={3}
-                    value={template?.fundamental_risk}
+                    value={template?.fundamental_risk || ""}
                     onChange={(e) =>
                         onChangeField("fundamental_risk", e.target.value)
                     }
@@ -59,7 +59,7 @@ const Risk = ({ template, onChangeField, onChangeFieldArray }) => {
                 <CustomTextField
                     multiline
                     minRows={3}
-                    value={template?.event_opportunity}
+                    value={template?.event_opportunity || ""}
                     onChange={(e) =>
                         onChangeField("event_opportunity", e.target.value)
                     }
@@ -87,6 +87,7 @@ const Risk = ({ template, onChangeField, onChangeFieldArray }) => {
                     </Box>
                     {template.event_risk_date.map((event, i) => (
                         <Box
+                            key={i}
                             className="position-grid"
                             sx={{ alignItems: "start" }}
                         >

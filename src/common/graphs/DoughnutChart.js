@@ -2,6 +2,7 @@ import { ArcElement, Chart as ChartJS, Legend, Tooltip } from "chart.js";
 import autocolors from "chartjs-plugin-autocolors";
 import { ErrorFeedback } from "common/ErrorFeedback";
 import { Doughnut } from "react-chartjs-2";
+import { parseColumn } from "utils/displayUtils";
 
 import Box from "@mui/material/Box";
 
@@ -28,9 +29,9 @@ const DoughnutChart = ({ statsData }) => {
     if (statsData) {
         let dataSets = [];
 
-        for (const [key, value] of Object.entries(statsData)) {
+        for (const [key, value] of Object.entries(statsData?.data)) {
             dataSets.push({
-                label: key,
+                label: parseColumn(key),
                 data: [value.wins, value.losses, value.breakEvens],
             });
         }
@@ -39,7 +40,7 @@ const DoughnutChart = ({ statsData }) => {
 
     return (
         <Box>
-            {Object.keys(statsData).length ? (
+            {Object.keys(statsData?.data).length ? (
                 <Doughnut data={data} options={options} />
             ) : (
                 <ErrorFeedback />

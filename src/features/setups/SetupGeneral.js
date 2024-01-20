@@ -2,15 +2,15 @@ import { CustomMenuItem } from "common/CustomComponents";
 import { ErrorFeedback } from "common/ErrorFeedback";
 import StateTable from "common/StateTable";
 import { useEffect, useState } from "react";
-import { getResultAdornment } from "utils";
+import { displayWinRate, parseDataValues } from "utils/displayUtils";
 import parseColumnName from "utils/parseColumns";
 
 import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
 import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
-import CircularProgress from "@mui/material/CircularProgress";
 import Divider from "@mui/material/Divider";
 import Select from "@mui/material/Select";
+import Skeleton from "@mui/material/Skeleton";
 import Typography from "@mui/material/Typography";
 
 import { useGetStatisticsQuery } from "features/statistics/statisticsApiSlice";
@@ -27,7 +27,7 @@ const SetupGeneral = (props) => {
     const {
         data: setupStatistics,
         isLoading,
-        isFetching,
+        isUninitialized,
     } = useGetStatisticsQuery(
         {
             setupId: setup?.id,
@@ -36,7 +36,8 @@ const SetupGeneral = (props) => {
     );
 
     useEffect(() => {
-        if (setupStatistics) setResultMetric(Object.keys(setupStatistics)[0]);
+        if (setupStatistics?.success)
+            setResultMetric(Object.keys(setupStatistics?.data)[0]);
     }, [setupStatistics]);
 
     const statisticsPanel = () => {
@@ -67,11 +68,13 @@ const SetupGeneral = (props) => {
                             },
                         }}
                     >
-                        {Object.keys(setupStatistics).map((column) => (
-                            <CustomMenuItem value={column}>
-                                {parseColumnName(column)}
-                            </CustomMenuItem>
-                        ))}
+                        {Object.keys(setupStatistics?.data).map(
+                            (column, idx) => (
+                                <CustomMenuItem value={column} key={idx}>
+                                    {parseColumnName(column)}
+                                </CustomMenuItem>
+                            )
+                        )}
                     </Select>
                 </Box>
                 <Box
@@ -86,7 +89,7 @@ const SetupGeneral = (props) => {
                             Total Trades
                         </Typography>
                         <Typography variant="h3">
-                            {setupStatistics[resultMetric]?.count}
+                            {setupStatistics?.data[resultMetric]?.count}
                         </Typography>
                     </Box>
                     <Box align="center">
@@ -96,13 +99,15 @@ const SetupGeneral = (props) => {
                         <Typography
                             variant="h3"
                             color={
-                                setupStatistics[resultMetric]?.total >= 0
+                                setupStatistics?.data[resultMetric]?.total >= 0
                                     ? "green"
                                     : "red"
                             }
                         >
-                            {setupStatistics[resultMetric]?.total}
-                            {getResultAdornment(resultMetric)}
+                            {parseDataValues(
+                                resultMetric,
+                                setupStatistics?.data[resultMetric]?.total
+                            )}
                         </Typography>
                     </Box>
                     <Box align="center">
@@ -110,7 +115,9 @@ const SetupGeneral = (props) => {
                             Win %
                         </Typography>
                         <Typography variant="h3">
-                            {setupStatistics[resultMetric]?.win_rate}
+                            {displayWinRate(
+                                setupStatistics?.data[resultMetric]?.win_rate
+                            )}
                         </Typography>
                     </Box>
                     <Box align="center">
@@ -120,13 +127,16 @@ const SetupGeneral = (props) => {
                         <Typography
                             variant="h3"
                             color={
-                                setupStatistics[resultMetric]?.expectancy >= 0
+                                setupStatistics?.data[resultMetric]
+                                    ?.expectancy >= 0
                                     ? "green"
                                     : "red"
                             }
                         >
-                            {setupStatistics[resultMetric]?.expectancy}
-                            {getResultAdornment(resultMetric)}
+                            {parseDataValues(
+                                resultMetric,
+                                setupStatistics?.data[resultMetric]?.expectancy
+                            )}
                         </Typography>
                     </Box>
                 </Box>
@@ -135,16 +145,16 @@ const SetupGeneral = (props) => {
     };
 
     return (
-        <div
-            role="tabpanel"
-            hidden={value !== index}
-            // id={`simple-tabpanel-${index}`}
-            // aria-labelledby={`simple-tab-${index}`}
-            {...other}
-        >
+        <div role="tabpanel" hidden={value !== index} {...other}>
             {value === index && (
                 <Box className="setup-general">
-                    {setupStatistics && (
+                    {isLoading || isUninitialized ? (
+                        <Skeleton
+                            variant="rounded"
+                            className="setup-overview"
+                            height={60}
+                        />
+                    ) : (
                         <Box
                             className="setup-overview"
                             sx={{
@@ -154,9 +164,7 @@ const SetupGeneral = (props) => {
                                 py: 3,
                             }}
                         >
-                            {isLoading || isFetching ? (
-                                <CircularProgress />
-                            ) : Object.keys(setupStatistics).length ? (
+                            {setupStatistics?.success ? (
                                 statisticsPanel()
                             ) : (
                                 <ErrorFeedback />
@@ -185,23 +193,27 @@ const SetupGeneral = (props) => {
                         className="setup-notes"
                     />
                     <Box className="setup-pnl">
-                        {setup?.id && <LineGraph setupId={setup?.id} />}
+                        <LineGraph setupId={setup?.id} />
                     </Box>
                     <Box className="setup-table">
-                        <StateTable
-                            setup={setup}
-                            setOpen={setOpen}
-                            setSelectedRow={setSelectedRow}
-                        />
+                        {setup?.id ? (
+                            <StateTable // avoid re-rendering this component. Only load if setup.id is provided.
+                                setup={setup}
+                                setOpen={setOpen}
+                                setSelectedRow={setSelectedRow}
+                            />
+                        ) : (
+                            <Skeleton variant="rounded" height={60} />
+                        )}
                     </Box>
-                    {renderTemplate(
-                        setup?.template,
-                        setup?.id,
-                        selectedRow,
-                        open,
-                        setOpen
-                    )}
                 </Box>
+            )}
+            {renderTemplate(
+                setup?.template,
+                setup?.documentId,
+                selectedRow,
+                open,
+                setOpen
             )}
         </div>
     );

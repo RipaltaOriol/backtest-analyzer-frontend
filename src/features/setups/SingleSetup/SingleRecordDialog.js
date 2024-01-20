@@ -1,11 +1,10 @@
-// import DialogTitle from "@mui/material/DialogTitle";
 import ImagesCarousel from "common/ImageCarousel";
 import ImagePreviewDialog from "common/ImagePreviewDialog";
 import Message from "common/Message";
 import TipTapEditor, { useTextEditor } from "common/TipTapEditor";
 import { EditorView } from "prosemirror-view";
 import { useEffect, useState } from "react";
-import { getResultAdornment } from "utils";
+import parseDataValues from "utils/displayUtils";
 import parseColumnName from "utils/parseColumns";
 
 import CloudUploadOutlinedIcon from "@mui/icons-material/CloudUploadOutlined";
@@ -14,17 +13,13 @@ import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-import FormControlLabel from "@mui/material/FormControlLabel";
 import Grid from "@mui/material/Grid";
 import InputAdornment from "@mui/material/InputAdornment";
-import Switch from "@mui/material/Switch";
 import TextField from "@mui/material/TextField";
-import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { styled } from "@mui/system";
 
 import { useUpdateDocumentMutation } from "features/documents/documentSlice";
-import { useUpdateRowNoteSetupMutation } from "features/setups/setupsSlice";
 
 const FieldText = styled(Typography)({
     color: "#6E7C87",
@@ -78,7 +73,7 @@ const LighTextField = styled(TextField)({
 // this should be improved
 function isMetric(metric) {
     if (
-        metric === ".d" ||
+        isResultColumn(metric) ||
         metric === "tableData" ||
         metric === "note" ||
         metric === "imgs" ||
@@ -91,7 +86,7 @@ function isMetric(metric) {
 }
 
 function parseColumnValue(value, metric) {
-    if (metric.startsWith("col_d_")) {
+    if (metric.startsWith("col_d_") && value) {
         return value.replace(/T.*/, "").split("-").reverse().join("-");
     } else {
         return value;
@@ -105,25 +100,19 @@ function isResultColumn(column) {
 function SingleRecordDialog({
     open,
     onClose,
-    setupId,
+    documentId,
     rowRecord,
-    isSetup = true,
+    // isSetup = true,
 }) {
     // TODO: change setupId to something like itemId
     const [imagePreview, setImagePreview] = useState(false);
-    const [isSync, setIsSync] = useState(false);
     const [imagePreviewUrl, setImagePreviewUrl] = useState("");
     const [newImageUrl, setNewImageUrl] = useState("");
     const [images, setImages] = useState(rowRecord.imgs || []);
     const [msg, setMsg] = useState("");
     const [msgStatus, setMsgStatus] = useState(true); // true reflects success, false reflects failure
 
-    const [updateRowNoteSetup] = useUpdateRowNoteSetupMutation();
     const [updateDocument] = useUpdateDocumentMutation();
-
-    const handleChange = (event) => {
-        setIsSync(event.target.checked);
-    };
 
     const handleClose = () => {
         onClose();
@@ -133,29 +122,19 @@ function SingleRecordDialog({
 
     const handleSave = async () => {
         let res = null;
-        if (isSetup) {
-            res = await updateRowNoteSetup({
-                setupId,
-                rowId: rowRecord.rowId,
-                note: editor?.getHTML(),
-                images,
-                isSync,
-            });
-        } else {
-            let data = {
-                ...rowRecord,
-                note: editor?.getHTML(),
-                imgs: images,
-                rowId: rowRecord.index,
-            };
-            delete data["index"];
-            res = await updateDocument({
-                id: setupId,
-                method: "update",
-                data,
-            });
-        }
+        let data = {
+            ...rowRecord,
+            note: editor?.getHTML(),
+            imgs: images,
+            rowId: rowRecord.rowId, // NOTE: this has been changed from index to rowId. Be careful it it triggers more errors.
+        };
 
+        delete data["index"];
+        res = await updateDocument({
+            id: documentId,
+            method: "update",
+            data,
+        });
         setMsg(res?.data.msg);
         setMsgStatus(res?.data.success);
     };
@@ -216,24 +195,6 @@ function SingleRecordDialog({
                     >
                         Trade in {rowRecord["col_p"]?.toUpperCase() || ""}
                     </DialogTitle>
-                    {isSetup && (
-                        <Tooltip
-                            sx={{ maxWidth: 300 }}
-                            title="Sync this changes with parent document"
-                            placement="right"
-                            arrow
-                        >
-                            <FormControlLabel
-                                control={
-                                    <Switch
-                                        checked={isSync}
-                                        onChange={handleChange}
-                                    />
-                                }
-                                label="Sync"
-                            />
-                        </Tooltip>
-                    )}
                 </Box>
 
                 <DialogContent sx={{ p: 4, pt: msg ? 1 : 4 }}>
@@ -280,17 +241,19 @@ function SingleRecordDialog({
                                     {rowRecord &&
                                         Object.entries(rowRecord).map(
                                             ([key, value], idx) => {
-                                                if (isResultColumn(key)) {
+                                                if (
+                                                    isResultColumn(key) &&
+                                                    typeof value === "number"
+                                                ) {
                                                     return (
                                                         <FieldText key={idx}>
                                                             {parseColumnName(
                                                                 key
                                                             )}
                                                             <HighlightText>
-                                                                {/* todo: change this */}
-                                                                {value}{" "}
-                                                                {getResultAdornment(
-                                                                    key
+                                                                {parseDataValues(
+                                                                    key,
+                                                                    value
                                                                 )}
                                                             </HighlightText>
                                                         </FieldText>
@@ -311,7 +274,7 @@ function SingleRecordDialog({
                                         ([key, value], idx) => {
                                             if (isMetric(key)) {
                                                 return (
-                                                    <Grid item xs={6}>
+                                                    <Grid item xs={6} key={idx}>
                                                         {/* have this props in case a word is very large and cannot be wrapped */}
                                                         <FieldText
                                                             sx={{

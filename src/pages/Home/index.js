@@ -708,7 +708,7 @@ const Home = (props) => {
                             <img
                                 className="home-workflow"
                                 src={HomeCreate}
-                                alt="Change"
+                                alt="Connect directly to your MT4 account"
                             />
                         </Box>
                     </Box>

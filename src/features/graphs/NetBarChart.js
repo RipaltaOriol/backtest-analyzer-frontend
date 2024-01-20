@@ -3,11 +3,16 @@ import { Bar } from "react-chartjs-2";
 import parseColumnName from "utils/parseColumns";
 
 import Box from "@mui/material/Box";
+import Skeleton from "@mui/material/Skeleton";
 
 import { useGetNetReturnQuery } from "features/graphs/graphsSlice";
 
 const NetBarChart = ({ setupId }) => {
-    const { data: getNetReturn } = useGetNetReturnQuery(
+    const {
+        data: getNetReturn,
+        isLoading,
+        isUninitialized,
+    } = useGetNetReturnQuery(
         {
             setupId,
         },
@@ -46,7 +51,9 @@ const NetBarChart = ({ setupId }) => {
 
     return (
         <Box>
-            {getNetReturn?.success ? (
+            {isLoading || isUninitialized ? (
+                <Skeleton variant="rounded" height={60} />
+            ) : getNetReturn?.success ? (
                 <Bar options={options} data={data} />
             ) : (
                 <ErrorFeedback />

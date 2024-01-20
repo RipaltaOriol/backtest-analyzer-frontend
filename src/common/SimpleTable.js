@@ -1,3 +1,4 @@
+import { parseStatsValues } from "utils/displayUtils";
 import parseColumnName from "utils/parseColumns";
 
 import Paper from "@mui/material/Paper";
@@ -33,56 +34,36 @@ const TablePaper = styled(Paper)({
 
 const HeaderCell = styled(TableCell)({
     borderLeft: "1px solid rgb(224, 224, 224)",
-    "&:first-child": {
+    "&:first-of-type": {
         border: "none",
     },
 });
 
 const RowCell = styled(TableCell)({
     borderLeft: "1px solid rgb(224, 224, 224)",
-    "&:first-child": {
+    "&:first-of-type": {
         border: "none",
     },
 });
 
 const MetricRow = styled(TableRow)({
-    "&:last-child ": {
+    "&:last-of-type ": {
         border: "none",
     },
 });
 
 const SimpleTable = ({ statsData }) => {
-    let tableRows = [];
-    let tableData = [];
-
-    // if (isSuccess) {
-    //     if (data) {
-    //         tableRows.push(<TableCell>Metric</TableCell>);
-    //         for (const prop in data[0]) {
-    //             if (prop !== "stat") {
-    //                 tableRows.push(
-    //                     <TableCell align="center">
-    //                         {parseColumnName(prop)}
-    //                     </TableCell>
-    //                 );
-    //             }
-    //         }
-    //         tableData = data;
-    //     }
-    // }
-
     return (
         <TableContainer component={TablePaper}>
             <Table size="small">
                 <TableHead>
                     <TableRow sx={{ fontSize: "14px" }}>
                         <HeaderCell>Metric</HeaderCell>
-                        {statsData &&
-                            Object.keys(statsData).map((col) => (
-                                <HeaderCell align="center">
-                                    {parseColumnName(col)}
-                                </HeaderCell>
-                            ))}
+                        {Object.keys(statsData?.data).map((col, idx) => (
+                            <HeaderCell align="center" key={idx}>
+                                {parseColumnName(col)}
+                            </HeaderCell>
+                        ))}
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -98,21 +79,24 @@ const SimpleTable = ({ statsData }) => {
                             }}
                         >
                             <RowCell>{name}</RowCell>
-                            {statsData &&
-                                Object.keys(statsData).map((col, i) => (
-                                    <RowCell
-                                        key={i}
-                                        align="center"
-                                        sx={{
-                                            color:
-                                                statsData[col][prop] < 0
-                                                    ? "red"
-                                                    : "inherit",
-                                        }}
-                                    >
-                                        {statsData[col][prop].toFixed(3)}
-                                    </RowCell>
-                                ))}
+                            {Object.keys(statsData?.data).map((col, i) => (
+                                <RowCell
+                                    key={i}
+                                    align="center"
+                                    sx={{
+                                        color:
+                                            statsData?.data[col][prop] < 0
+                                                ? "red"
+                                                : "inherit",
+                                    }}
+                                >
+                                    {parseStatsValues(
+                                        col,
+                                        prop,
+                                        statsData?.data[col][prop]
+                                    )}
+                                </RowCell>
+                            ))}
                         </MetricRow>
                     ))}
                 </TableBody>

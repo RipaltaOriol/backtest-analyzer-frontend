@@ -1,5 +1,5 @@
 import React from "react";
-import ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client";
 import { ErrorBoundary } from "react-error-boundary";
 import { Provider } from "react-redux";
 import "typeface-inter";
@@ -10,7 +10,10 @@ import CrashBoundry from "./pages/CrashBoundry";
 import { store } from "./redux/store";
 import reportWebVitals from "./reportWebVitals";
 
-ReactDOM.render(
+const container = document.getElementById("root");
+const root = createRoot(container);
+
+root.render(
     <React.StrictMode>
         <ErrorBoundary
             FallbackComponent={CrashBoundry}
@@ -20,8 +23,7 @@ ReactDOM.render(
                 <App />
             </Provider>
         </ErrorBoundary>
-    </React.StrictMode>,
-    document.getElementById("root")
+    </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function

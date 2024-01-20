@@ -1,3 +1,4 @@
+// this should be reomved and replaced by the function in displayUtils.js
 export function parseColumnName(name) {
     if (name === "index") {
         return "Index";

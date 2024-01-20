@@ -223,37 +223,33 @@ const CreateDocument = () => {
                         Fields:
                     </Typography>
                     <Box display="flex">
-                        {fields.map((field) => {
-                            return (
-                                <FieldsBox
-                                    key={field.name}
-                                    sx={{
-                                        display: "flex",
-                                        alignItems: "center",
-                                        mb: 1,
-                                        mr: 1.5,
-                                    }}
+                        {fields.map((field, idx) => (
+                            <FieldsBox
+                                key={idx}
+                                sx={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    mb: 1,
+                                    mr: 1.5,
+                                }}
+                            >
+                                <Typography sx={{ mr: 1.5, fontWeight: "500" }}>
+                                    {field.type}
+                                </Typography>
+                                <Typography sx={{ mr: 2 }}>
+                                    {field.name}
+                                </Typography>
+                                <IconButton
+                                    color="error"
+                                    sx={{ p: 0 }}
+                                    onClick={() =>
+                                        handleRemoveField(field.name)
+                                    }
                                 >
-                                    <Typography
-                                        sx={{ mr: 1.5, fontWeight: "500" }}
-                                    >
-                                        {field.type}
-                                    </Typography>
-                                    <Typography sx={{ mr: 2 }}>
-                                        {field.name}
-                                    </Typography>
-                                    <IconButton
-                                        color="error"
-                                        sx={{ p: 0 }}
-                                        onClick={() =>
-                                            handleRemoveField(field.name)
-                                        }
-                                    >
-                                        <ClearIcon />
-                                    </IconButton>
-                                </FieldsBox>
-                            );
-                        })}
+                                    <ClearIcon />
+                                </IconButton>
+                            </FieldsBox>
+                        ))}
                     </Box>
                 </Box>
                 <Box sx={{ mt: 2 }}>
@@ -287,7 +283,7 @@ const CreateDocument = () => {
                                 displayEmpty
                             >
                                 {Object.keys(columnOptions).map((column) => (
-                                    <CustomMenuItem value={column}>
+                                    <CustomMenuItem key={column} value={column}>
                                         {column}
                                     </CustomMenuItem>
                                 ))}
@@ -459,8 +455,8 @@ const CreateDocument = () => {
                                 ))}
                             </thead>
                             <tbody>
-                                {table.getRowModel().rows.map((row) => (
-                                    <tr key={row.id}>
+                                {table.getRowModel().rows.map((row, idx) => (
+                                    <tr key={idx}>
                                         {row.getVisibleCells().map((cell) => (
                                             <td key={cell.id}>
                                                 {flexRender(

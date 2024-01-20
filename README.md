@@ -1,5 +1,6 @@
-# Trade Sharpener: Server
-*Formally known as Backtest Analyzer*
+# Trade Sharpener: Client
+
+_Formally known as Backtest Analyzer_
 
 Trade Sharpener is an online, fully customizable trading journal with a focus on data analysis and optimization. Its purpose is to empower traders and enable them to quantify and enhance their trading strategies by taking control of their data.
 
@@ -9,10 +10,10 @@ Once the user uploads their data to Trade Sharpener through one of the multiple 
 Moreover, Trade Sharpener provides users with several features to support them in their analysis, including smart filters, note-taking capabilities, template selection, detailed statistics, and a comprehensive array of graphs for data visualization.
 
 ## Stack:
--	Javascript
--	Reat.js
--	RTK (Redux)
--	Chart.js
--	MUI
--	Prettier
 
+-   Javascript
+-   Reat.js
+-   RTK (Redux)
+-   Chart.js
+-   MUI
+-   Prettier

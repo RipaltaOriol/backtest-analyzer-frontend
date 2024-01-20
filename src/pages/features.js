@@ -74,8 +74,9 @@ const Features = () => {
                         align="center"
                         sx={{ mt: 2 }}
                     >
-                        All <span className="blue-highlights">Features</span>{" "}
-                        The Featuers You Expect
+                        All The{" "}
+                        <span className="blue-highlights">Features</span> You
+                        Expect
                     </Typography>
                     <Typography variant="body2" align="center" sx={{ mb: 4 }}>
                         Trade Sharpener offers all the features you need,

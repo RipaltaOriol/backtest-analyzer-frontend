@@ -36,7 +36,7 @@ const Technical = ({ template, onChangeField }) => {
                     <CustomTextField
                         multiline
                         minRows={3}
-                        value={template?.technical_levels}
+                        value={template?.technical_levels || ""}
                         onChange={(e) =>
                             onChangeField("technical_levels", e.target.value)
                         }
@@ -90,7 +90,7 @@ const Technical = ({ template, onChangeField }) => {
                 <CustomTextField
                     multiline
                     minRows={3}
-                    value={template?.technical_analysis_comment}
+                    value={template?.technical_analysis_comment || ""}
                     onChange={(e) =>
                         onChangeField(
                             "technical_analysis_comment",

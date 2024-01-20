@@ -7,6 +7,7 @@ import {
     useReactTable,
 } from "@tanstack/react-table";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { displayPercent } from "utils/displayUtils";
 import parseColumnName from "utils/parseColumns";
 
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
@@ -39,6 +40,7 @@ let StateTable = ({ setup, setOpen, setSelectedRow }) => {
     const columnHelper = useMemo(() => createColumnHelper(), []);
 
     const reloadTable = useCallback(() => {
+        // NOTE: at this point it would be better to create a switch function and placed it in utils
         if (setup && setup.state && Object.keys(setup.state).length !== 0) {
             setColumns(
                 Object.keys(setup.state.fields).reduce((result, key) => {
@@ -48,14 +50,22 @@ let StateTable = ({ setup, setOpen, setSelectedRow }) => {
                                 columnHelper.accessor(key, {
                                     header: parseColumnName(key),
                                     cell: (info) =>
-                                        key.startsWith("col_d")
+                                        info.getValue()
                                             ? new Date(
                                                   info.getValue()
                                               ).toLocaleDateString(
                                                   "en-EN",
                                                   options
                                               )
-                                            : info.getValue(),
+                                            : null,
+                                })
+                            );
+                        } else if (key.startsWith("col_p_")) {
+                            result.push(
+                                columnHelper.accessor(key, {
+                                    header: parseColumnName(key),
+                                    cell: (info) =>
+                                        displayPercent(info.getValue()),
                                 })
                             );
                         } else {
@@ -88,6 +98,7 @@ let StateTable = ({ setup, setOpen, setSelectedRow }) => {
         onSortingChange: setSorting,
         getCoreRowModel: getCoreRowModel(),
         enableRowSelectio: true,
+        autoResetPageIndex: false,
         enableMultiRowSelection: false,
         onRowSelectionChange: setRowSelection,
         getPaginationRowModel: getPaginationRowModel(),

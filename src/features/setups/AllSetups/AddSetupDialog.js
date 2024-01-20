@@ -83,7 +83,7 @@ const AddSetupDialog = ({
     return (
         <Dialog open={openAddDialog} onClose={handleAddDialogClose}>
             <DialogTitle sx={{ color: "inherit" }}>
-                <Typography variant="h5" sx={{ mt: 1 }}>
+                <Typography variant="h5" component="div" sx={{ mt: 1 }}>
                     Add New Version
                 </Typography>
             </DialogTitle>
@@ -121,6 +121,7 @@ const AddSetupDialog = ({
                             {orderedDocuments
                                 ? orderedDocuments.map(({ id, name }) => (
                                       <DropdownMenuItem
+                                          key={id}
                                           onClick={() =>
                                               handleSelectDocument({ id, name })
                                           }

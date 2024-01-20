@@ -15,7 +15,7 @@ const CURRENCY_STATES = [
     "Weak Bullish",
     "Neutral",
     "Weak Bearish",
-    "Strong Bullish",
+    "Strong Bearish",
 ];
 
 const getPairBaseNQuote = (pair, pos) => {
@@ -64,10 +64,10 @@ const Fundamental = ({ template, onChangeField }) => {
                                     onChangeField("direction", e.target.value)
                                 }
                             >
-                                <CustomMenuItem value={"long"}>
+                                <CustomMenuItem value={"Long"}>
                                     Long
                                 </CustomMenuItem>
-                                <CustomMenuItem value={"short"}>
+                                <CustomMenuItem value={"Short"}>
                                     Short
                                 </CustomMenuItem>
                             </CustomSelect>

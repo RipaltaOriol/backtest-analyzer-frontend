@@ -94,13 +94,13 @@ const SetupAndValues = ({ template, onChangeField, onChangeFieldArray }) => {
                                 size="small"
                                 variant="outlined"
                                 type="number"
-                                value={position?.price}
+                                value={position?.price.toString() || ""}
                                 onChange={(e) =>
                                     onChangeFieldArray(
                                         i,
                                         "positions",
                                         "price",
-                                        e.target.value
+                                        e.target.valueAsNumber
                                     )
                                 }
                             />
@@ -110,13 +110,13 @@ const SetupAndValues = ({ template, onChangeField, onChangeFieldArray }) => {
                                 size="small"
                                 variant="outlined"
                                 type="number"
-                                value={position?.risk}
+                                value={position?.risk.toString() || ""}
                                 onChange={(e) =>
                                     onChangeFieldArray(
                                         i,
                                         "positions",
                                         "risk",
-                                        e.target.value
+                                        e.target.valueAsNumber
                                     )
                                 }
                             />
@@ -126,13 +126,13 @@ const SetupAndValues = ({ template, onChangeField, onChangeFieldArray }) => {
                                 size="small"
                                 variant="outlined"
                                 type="number"
-                                value={position?.size}
+                                value={position?.size.toString() || ""}
                                 onChange={(e) =>
                                     onChangeFieldArray(
                                         i,
                                         "positions",
                                         "size",
-                                        e.target.value
+                                        e.target.valueAsNumber
                                     )
                                 }
                             />
@@ -142,13 +142,13 @@ const SetupAndValues = ({ template, onChangeField, onChangeFieldArray }) => {
                                 size="small"
                                 variant="outlined"
                                 type="number"
-                                value={position?.risk_reward}
+                                value={position.risk_reward.toString() || ""}
                                 onChange={(e) =>
                                     onChangeFieldArray(
                                         i,
                                         "positions",
                                         "risk_reward",
-                                        e.target.value
+                                        e.target.valueAsNumber
                                     )
                                 }
                             />
@@ -169,9 +169,12 @@ const SetupAndValues = ({ template, onChangeField, onChangeFieldArray }) => {
                                 size="small"
                                 variant="outlined"
                                 type="number"
-                                value={template.stop_loss || ""}
+                                value={template.stop_loss ?? ""}
                                 onChange={(e) =>
-                                    onChangeField("stop_loss", e.target.value)
+                                    onChangeField(
+                                        "stop_loss",
+                                        e.target.valueAsNumber
+                                    )
                                 }
                             />
                         </Box>
@@ -193,13 +196,13 @@ const SetupAndValues = ({ template, onChangeField, onChangeFieldArray }) => {
                                     size="small"
                                     variant="outlined"
                                     type="number"
-                                    value={tp.take_profit}
+                                    value={tp.take_profit ?? ""}
                                     onChange={(e) =>
                                         onChangeFieldArray(
                                             i,
                                             "take_profit",
                                             "take_profit",
-                                            e.target.value
+                                            e.target.valueAsNumber
                                         )
                                     }
                                 />

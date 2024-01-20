@@ -8,7 +8,7 @@ import Typography from "@mui/material/Typography";
 
 import { CustomDateTimeField } from "features/templates/templateCustomComponents";
 
-const Execution = ({ template, onChangeField }) => {
+const Execution = ({ template, onChangeField, onChangeDateField }) => {
     return (
         <Box sx={{ mb: 2.5 }}>
             <Typography variant="h5">Execution & Management</Typography>
@@ -22,17 +22,14 @@ const Execution = ({ template, onChangeField }) => {
                         format="L HH:mm"
                         value={dayjs(template?.date_executed) || null}
                         onChange={(newValue) =>
-                            onChangeField(
-                                "date_executed",
-                                newValue.toISOString()
-                            )
+                            onChangeDateField("date_executed", newValue)
                         }
                     />
                 </Box>
                 <FormControlLabel
                     control={<Checkbox disableRipple />}
                     label="Alert Placed"
-                    value={template?.entry_alert}
+                    checked={template?.entry_alert ?? false}
                     onChange={(e) =>
                         onChangeField("entry_alert", e.target.checked)
                     }
@@ -40,7 +37,7 @@ const Execution = ({ template, onChangeField }) => {
                 <FormControlLabel
                     control={<Checkbox disableRipple />}
                     label="Trade Placed"
-                    value={template?.is_trade_placed}
+                    checked={template?.is_trade_placed ?? false}
                     onChange={(e) =>
                         onChangeField("is_trade_placed", e.target.checked)
                     }
@@ -48,7 +45,7 @@ const Execution = ({ template, onChangeField }) => {
                 <FormControlLabel
                     control={<Checkbox disableRipple />}
                     label="Read Notes"
-                    value={template?.read_notes}
+                    checked={template?.read_notes ?? false}
                     onChange={(e) =>
                         onChangeField("read_notes", e.target.checked)
                     }
@@ -56,7 +53,7 @@ const Execution = ({ template, onChangeField }) => {
                 <FormControlLabel
                     control={<Checkbox disableRipple />}
                     label="Stop Loss"
-                    value={template?.is_stop_loss}
+                    checked={template?.is_stop_loss ?? false}
                     onChange={(e) =>
                         onChangeField("is_stop_loss", e.target.checked)
                     }
@@ -64,7 +61,7 @@ const Execution = ({ template, onChangeField }) => {
                 <FormControlLabel
                     control={<Checkbox disableRipple />}
                     label="Take Profit"
-                    value={template?.is_take_profit}
+                    checked={template?.is_take_profit ?? false}
                     onChange={(e) =>
                         onChangeField("is_take_profit", e.target.checked)
                     }

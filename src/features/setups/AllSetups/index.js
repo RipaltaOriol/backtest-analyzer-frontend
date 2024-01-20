@@ -91,9 +91,10 @@ const AllSetups = () => {
         return (
             <DocumentGrid container sx={{ mb: 3 }}>
                 {setups
-                    ? setups.map((setup) => (
+                    ? setups.map((setup, id) => (
                           <Grid
                               item
+                              key={id}
                               xs={6}
                               lg={4}
                               xl={3}
@@ -172,8 +173,8 @@ const AllSetups = () => {
             <Divider sx={{ mt: 2, mb: 4 }} />
             <Box sx={{ flexGrow: 1 }}>
                 {orderedDocuments
-                    ? orderedDocuments.map((doc) => (
-                          <Box>
+                    ? orderedDocuments.map((doc, id) => (
+                          <Box key={id}>
                               <Box sx={{ mb: 1 }}>
                                   <Typography variant="caption">
                                       {doc.name}

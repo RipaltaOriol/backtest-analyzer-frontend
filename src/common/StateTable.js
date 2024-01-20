@@ -98,6 +98,7 @@ let StateTable = ({ setup, setOpen, setSelectedRow }) => {
         onSortingChange: setSorting,
         getCoreRowModel: getCoreRowModel(),
         enableRowSelectio: true,
+        autoResetPageIndex: false,
         enableMultiRowSelection: false,
         onRowSelectionChange: setRowSelection,
         getPaginationRowModel: getPaginationRowModel(),

@@ -139,7 +139,7 @@ const TemplateSelection = ({ open, handleCloseDialog, document }) => {
 
     const changeAccountTemplate = () => (
         <div>
-            <DialogContentText gutterBottom sx={{ fontSize: "14px" }}>
+            <DialogContentText gutterBottom sx={{ fontSize: "15px" }}>
                 Indicate which tempalte you want this account to use:
             </DialogContentText>
             <DropdownButton sx={{ p: 1 }} variant="text" onClick={handleClick}>
@@ -296,7 +296,9 @@ const TemplateSelection = ({ open, handleCloseDialog, document }) => {
     return (
         <Dialog open={open} onClose={handleClose} fullWidth maxWidth="lg">
             <DialogTitle sx={{ color: "inherit" }}>
-                <Typography variant="h5">Select Account Template</Typography>
+                <Typography variant="h5" component="div">
+                    Select Account Template
+                </Typography>
             </DialogTitle>
             <DialogContent>
                 <Stepper nonLinear activeStep={activeStep}>

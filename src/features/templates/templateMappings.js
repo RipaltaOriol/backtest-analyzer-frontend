@@ -1,3 +1,4 @@
+// TODO: THIS LOGIC SHOULD BE SEND TO THE BACKEND
 const PPT_MAPPINGS = {
     constants: {
         col_p: "asset",

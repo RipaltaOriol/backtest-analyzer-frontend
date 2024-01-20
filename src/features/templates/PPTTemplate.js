@@ -77,6 +77,20 @@ const PPTTemplate = ({ documentId, rowId, open, onClose }) => {
         }));
     }, []);
 
+    const onChangeDateField = useCallback((name, value) => {
+        try {
+            const newValue = value ? value.toISOString() : null;
+            setTemplate((prevState) => ({
+                ...prevState, // shallow copy all previous state
+                [name]: newValue, // update specific key/value
+            }));
+        } catch (err) {
+            if (err instanceof RangeError) {
+                console.log(err);
+            }
+        }
+    }, []);
+
     return (
         <Box>
             {template && (
@@ -152,12 +166,16 @@ const PPTTemplate = ({ documentId, rowId, open, onClose }) => {
                         <Execution
                             template={template}
                             onChangeField={onChangeField}
+                            onChangeDateField={onChangeDateField}
                         />
                         {/* Close */}
                         <Close
                             template={template}
                             onChangeField={onChangeField}
                         />
+                        <button onClick={() => console.log(template)}>
+                            Hello
+                        </button>
                     </DialogContent>
                 </Dialog>
             )}

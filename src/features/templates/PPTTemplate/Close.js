@@ -84,7 +84,7 @@ const Close = ({ template, onChangeField }) => {
                         <Typography sx={{ mr: 2 }}>Result</Typography>
                         <CustomSelect
                             size="small"
-                            value={template?.result}
+                            value={template?.result || ""}
                             onChange={(e) =>
                                 onChangeField("result", e.target.value)
                             }
@@ -100,11 +100,11 @@ const Close = ({ template, onChangeField }) => {
                             size="small"
                             variant="outlined"
                             type="number"
-                            value={template?.return_percentage || ""}
+                            value={template?.return_percentage ?? ""}
                             onChange={(e) =>
                                 onChangeField(
                                     "return_percentage",
-                                    e.target.value
+                                    e.target.valueAsNumber
                                 )
                             }
                         />
@@ -117,9 +117,12 @@ const Close = ({ template, onChangeField }) => {
                             size="small"
                             variant="outlined"
                             type="number"
-                            value={template?.return_value || ""}
+                            value={template?.return_value ?? ""}
                             onChange={(e) =>
-                                onChangeField("return_value", e.target.value)
+                                onChangeField(
+                                    "return_value",
+                                    e.target.valueAsNumber
+                                )
                             }
                         />
                     </Box>
@@ -144,7 +147,7 @@ const Close = ({ template, onChangeField }) => {
                         <Typography sx={{ mr: 2 }}>Levels</Typography>
                         <CustomSelect
                             size="small"
-                            value={template?.levels_result}
+                            value={template?.levels_result || ""}
                             onChange={(e) =>
                                 onChangeField("levels_result", e.target.value)
                             }
@@ -156,7 +159,7 @@ const Close = ({ template, onChangeField }) => {
                         <Typography sx={{ mr: 2 }}>Exit</Typography>
                         <CustomSelect
                             size="small"
-                            value={template?.close_result}
+                            value={template?.close_result || ""}
                             onChange={(e) =>
                                 onChangeField("close_result", e.target.value)
                             }

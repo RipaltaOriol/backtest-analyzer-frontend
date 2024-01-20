@@ -2,7 +2,6 @@ import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Typography from "@mui/material/Typography";
 
@@ -15,32 +14,33 @@ const DeleteConfirmationDialog = ({
     return (
         <Dialog open={open} onClose={onClose}>
             <DialogTitle>
-                <Typography variant="h5">Delete</Typography>
+                <Typography variant="h5" component="div">
+                    Delete
+                </Typography>
             </DialogTitle>
             <DialogContent>
-                <DialogContentText>
-                    <Typography gutterBottom>
-                        Are you sure you want to delete this{" "}
-                        {itemName || "item"}?
-                    </Typography>
-                    <Typography>This process cannot be undone.</Typography>
-                </DialogContentText>
+                <Typography variant="body2" gutterBottom>
+                    Are you sure you want to delete this {itemName || "item"}?
+                </Typography>
+                <Typography variant="body2">
+                    This process cannot be undone.
+                </Typography>
+                <DialogActions sx={{ mt: 2 }}>
+                    <Button variant="outlined" onClick={onClose}>
+                        Cancel
+                    </Button>
+                    <Button
+                        variant="contained"
+                        color="error"
+                        onClick={() => {
+                            if (onSubmit) onSubmit();
+                            onClose();
+                        }}
+                    >
+                        Delete
+                    </Button>
+                </DialogActions>
             </DialogContent>
-            <DialogActions>
-                <Button variant="outlined" onClick={onClose}>
-                    Cancel
-                </Button>
-                <Button
-                    variant="contained"
-                    color="error"
-                    onClick={() => {
-                        if (onSubmit) onSubmit();
-                        onClose();
-                    }}
-                >
-                    Delete
-                </Button>
-            </DialogActions>
         </Dialog>
     );
 };

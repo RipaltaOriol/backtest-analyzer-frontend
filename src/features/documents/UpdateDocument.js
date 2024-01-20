@@ -260,7 +260,7 @@ const UpdateDocument = () => {
     }
 
     return (
-        <Box sx={{ display: "block", width: "calc(100% - 200px)" }}>
+        <Box>
             {/* Image Preview Component */}
             <ImagePreviewDialog
                 url={imagePreviewUrl}

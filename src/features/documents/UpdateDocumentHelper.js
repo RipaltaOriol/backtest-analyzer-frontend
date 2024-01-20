@@ -34,7 +34,7 @@ export const updateNumberInput = (column, value, onChange) => {
             label={column.name}
             type="number"
             variant="outlined"
-            value={value || ""}
+            value={value ?? ""}
             onChange={onChange(column.id, "number")}
             size="small"
             step={0.5}

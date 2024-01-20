@@ -127,9 +127,9 @@ const Day = ({ day, rowIdx, cellIdx, calendarData }) => {
                             {day.format("DD")}
                         </Typography>
                     </Box>
-                    {trades?.map((trade) => (
+                    {trades?.map((trade, idx) => (
                         <Box
-                            key={trade.index}
+                            key={idx}
                             sx={{
                                 mx: 1.5,
                                 px: 1,

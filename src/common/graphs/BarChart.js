@@ -46,7 +46,7 @@ const BarChart = ({ chartData }) => {
 
     return (
         <Box>
-            {chartData.success ? (
+            {chartData?.success ? (
                 <Bar data={data} options={options} />
             ) : (
                 <ErrorFeedback />

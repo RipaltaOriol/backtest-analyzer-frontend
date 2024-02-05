@@ -135,8 +135,12 @@ const UpdateDocument = () => {
         (key, type = "string") =>
         (event) => {
             let newValue = event.target.value;
-            if (type === "number" && newValue)
-                newValue = event.target.valueAsNumber;
+            if (type === "number") {
+                newValue =
+                    event.target.valueAsNumber === 0
+                        ? 0
+                        : event.target.valueAsNumber || null;
+            }
             setRowValues({ ...rowValues, [key]: newValue });
         };
 

@@ -36,6 +36,7 @@ export const graphsSlice = apiSlice.injectEndpoints({
             query: ({ setupId, currentMetric }) => ({
                 url: `/setups/${setupId}/charts/bubble`,
                 method: "GET",
+                params: { currentMetric },
             }),
             providesTags: ["BubbleChart"],
         }),

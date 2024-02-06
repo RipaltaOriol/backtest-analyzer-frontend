@@ -173,9 +173,6 @@ const PPTTemplate = ({ documentId, rowId, open, onClose }) => {
                             template={template}
                             onChangeField={onChangeField}
                         />
-                        <button onClick={() => console.log(template)}>
-                            Hello
-                        </button>
                     </DialogContent>
                 </Dialog>
             )}

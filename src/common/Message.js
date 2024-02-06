@@ -1,9 +1,7 @@
 import { useEffect, useState } from "react";
 
-import CloseIcon from "@mui/icons-material/Close";
 import Alert from "@mui/material/Alert";
-import Collapse from "@mui/material/Collapse";
-import IconButton from "@mui/material/IconButton";
+import Snackbar from "@mui/material/Snackbar";
 
 const Message = ({ message, setMessage, isError, sx }) => {
     const [open, setOpen] = useState(false);
@@ -15,27 +13,22 @@ const Message = ({ message, setMessage, isError, sx }) => {
         }
     }, [message]);
 
+    const handleClose = () => {
+        setOpen(false);
+        setMessage("");
+    };
+
     return (
-        <Collapse in={open} sx={sx}>
-            <Alert
-                severity={alertType}
-                action={
-                    <IconButton
-                        aria-label="close"
-                        color="inherit"
-                        size="small"
-                        onClick={() => {
-                            setOpen(false);
-                            setMessage("");
-                        }}
-                    >
-                        <CloseIcon fontSize="inherit" />
-                    </IconButton>
-                }
-            >
+        <Snackbar
+            anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+            open={open}
+            onClose={handleClose}
+            autoHideDuration={5000}
+        >
+            <Alert severity={alertType} onClose={handleClose}>
                 {message}
             </Alert>
-        </Collapse>
+        </Snackbar>
     );
 };
 

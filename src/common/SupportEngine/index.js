@@ -25,7 +25,7 @@ const SupportEngine = () => {
     return (
         <Box ref={ref}>
             <SupportWindow open={open} />
-            <div style={{ position: "fixed", bottom: "24px", right: "24px" }}>
+            <div style={{ position: "fixed", bottom: "10px", right: "10px" }}>
                 <SupportAgentIcon
                     className={`support-icon transition-1 ${
                         open && "support-icon-open"

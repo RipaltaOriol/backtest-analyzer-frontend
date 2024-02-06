@@ -35,6 +35,7 @@ function getResultDecorator(column) {
 }
 
 function parseStatsValues(column, metric, value) {
+    if (!value) return null;
     let decorator = getResultDecorator(column);
 
     switch (true) {

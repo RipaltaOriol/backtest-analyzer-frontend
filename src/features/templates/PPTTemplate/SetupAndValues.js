@@ -95,7 +95,7 @@ const SetupAndValues = ({ template, onChangeField, onChangeFieldArray }) => {
                                 size="small"
                                 variant="outlined"
                                 type="number"
-                                value={position?.price.toString() || ""}
+                                value={position?.price ?? ""}
                                 onChange={(e) =>
                                     onChangeFieldArray(
                                         i,
@@ -111,7 +111,7 @@ const SetupAndValues = ({ template, onChangeField, onChangeFieldArray }) => {
                                 size="small"
                                 variant="outlined"
                                 type="number"
-                                value={position?.risk.toString() || ""}
+                                value={position?.risk ?? ""}
                                 InputProps={{
                                     endAdornment: (
                                         <InputAdornment position="end">
@@ -134,11 +134,7 @@ const SetupAndValues = ({ template, onChangeField, onChangeFieldArray }) => {
                                 size="small"
                                 variant="outlined"
                                 type="number"
-                                value={
-                                    position?.size
-                                        ? position?.size.toString() || ""
-                                        : ""
-                                }
+                                value={position?.size ?? ""}
                                 onChange={(e) =>
                                     onChangeFieldArray(
                                         i,
@@ -161,7 +157,7 @@ const SetupAndValues = ({ template, onChangeField, onChangeFieldArray }) => {
                                         </InputAdornment>
                                     ),
                                 }}
-                                value={position.risk_reward.toString() || ""}
+                                value={position?.risk_reward ?? ""}
                                 onChange={(e) =>
                                     onChangeFieldArray(
                                         i,

@@ -21,8 +21,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import { createStyles, makeStyles } from "@mui/styles";
-import { styled } from "@mui/system";
+import { styled } from "@mui/material/styles";
 
 import { useLogoutMutation } from "../features/auth/authApiSlice";
 import { logOut } from "../features/auth/authSlice";
@@ -50,32 +49,7 @@ const DrawerItemButton = styled(ListItemButton)({
     padding: "4px 12px 4px 8px",
 });
 
-const useStyles = makeStyles((theme) =>
-    createStyles({
-        brand: {
-            color: "#000",
-            textDecoration: "none",
-            flexGrow: 1,
-            "&:hover": {
-                color: "inherit",
-            },
-        },
-        content: {
-            width: `calc(100% - ${drawerWidth}px)`,
-        },
-        toolbar: theme.mixins.toolbar,
-        logoLink: {
-            textDecoration: "none",
-            "&:hover": {
-                color: "inherit",
-            },
-        },
-        logoIcon: {
-            maxWidth: "18px",
-            marginRight: "5px",
-        },
-    })
-);
+const RootToolbar = styled("div")(({ theme }) => theme.mixins.toolbar);
 
 const features = [
     {
@@ -117,7 +91,6 @@ const assistance = [
 ];
 
 export default function Layout() {
-    const classes = useStyles();
     const dispatch = useDispatch();
     const location = useLocation();
 
@@ -148,15 +121,18 @@ export default function Layout() {
                 <Toolbar>
                     {/* Title  */}
                     <Box
-                        sx={{ flexGrow: 1, display: "inline-flex" }}
+                        sx={{
+                            flexGrow: 1,
+                            display: "inline-flex",
+                            textDecoration: "none",
+                        }}
                         component={Link}
                         to="/"
-                        className={classes.logoLink}
                     >
                         <img
                             alt="Trade Sharpener Logo"
                             src={logoTradeSharpener}
-                            className={classes.logoIcon}
+                            className="logo-icon-regular"
                         />
                         <LogoTitle
                             first="Trade"
@@ -265,8 +241,8 @@ export default function Layout() {
             </Drawer>
 
             {/* main content */}
-            <Box sx={{ my: 3 }} className={classes.content}>
-                <div className={classes.toolbar}></div>
+            <Box sx={{ my: 3, width: `calc(100% - ${drawerWidth}px)` }}>
+                <RootToolbar />
                 <Box sx={{ mx: 4 }}>
                     <Outlet />
                 </Box>

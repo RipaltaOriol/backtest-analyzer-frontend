@@ -11,7 +11,6 @@ import Container from "@mui/material/Container";
 import IconButton from "@mui/material/IconButton";
 import SwipeableDrawer from "@mui/material/SwipeableDrawer";
 import Toolbar from "@mui/material/Toolbar";
-import { makeStyles } from "@mui/styles";
 import { styled } from "@mui/system";
 
 import LogoTitle from "./LogoTitle";
@@ -41,21 +40,7 @@ const NavButton = styled(Button)({
     },
 });
 
-const useStyles = makeStyles({
-    logoLink: {
-        textDecoration: "none",
-        "&:hover": {
-            color: "inherit",
-        },
-    },
-    logoIcon: {
-        maxWidth: "18px",
-        marginRight: "5px",
-    },
-});
-
 const HomeBar = () => {
-    const classes = useStyles();
     const [openDrawer, setOpenDrawer] = useState(false);
     const toggleDrawer = (open) => (event) => {
         if (
@@ -85,13 +70,12 @@ const HomeBar = () => {
                         }}
                         component={Link}
                         to="/"
-                        className={classes.logoLink}
                     >
                         <Box sx={{ mr: 4 }}>
                             <img
                                 alt="Trade Sharpener Logo"
                                 src={LogoIcon}
-                                className={classes.logoIcon}
+                                className="logo-icon-regular"
                             />
                             <LogoTitle
                                 first="Trade"

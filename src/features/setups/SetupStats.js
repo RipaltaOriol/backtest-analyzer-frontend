@@ -1,3 +1,14 @@
+import {
+    BarElement,
+    CategoryScale,
+    Chart as ChartJS,
+    Legend,
+    LinearScale,
+    Title,
+    Tooltip,
+} from "chart.js";
+import annotationPlugin from "chartjs-plugin-annotation";
+import autocolors from "chartjs-plugin-autocolors";
 import BarChart from "common/graphs/BarChart";
 import RadarChart from "common/graphs/BubbleChart";
 import HorizontalBarChart from "common/graphs/HorizontalBarChart";
@@ -14,6 +25,17 @@ import { useGetStatisticsQuery } from "features/statistics/statisticsApiSlice";
 import SimpleTable from "../../common/SimpleTable";
 import BarGraph from "../graphs/BarGraph";
 import ScatterGraph from "../graphs/ScatterGraph";
+
+ChartJS.register(
+    CategoryScale,
+    LinearScale,
+    BarElement,
+    Title,
+    Tooltip,
+    Legend,
+    autocolors,
+    annotationPlugin
+);
 
 const SetupStats = (props) => {
     const { children, value, setup, index, ...other } = props;

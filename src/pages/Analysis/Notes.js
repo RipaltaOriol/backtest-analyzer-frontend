@@ -5,25 +5,10 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import { createStyles, makeStyles } from "@mui/styles";
 
 import { useUpdateSetupsMutation } from "../../features/setups/setupsSlice";
 
-const useStyles = makeStyles((theme) =>
-    createStyles({
-        inputMultiline: {
-            height: "100%",
-            "& .MuiInputBase-root": {
-                height: "100%",
-                display: "flex",
-                alignItems: "start",
-            },
-        },
-    })
-);
-
 const Notes = ({ setupId, notes, className }) => {
-    const classes = useStyles();
     const [setupNotes, setSetupNotes] = useState(notes);
 
     const [updateSetups] = useUpdateSetupsMutation();
@@ -68,9 +53,14 @@ const Notes = ({ setupId, notes, className }) => {
             </Box>
             <Box>
                 <TextField
-                    className={classes.inputMultiline}
                     label={null}
                     sx={{
+                        height: "100%",
+                        "& .MuiInputBase-root": {
+                            height: "100%",
+                            display: "flex",
+                            alignItems: "start",
+                        },
                         "& legend": { display: "none" },
                         "& fieldset": { top: 0 },
                         "& .MuiOutlinedInput-root": {

@@ -99,6 +99,13 @@ const Close = ({ template, onChangeField }) => {
                         <CustomTextField
                             size="small"
                             variant="outlined"
+                            InputProps={{
+                                endAdornment: (
+                                    <InputAdornment position="end">
+                                        %
+                                    </InputAdornment>
+                                ),
+                            }}
                             type="number"
                             value={template?.return_percentage ?? ""}
                             onChange={(e) =>

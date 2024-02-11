@@ -26,7 +26,6 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import { styled } from "@mui/material/styles";
 import useScrollTrigger from "@mui/material/useScrollTrigger";
-import { makeStyles } from "@mui/styles";
 
 import HomeAnalytics from "../../assets/images/home-analytics.png";
 import HomeCreate from "../../assets/images/home-create.png";
@@ -114,17 +113,7 @@ const NavButton = styled(Button, {
     }),
 }));
 
-const useStyles = makeStyles({
-    logoLink: {
-        textDecoration: "none",
-        "&:hover": {
-            color: "inherit",
-        },
-    },
-});
-
 const HomeAppbar = (props) => {
-    const classes = useStyles();
     const { window } = props;
 
     const [openDrawer, setOpenDrawer] = useState(false);
@@ -170,7 +159,6 @@ const HomeAppbar = (props) => {
                     }}
                     component={Link}
                     to="/"
-                    className={classes.logoLink}
                 >
                     <Box sx={{ mr: 4 }}>
                         <img

@@ -2,6 +2,11 @@ img {
     width: 100%;
 }
 
+.logo-icon-regular {
+    max-width: 18px;
+    margin-right: 5px;
+}
+
 .logo-icon {
     max-width: 18px;
     margin-right: 5px;

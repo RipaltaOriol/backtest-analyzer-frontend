@@ -3,6 +3,7 @@ import { CustomMenuItem } from "common/CustomComponents";
 import AddIcon from "@mui/icons-material/Add";
 import { Divider } from "@mui/material";
 import Box from "@mui/material/Box";
+import InputAdornment from "@mui/material/InputAdornment";
 import Typography from "@mui/material/Typography";
 
 import {
@@ -66,7 +67,7 @@ const SetupAndValues = ({ template, onChangeField, onChangeFieldArray }) => {
                     </Box>
                     <Box>Order Type</Box>
                     <Box>Price</Box>
-                    <Box>Risk</Box>
+                    <Box>Risk (Account %)</Box>
                     <Box>Position Size</Box>
                     <Box>Risk Reward</Box>
                 </Box>
@@ -94,7 +95,7 @@ const SetupAndValues = ({ template, onChangeField, onChangeFieldArray }) => {
                                 size="small"
                                 variant="outlined"
                                 type="number"
-                                value={position?.price.toString() || ""}
+                                value={position?.price ?? ""}
                                 onChange={(e) =>
                                     onChangeFieldArray(
                                         i,
@@ -110,7 +111,14 @@ const SetupAndValues = ({ template, onChangeField, onChangeFieldArray }) => {
                                 size="small"
                                 variant="outlined"
                                 type="number"
-                                value={position?.risk.toString() || ""}
+                                value={position?.risk ?? ""}
+                                InputProps={{
+                                    endAdornment: (
+                                        <InputAdornment position="end">
+                                            %
+                                        </InputAdornment>
+                                    ),
+                                }}
                                 onChange={(e) =>
                                     onChangeFieldArray(
                                         i,
@@ -126,7 +134,7 @@ const SetupAndValues = ({ template, onChangeField, onChangeFieldArray }) => {
                                 size="small"
                                 variant="outlined"
                                 type="number"
-                                value={position?.size.toString() || ""}
+                                value={position?.size ?? ""}
                                 onChange={(e) =>
                                     onChangeFieldArray(
                                         i,
@@ -142,7 +150,14 @@ const SetupAndValues = ({ template, onChangeField, onChangeFieldArray }) => {
                                 size="small"
                                 variant="outlined"
                                 type="number"
-                                value={position.risk_reward.toString() || ""}
+                                InputProps={{
+                                    endAdornment: (
+                                        <InputAdornment position="end">
+                                            RR
+                                        </InputAdornment>
+                                    ),
+                                }}
+                                value={position?.risk_reward ?? ""}
                                 onChange={(e) =>
                                     onChangeFieldArray(
                                         i,

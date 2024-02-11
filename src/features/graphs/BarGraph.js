@@ -85,6 +85,17 @@ const BarGraph = ({ setupId }) => {
                     usePointStyle: true,
                 },
             },
+            annotation: {
+                annotations: {
+                    line1: {
+                        type: "line",
+                        yMin: 0,
+                        yMax: 0,
+                        borderColor: "#878787",
+                        borderWidth: 2,
+                    },
+                },
+            },
         },
     };
 

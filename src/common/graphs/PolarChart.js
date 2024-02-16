@@ -5,14 +5,15 @@ import {
     RadialLinearScale,
     Tooltip,
 } from "chart.js";
-import autocolors from "chartjs-plugin-autocolors";
 import { ErrorFeedback } from "common/ErrorFeedback";
 import { PolarArea } from "react-chartjs-2";
 import { parseColumnList } from "utils/displayUtils";
 
 import Box from "@mui/material/Box";
 
-ChartJS.register(RadialLinearScale, ArcElement, Tooltip, Legend, autocolors);
+import { multipleColorsConfig, tooltipConfig } from "./graphUtils";
+
+ChartJS.register(RadialLinearScale, ArcElement, Tooltip, Legend);
 
 const PolarChart = ({ statsData }) => {
     let data = {
@@ -35,9 +36,7 @@ const PolarChart = ({ statsData }) => {
             legend: {
                 display: false,
             },
-            autocolors: {
-                mode: "data",
-            },
+            tooltip: tooltipConfig,
         },
     };
 
@@ -54,12 +53,16 @@ const PolarChart = ({ statsData }) => {
             minValue = Math.min(minValue, value.profit_factor);
         }
         data.datasets[0].data = dataValues;
+        data.datasets[0].backgroundColor = multipleColorsConfig;
         data.labels = parseColumnList(dataLabels);
         options.scales.r = {
             min: minValue - 1,
             max: maxValue,
             ticks: {
                 stepSize: 0.5,
+                font: {
+                    weight: "bold",
+                },
             },
         };
     }

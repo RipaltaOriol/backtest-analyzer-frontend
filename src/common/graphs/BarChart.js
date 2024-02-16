@@ -3,6 +3,12 @@ import { Bar } from "react-chartjs-2";
 
 import Box from "@mui/material/Box";
 
+import {
+    greenPaletteConfig,
+    redPaletteConfig,
+    tooltipConfig,
+} from "./graphUtils";
+
 const DAILY_LABELS = [
     "Monday",
     "Tuesday",
@@ -21,18 +27,32 @@ const BarChart = ({ chartData }) => {
 
     const options = {
         responsive: true,
+        scales: {
+            y: {
+                ticks: {
+                    font: {
+                        weight: "bold",
+                    },
+                },
+            },
+            x: {
+                ticks: {
+                    font: {
+                        weight: "bold",
+                    },
+                },
+            },
+        },
         plugins: {
             legend: {
                 labels: {
                     usePointStyle: true,
                 },
             },
-            autocolors: {
-                offset: 8,
-            },
+            tooltip: tooltipConfig,
             annotation: {
                 annotations: {
-                    line1: {
+                    zeroLine: {
                         type: "line",
                         yMin: 0,
                         yMax: 0,
@@ -46,12 +66,17 @@ const BarChart = ({ chartData }) => {
 
     if (chartData?.success) {
         let datasetsDaily = [];
-        for (const [key, value] of Object.entries(chartData.data)) {
+        Object.entries(chartData.data).forEach(([key, value], index) => {
             datasetsDaily.push({
                 label: key,
                 data: DAILY_LABELS.map((day) => value[day]),
+                backgroundColor: Object.values(value).map((result) =>
+                    result > 0
+                        ? greenPaletteConfig[index]
+                        : redPaletteConfig[index]
+                ),
             });
-        }
+        });
         data.datasets = datasetsDaily;
     }
 

@@ -58,9 +58,13 @@ const SimpleTable = ({ statsData }) => {
             <Table size="small">
                 <TableHead>
                     <TableRow sx={{ fontSize: "14px" }}>
-                        <HeaderCell>Metric</HeaderCell>
+                        <HeaderCell></HeaderCell>
                         {Object.keys(statsData?.data).map((col, idx) => (
-                            <HeaderCell align="center" key={idx}>
+                            <HeaderCell
+                                align="center"
+                                key={idx}
+                                sx={{ fontWeight: "600" }}
+                            >
                                 {parseColumnName(col)}
                             </HeaderCell>
                         ))}
@@ -78,12 +82,18 @@ const SimpleTable = ({ statsData }) => {
                                 },
                             }}
                         >
-                            <RowCell>{name}</RowCell>
+                            <RowCell
+                                sx={{ fontWeight: "600", color: "#0e73f6" }}
+                            >
+                                {name}
+                            </RowCell>
                             {Object.keys(statsData?.data).map((col, i) => (
                                 <RowCell
                                     key={i}
                                     align="center"
                                     sx={{
+                                        backgroundColor: "#F6F8F9",
+                                        fontWeight: "600",
                                         color:
                                             statsData?.data[col][prop] < 0
                                                 ? "red"

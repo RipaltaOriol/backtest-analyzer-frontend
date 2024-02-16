@@ -5,14 +5,15 @@ import {
     RadialLinearScale,
     Tooltip,
 } from "chart.js";
-import autocolors from "chartjs-plugin-autocolors";
 import { ErrorFeedback } from "common/ErrorFeedback";
 import { Bar } from "react-chartjs-2";
 import parseColumnName from "utils/parseColumns";
 
 import Box from "@mui/material/Box";
 
-ChartJS.register(RadialLinearScale, ArcElement, Tooltip, Legend, autocolors);
+import { multipleColorsConfig, tooltipConfig } from "./graphUtils";
+
+ChartJS.register(RadialLinearScale, ArcElement, Tooltip, Legend);
 
 const HorizontalBarChart = ({ statsData }) => {
     let data = {
@@ -36,6 +37,15 @@ const HorizontalBarChart = ({ statsData }) => {
                 title: {
                     display: true,
                     text: "Win Rate",
+                    font: {
+                        weight: "bold",
+                    },
+                },
+
+                ticks: {
+                    font: {
+                        weight: "bold",
+                    },
                 },
             },
             y: {
@@ -44,6 +54,9 @@ const HorizontalBarChart = ({ statsData }) => {
                 },
                 ticks: {
                     autoSkip: false,
+                    font: {
+                        weight: "bold",
+                    },
                     // minRotation: 90,
                     // font: {
                     //     size: 14,
@@ -55,9 +68,7 @@ const HorizontalBarChart = ({ statsData }) => {
             legend: {
                 display: false,
             },
-            autocolors: {
-                offset: 7,
-            },
+            tooltip: tooltipConfig,
         },
     };
 
@@ -69,6 +80,7 @@ const HorizontalBarChart = ({ statsData }) => {
             dataLabels.push(parseColumnName(key));
         }
         data.datasets[0].data = dataValues;
+        data.datasets[0].backgroundColor = multipleColorsConfig;
         data.labels = dataLabels;
     }
 

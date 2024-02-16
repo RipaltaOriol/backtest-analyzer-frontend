@@ -4,6 +4,8 @@ import { Doughnut } from "react-chartjs-2";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 
+import { breakDownConfig, tooltipConfig } from "./graphs/graphUtils";
+
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const PieChart = ({
@@ -23,8 +25,8 @@ const PieChart = ({
         };
         data.datasets.push({
             data: dataPieChart.values,
-            backgroundColor: ["#2CDDC7", "#C479F3", "#59A7FF"],
-            borderColor: ["#2CDDC7", "#C479F3", "#59A7FF"],
+            backgroundColor: breakDownConfig,
+            borderColor: breakDownConfig,
             borderWidth: 1,
         });
     }
@@ -56,6 +58,7 @@ const PieChart = ({
                         data={data}
                         options={{
                             plugins: {
+                                tooltip: tooltipConfig,
                                 legend: {
                                     labels: {
                                         usePointStyle: true,

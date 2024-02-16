@@ -6,9 +6,9 @@ import {
     PointElement,
     Tooltip,
 } from "chart.js";
-import autocolors from "chartjs-plugin-autocolors";
 import { CustomSelect } from "common/CustomComponents";
 import { ErrorFeedback } from "common/ErrorFeedback";
+import { multipleColorsConfig, tooltipConfig } from "common/graphs/graphUtils";
 import { Scatter } from "react-chartjs-2";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -26,14 +26,7 @@ import {
 
 import { useGetGraphQuery } from "./graphsSlice";
 
-ChartJS.register(
-    LinearScale,
-    PointElement,
-    LineElement,
-    Tooltip,
-    Legend,
-    autocolors
-);
+ChartJS.register(LinearScale, PointElement, LineElement, Tooltip, Legend);
 
 const FilterMenuItem = styled(MenuItem)({
     fontSize: "14px",
@@ -73,6 +66,14 @@ const ScatterGraph = ({ setupId }) => {
                 title: {
                     display: true,
                     text: "Result",
+                    font: {
+                        weight: "bold",
+                    },
+                },
+                ticks: {
+                    font: {
+                        weight: "bold",
+                    },
                 },
             },
             x: {
@@ -80,6 +81,14 @@ const ScatterGraph = ({ setupId }) => {
                 title: {
                     display: true,
                     text: "",
+                    font: {
+                        weight: "bold",
+                    },
+                },
+                ticks: {
+                    font: {
+                        weight: "bold",
+                    },
                 },
             },
         },
@@ -89,6 +98,7 @@ const ScatterGraph = ({ setupId }) => {
                     usePointStyle: true,
                 },
             },
+            tooltip: tooltipConfig,
             annotation: {
                 annotations: {
                     line1: {
@@ -118,6 +128,8 @@ const ScatterGraph = ({ setupId }) => {
             scatterDatasets.push({
                 ...dataset,
                 pointRadius: 5,
+                backgroundColor: multipleColorsConfig[idx],
+                borderColor: multipleColorsConfig[idx],
             });
         });
         scatterData.datasets = scatterDatasets;

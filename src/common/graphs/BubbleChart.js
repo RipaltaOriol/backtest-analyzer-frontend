@@ -5,7 +5,6 @@ import {
     PointElement,
     Tooltip,
 } from "chart.js";
-import autocolors from "chartjs-plugin-autocolors";
 import { CustomSelect } from "common/CustomComponents";
 import { ErrorFeedback } from "common/ErrorFeedback";
 import { useState } from "react";
@@ -19,7 +18,9 @@ import { styled } from "@mui/material/styles";
 
 import { useGetBubbleQuery } from "features/graphs/graphsSlice";
 
-ChartJS.register(LinearScale, PointElement, Tooltip, Legend, autocolors);
+import { multipleColorsConfig, tooltipConfig } from "./graphUtils";
+
+ChartJS.register(LinearScale, PointElement, Tooltip, Legend);
 
 const FilterMenuItem = styled(MenuItem)({
     fontSize: "14px",
@@ -59,6 +60,14 @@ const RadarChart = ({ setupId }) => {
                 title: {
                     display: true,
                     text: "Result",
+                    font: {
+                        weight: "bold",
+                    },
+                },
+                ticks: {
+                    font: {
+                        weight: "bold",
+                    },
                 },
             },
             x: {
@@ -66,11 +75,20 @@ const RadarChart = ({ setupId }) => {
                 title: {
                     display: true,
                     text: "",
+                    font: {
+                        weight: "bold",
+                    },
+                },
+                ticks: {
+                    font: {
+                        weight: "bold",
+                    },
                 },
             },
         },
         plugins: {
             tooltip: {
+                ...tooltipConfig,
                 callbacks: {
                     label: (context) => {
                         return `Risk-Reward: ${(context.raw.r / 5).toFixed(2)}`;
@@ -81,9 +99,6 @@ const RadarChart = ({ setupId }) => {
                 labels: {
                     usePointStyle: true,
                 },
-            },
-            autocolors: {
-                offset: 30,
             },
             annotation: {
                 annotations: {
@@ -112,6 +127,8 @@ const RadarChart = ({ setupId }) => {
         data?.data.forEach((dataset, idx) => {
             bubbleDatasets.push({
                 ...dataset,
+                backgroundColor: multipleColorsConfig[idx],
+                borderColor: multipleColorsConfig[idx],
             });
         });
         bubbleData.datasets = bubbleDatasets;

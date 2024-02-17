@@ -34,7 +34,15 @@ const ChatInput = ({ user, chat }) => {
             />
             <Button
                 variant="contained"
-                sx={{ ml: 1, minWidth: "50px" }}
+                sx={{
+                    ml: 1,
+                    minWidth: "50px",
+                    backgroundColor: "#0e73f6",
+                    borderRadius: "15px 0px 5px 15px",
+                    "&:hover": {
+                        backgroundColor: "#0e73f6",
+                    },
+                }}
                 onClick={handleSend}
             >
                 <ArrowUpwardRoundedIcon />

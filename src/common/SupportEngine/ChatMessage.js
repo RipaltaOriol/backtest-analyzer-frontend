@@ -1,8 +1,7 @@
-import LogoIcon from "assets/svg/trade_sharpener_logo.svg";
+import LogoIcon from "assets/svg/trade_sharpener_white.svg";
 import React, { useEffect, useRef } from "react";
 
 import Avatar from "@mui/material/Avatar";
-import { deepOrange } from "@mui/material/colors";
 
 const ChatMessage = ({ message, user }) => {
     const ref = useRef();
@@ -18,11 +17,11 @@ const ChatMessage = ({ message, user }) => {
             <div className="messageInfo">
                 <Avatar
                     sx={{
-                        bgcolor: isOwner ? deepOrange[500] : "#d7edff",
+                        bgcolor: isOwner ? "#f8961e" : "#0e73f6",
                         width: 30,
                         height: 30,
                         p: 0.5,
-                        borderRadius: "5px",
+                        borderRadius: "25%",
                     }}
                     variant="square"
                     src={!isOwner && LogoIcon}

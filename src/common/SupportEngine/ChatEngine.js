@@ -1,4 +1,4 @@
-import LogoIcon from "assets/svg/trade_sharpener_logo.svg";
+import LogoIcon from "assets/svg/trade_sharpener_white.svg";
 import { useEffect, useState } from "react";
 
 import { Typography } from "@mui/material";

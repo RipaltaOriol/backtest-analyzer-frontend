@@ -20,14 +20,13 @@
 
 .support-logo {
     max-width: 18px;
-    filter: invert(1);
 }
 
 .chat-info {
     background-color: #0e73f6;
     display: flex;
     align-items: center;
-    color: lightgray;
+    color: white;
 }
 
 .messages-container {
@@ -95,20 +94,25 @@
 
 .support-input {
     height: 46px;
-    background-color: #d7edff;
+    background-color: #f6f8f9;
     display: flex;
     border-radius: 5px;
+    border-top: 1px solid lightgray;
     /* justify-content: space-between; */
 }
 
 .support-input input {
     width: 100%;
-    margin: 8px;
+    margin: 0px 8px;
     border: none;
+    font-size: 16px;
     outline: none;
     color: #2f2d52;
-    background-color: #d7edff;
+    background-color: #f6f8f9;
     font-size: 14px;
+}
+.support-input input[type="text"] {
+    font-size: 15px;
 }
 
 .support-input input::placeholder {

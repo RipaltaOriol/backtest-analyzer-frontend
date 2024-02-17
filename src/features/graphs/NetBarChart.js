@@ -1,4 +1,9 @@
 import { ErrorFeedback } from "common/ErrorFeedback";
+import {
+    greenPaletteConfig,
+    redPaletteConfig,
+    tooltipConfig,
+} from "common/graphs/graphUtils";
 import { Bar } from "react-chartjs-2";
 import parseColumnName from "utils/parseColumns";
 
@@ -26,6 +31,18 @@ const NetBarChart = ({ setupId }) => {
                 gridLines: {
                     zeroLineColor: "#ffcc33",
                 },
+                ticks: {
+                    font: {
+                        weight: "bold",
+                    },
+                },
+            },
+            x: {
+                ticks: {
+                    font: {
+                        weight: "bold",
+                    },
+                },
             },
         },
         plugins: {
@@ -34,9 +51,7 @@ const NetBarChart = ({ setupId }) => {
                     usePointStyle: true,
                 },
             },
-            autocolors: {
-                offset: 10,
-            },
+            tooltip: tooltipConfig,
             annotation: {
                 annotations: {
                     line1: {
@@ -57,12 +72,17 @@ const NetBarChart = ({ setupId }) => {
     };
     if (getNetReturn?.success) {
         let datasetsDaily = [];
-        for (const [key, value] of Object.entries(getNetReturn?.data)) {
+        Object.entries(getNetReturn?.data).forEach(([key, value], index) => {
             datasetsDaily.push({
                 label: parseColumnName(key),
                 data: value,
+                backgroundColor: value.map((result) =>
+                    result > 0
+                        ? greenPaletteConfig[index]
+                        : redPaletteConfig[index]
+                ),
             });
-        }
+        });
         data.datasets = datasetsDaily;
         data.labels = getNetReturn?.labels;
     }

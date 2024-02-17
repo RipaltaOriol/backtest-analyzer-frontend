@@ -8,8 +8,8 @@ import {
     Title,
     Tooltip,
 } from "chart.js";
-import autocolors from "chartjs-plugin-autocolors";
 import { ErrorFeedback } from "common/ErrorFeedback";
+import { multipleColorsConfig, tooltipConfig } from "common/graphs/graphUtils";
 import { Line } from "react-chartjs-2";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -34,8 +34,7 @@ ChartJS.register(
     LineElement,
     Title,
     Tooltip,
-    Legend,
-    autocolors
+    Legend
 );
 
 const FilterMenuItem = styled(MenuItem)({
@@ -73,16 +72,30 @@ const LineGraph = ({ setupId }) => {
                 title: {
                     display: true,
                     text: "Equity",
+                    font: {
+                        weight: "bold",
+                    },
+                },
+                ticks: {
+                    font: {
+                        weight: "bold",
+                    },
                 },
             },
             x: {
                 title: {
                     display: true,
                     text: "",
+                    font: {
+                        weight: "bold",
+                    },
                 },
                 ticks: {
                     autoSkip: true,
-                    maxRotation: 0,
+                    maxRotation: 45,
+                    // font: {
+                    //     weight: "bold",
+                    // },
                 },
             },
         },
@@ -92,6 +105,7 @@ const LineGraph = ({ setupId }) => {
                     usePointStyle: true,
                 },
             },
+            tooltip: tooltipConfig,
         },
     };
 
@@ -115,6 +129,8 @@ const LineGraph = ({ setupId }) => {
         data?.data.forEach((dataset, idx) => {
             lineDatasets.push({
                 ...dataset,
+                backgroundColor: multipleColorsConfig[idx],
+                borderColor: multipleColorsConfig[idx],
             });
         });
         lineData.datasets = lineDatasets;

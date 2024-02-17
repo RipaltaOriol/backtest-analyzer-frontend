@@ -7,9 +7,13 @@ import {
     Title,
     Tooltip,
 } from "chart.js";
-import autocolors from "chartjs-plugin-autocolors";
 import { CustomSelect } from "common/CustomComponents";
 import { ErrorFeedback } from "common/ErrorFeedback";
+import {
+    greenPaletteConfig,
+    redPaletteConfig,
+    tooltipConfig,
+} from "common/graphs/graphUtils";
 import { Bar } from "react-chartjs-2";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -33,8 +37,7 @@ ChartJS.register(
     BarElement,
     Title,
     Tooltip,
-    Legend,
-    autocolors
+    Legend
 );
 
 const FilterMenuItem = styled(MenuItem)({
@@ -70,12 +73,28 @@ const BarGraph = ({ setupId }) => {
                 title: {
                     display: true,
                     text: "Result",
+                    font: {
+                        weight: "bold",
+                    },
+                },
+                ticks: {
+                    font: {
+                        weight: "bold",
+                    },
                 },
             },
             x: {
                 title: {
                     display: true,
                     text: "",
+                    font: {
+                        weight: "bold",
+                    },
+                },
+                ticks: {
+                    font: {
+                        weight: "bold",
+                    },
                 },
             },
         },
@@ -85,6 +104,7 @@ const BarGraph = ({ setupId }) => {
                     usePointStyle: true,
                 },
             },
+            tooltip: tooltipConfig,
             annotation: {
                 annotations: {
                     line1: {
@@ -120,6 +140,9 @@ const BarGraph = ({ setupId }) => {
             barDatasets.push({
                 ...dataset,
                 barThickness: 30,
+                backgroundColor: dataset.data.map((result) =>
+                    result > 0 ? greenPaletteConfig[idx] : redPaletteConfig[idx]
+                ),
             });
         });
         barData.datasets = barDatasets;

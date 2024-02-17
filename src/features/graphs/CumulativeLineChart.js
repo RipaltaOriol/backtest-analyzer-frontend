@@ -1,4 +1,6 @@
 import { ErrorFeedback } from "common/ErrorFeedback";
+import { tooltipConfig } from "common/graphs/graphUtils";
+import { multipleColorsConfig } from "common/graphs/graphUtils";
 import { Line } from "react-chartjs-2";
 import parseColumnName from "utils/parseColumns";
 
@@ -21,15 +23,29 @@ const CumulativeLineChart = ({ setupId }) => {
 
     let options = {
         responsive: true,
+        scales: {
+            y: {
+                ticks: {
+                    font: {
+                        weight: "bold",
+                    },
+                },
+            },
+            x: {
+                ticks: {
+                    font: {
+                        weight: "bold",
+                    },
+                },
+            },
+        },
         plugins: {
             legend: {
                 labels: {
                     usePointStyle: true,
                 },
             },
-            autocolors: {
-                offset: 10,
-            },
+            tooltip: tooltipConfig,
             annotation: {
                 annotations: {
                     line1: {
@@ -51,12 +67,16 @@ const CumulativeLineChart = ({ setupId }) => {
 
     if (getCumulativeReturn?.success) {
         let datasetsDaily = [];
-        for (const [key, value] of Object.entries(getCumulativeReturn?.data)) {
-            datasetsDaily.push({
-                label: parseColumnName(key),
-                data: value,
-            });
-        }
+        Object.entries(getCumulativeReturn.data).forEach(
+            ([key, value], index) => {
+                datasetsDaily.push({
+                    label: parseColumnName(key),
+                    data: value,
+                    backgroundColor: multipleColorsConfig[index],
+                    borderColor: multipleColorsConfig[index],
+                });
+            }
+        );
         data.datasets = datasetsDaily;
         data.labels = getCumulativeReturn?.labels;
     }

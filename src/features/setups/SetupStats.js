@@ -8,7 +8,6 @@ import {
     Tooltip,
 } from "chart.js";
 import annotationPlugin from "chartjs-plugin-annotation";
-import autocolors from "chartjs-plugin-autocolors";
 import BarChart from "common/graphs/BarChart";
 import RadarChart from "common/graphs/BubbleChart";
 import HorizontalBarChart from "common/graphs/HorizontalBarChart";
@@ -33,7 +32,6 @@ ChartJS.register(
     Title,
     Tooltip,
     Legend,
-    autocolors,
     annotationPlugin
 );
 

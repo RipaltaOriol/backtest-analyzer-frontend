@@ -27,7 +27,6 @@
         "bootstrap": "^5.2.3",
         "chart.js": "^4.3.0",
         "chartjs-plugin-annotation": "^3.0.1",
-        "chartjs-plugin-autocolors": "^0.2.2",
         "dayjs": "^1.11.7",
         "emoji-mart": "^5.5.2",
         "firebase": "^10.3.1",

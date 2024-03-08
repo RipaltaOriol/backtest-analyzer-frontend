@@ -189,7 +189,7 @@ const UpdateDocument = () => {
     };
 
     const addNewImage = () => {
-        if (rowValues.imgs === undefined) {
+        if (rowValues.imgs == null) {
             setRowValues({ ...rowValues, imgs: [newImageUrl] });
         } else {
             setRowValues({

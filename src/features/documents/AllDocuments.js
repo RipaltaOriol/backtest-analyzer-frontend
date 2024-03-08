@@ -12,6 +12,7 @@ import FileCopyRoundedIcon from "@mui/icons-material/FileCopyRounded";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import SensorsIcon from "@mui/icons-material/Sensors";
 import TextSnippetIcon from "@mui/icons-material/TextSnippet";
+import TuneRoundedIcon from "@mui/icons-material/TuneRounded";
 import UpdateRoundedIcon from "@mui/icons-material/UpdateRounded";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -393,6 +394,16 @@ const AllDocuments = () => {
                     <ListItemIcon sx={{ minWidth: "30px !important" }}>
                         <UpdateRoundedIcon fontSize="small" />
                     </ListItemIcon>
+                    <ListItemText>Update</ListItemText>
+                </DocumentMenuItem>
+                <DocumentMenuItem
+                    onClick={() =>
+                        navigate("/account/modify/" + selectedDocument.id)
+                    }
+                >
+                    <ListItemIcon sx={{ minWidth: "30px !important" }}>
+                        <TuneRoundedIcon fontSize="small" />
+                    </ListItemIcon>
                     <ListItemText>Modify</ListItemText>
                 </DocumentMenuItem>
                 {selectedDocument?.source === "MT4 API" && (
@@ -400,7 +411,7 @@ const AllDocuments = () => {
                         <ListItemIcon sx={{ minWidth: "30px !important" }}>
                             <SensorsIcon fontSize="small" />
                         </ListItemIcon>
-                        <ListItemText>Update</ListItemText>
+                        <ListItemText>Sync MetaTrader</ListItemText>
                     </DocumentMenuItem>
                 )}
                 <DocumentMenuItem onClick={handleSelectTemplateClose}>

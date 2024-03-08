@@ -1,0 +1,58 @@
+.ts-table-container {
+    display: block;
+    max-width: 100%;
+    overflow-x: scroll;
+    scrollbar-width: none;
+    -ms-overflow-style: none; /* IE and Edge */
+    border-radius: 10px;
+}
+
+.ts-table-container table {
+    border-collapse: collapse;
+    width: 100%;
+    padding: 0px 5px;
+    font-size: 14px;
+    background-color: white;
+}
+
+.ts-table-container thead {
+    background-color: #efeff1;
+    border-radius: 10px;
+}
+
+.ts-table-container thead tr th {
+    padding: 15px 10px 15px;
+}
+
+.ts-table-container thead tr th:first-child {
+    border-radius: 10px 0 0 10px;
+}
+
+.ts-table-container thead tr th:last-child {
+    border-radius: 0 10px 10px 0;
+}
+
+.ts-table-container tr {
+    border: none;
+    /* border-bottom: 1px solid rgb(224, 224, 224);s */
+}
+
+.ts-table-container th {
+    text-align: left;
+    font-weight: 500;
+    padding: 20px 20px 10px;
+    user-select: none; /* standard syntax */
+    -webkit-user-select: none; /* webkit (safari, chrome) browsers */
+    -moz-user-select: none; /* mozilla browsers */
+    -khtml-user-select: none; /* webkit (konqueror) browsers */
+    -ms-user-select: none; /* IE10+ */
+}
+
+.ts-table-container td {
+    padding: 10px 20px;
+    user-select: none; /* standard syntax */
+    -webkit-user-select: none; /* webkit (safari, chrome) browsers */
+    -moz-user-select: none; /* mozilla browsers */
+    -khtml-user-select: none; /* webkit (konqueror) browsers */
+    -ms-user-select: none; /* IE10+ */
+}

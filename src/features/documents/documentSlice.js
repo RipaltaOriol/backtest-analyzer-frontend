@@ -117,6 +117,25 @@ export const documentsApiSlice = apiSlice.injectEndpoints({
         }),
         getDocumentColumns: builder.query({
             query: ({ documentId }) => `/documents/${documentId}/columns`,
+            providesTags: ["AccountColumns"],
+        }),
+        updateAccountColumns: builder.mutation({
+            query: ({ id, columns }) => ({
+                url: `/documents/${id}/columns`,
+                method: "PUT",
+                body: columns,
+            }),
+            invalidatesTags: (result, error, arg) => [
+                { type: "Document", id: arg.documentId },
+                "DocumentTable",
+                "CalendarTable",
+                "Setup",
+                "SetupRow",
+                "Stats",
+                "Graphs",
+                "Charts",
+                "AccountColumns",
+            ],
         }),
         compareDocumentSetups: builder.query({
             query: ({ documentId, metric = null }) => ({
@@ -141,6 +160,7 @@ export const {
     useDeleteDocumentMutation,
     useCompareDocumentSetupsQuery,
     useGetDocumentColumnsQuery,
+    useUpdateAccountColumnsMutation,
     useAssignDocumentTemplateMutation,
 } = documentsApiSlice;
 

@@ -39,3 +39,26 @@ export const CustomSelect = styled(Select)({
         borderWidth: "1px",
     },
 });
+
+export const TSMenuItem = styled(MenuItem)({
+    borderRadius: "6px",
+    fontWeight: "500",
+    "&:hover": {
+        color: "#1A65F1",
+        backgroundColor: "#f6f9fe",
+    },
+    "&:focus": {
+        color: "inherit",
+        backgroundColor: "inherit",
+    },
+    "&.Mui-selected": {
+        "&:focus": {
+            color: "inherit",
+            backgroundColor: "inherit",
+        },
+    },
+    "&:hover:focus": {
+        color: "#1A65F1",
+        backgroundColor: "#f6f9fe",
+    },
+});

@@ -1,76 +1,85 @@
+import { uploadFile } from "api/awsS3";
+import {
+    TSBackButton,
+    TSMainButton,
+    TSTextField,
+} from "common/CustomComponents";
 import ImagesCarousel from "common/ImageCarousel";
 import ImagePreviewDialog from "common/ImagePreviewDialog";
-import Message from "common/Message";
 import TipTapEditor, { useTextEditor } from "common/TipTapEditor";
 import { EditorView } from "prosemirror-view";
-import { useEffect, useState } from "react";
-import parseDataValues from "utils/displayUtils";
-import parseColumnName from "utils/parseColumns";
+import { useCallback, useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { validateDirection } from "utils";
 
+import { AddBoxRounded } from "@mui/icons-material";
 import CloudUploadOutlinedIcon from "@mui/icons-material/CloudUploadOutlined";
+import DeleteOutlineRoundedIcon from "@mui/icons-material/DeleteOutlineRounded";
+import MoveToInboxRoundedIcon from "@mui/icons-material/MoveToInboxRounded";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import Grid from "@mui/material/Grid";
+import IconButton from "@mui/material/IconButton";
 import InputAdornment from "@mui/material/InputAdornment";
-import TextField from "@mui/material/TextField";
+import InputLabel from "@mui/material/InputLabel";
 import Typography from "@mui/material/Typography";
 import { styled } from "@mui/system";
 
-import { useUpdateDocumentMutation } from "features/documents/documentSlice";
+import {
+    updateDateInput,
+    updateNumberInput,
+    updateTextInput,
+} from "features/documents/UpdateDocumentHelper";
+import { useGetDocumentColumnsQuery } from "features/documents/documentSlice";
+import { setError, setMessage } from "features/messages/messagesSlice";
+import {
+    useDeleteTradeMutation,
+    useUpdateTradeMutation,
+} from "features/trades/tradeAPISlice";
 
-const FieldText = styled(Typography)({
-    color: "#6E7C87",
-});
-
-// hacky solution for reload editor
 EditorView.prototype.updateState = function updateState(state) {
+    // hacky solution for reload editor
     if (!this.docView) return; // This prevents the matchesNode error on hot reloads
     this.updateStateInner(state, this.state.plugins !== state.plugins);
 };
 
+const VisuallyHiddenInput = styled("input")({
+    clip: "rect(0 0 0 0)",
+    clipPath: "inset(50%)",
+    height: 1,
+    overflow: "hidden",
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    whiteSpace: "nowrap",
+    width: 1,
+});
+
 const HighlightBox = styled(Box)({
     backgroundColor: "#F0F1F2",
-    borderRadius: "6px",
-    marginBottom: 15,
-});
-
-const HighlightText = styled("span")({
-    marginLeft: 10,
-    color: "#252C32",
-    fontWeight: "400",
-});
-
-const AddImageBox = styled(Box)({
-    backgroundColor: "#fff",
-    border: "1px solid #E5E9EB",
-    borderRadius: "6px",
-    display: "flex",
-    flexDirection: "column",
+    borderRadius: "10px",
+    marginBottom: 16,
+    display: "grid",
+    gridTemplateColumns: "repeat(4, 1fr)",
+    columnGap: "16px",
+    rowGap: "8px",
     alignItems: "center",
-    padding: "15px 0",
 });
 
-const LighTextField = styled(TextField)({
-    background: "#F0F1F2",
-    outline: null,
-    borderRadius: "6px",
-    "& .MuiOutlinedInput-root": {
-        "& fieldset": {
-            borderColor: "#E5E9EB",
-        },
-        "&:hover fieldset": {
-            borderColor: "#E5E9EB",
-        },
-        "&.Mui-focused fieldset": {
-            border: "#E5E9EB",
-        },
-    },
+const MetricBox = styled(Box)({
+    margin: "8px",
+    display: "grid",
+    gridTemplateColumns: "repeat(4, 1fr)",
+    columnGap: "16px",
+    rowGap: "8px",
+    alignItems: "center",
+    marginBottom: 16,
 });
 
-// this should be improved
+// TODO: optimize this logic
 function isMetric(metric) {
     if (
         isResultColumn(metric) ||
@@ -78,6 +87,10 @@ function isMetric(metric) {
         metric === "note" ||
         metric === "imgs" ||
         metric === "index" ||
+        metric === "col_o" ||
+        metric === "col_rr" ||
+        metric === "col_sl" ||
+        metric === "col_tp" ||
         metric === "rowId"
     ) {
         return false;
@@ -85,58 +98,115 @@ function isMetric(metric) {
     return true;
 }
 
-function parseColumnValue(value, metric) {
-    if (metric.startsWith("col_d_") && value) {
-        return value.replace(/T.*/, "").split("-").reverse().join("-");
-    } else {
-        return value;
-    }
-}
-
 function isResultColumn(column) {
     return new RegExp("col_[vpr]_").test(column);
 }
 
-function SingleRecordDialog({
-    open,
-    onClose,
-    documentId,
-    rowRecord,
-    // isSetup = true,
-}) {
-    // TODO: change setupId to something like itemId
+function SingleRecordDialog({ open, onClose, documentId, rowRecord }) {
     const [imagePreview, setImagePreview] = useState(false);
     const [imagePreviewUrl, setImagePreviewUrl] = useState("");
     const [newImageUrl, setNewImageUrl] = useState("");
+    const [tradeData, setTradeData] = useState(rowRecord);
     const [images, setImages] = useState(rowRecord.imgs || []);
-    const [msg, setMsg] = useState("");
-    const [msgStatus, setMsgStatus] = useState(true); // true reflects success, false reflects failure
+    const dispatch = useDispatch();
 
-    const [updateDocument] = useUpdateDocumentMutation();
+    const [updateTrade] = useUpdateTradeMutation();
+    const [deleteTrade] = useDeleteTradeMutation();
+
+    const { data: accountColumns } = useGetDocumentColumnsQuery(
+        { documentId },
+        { skip: !documentId }
+    );
 
     const handleClose = () => {
         onClose();
     };
 
+    const handleDelete = async () => {
+        try {
+            const response = await deleteTrade({
+                documentId,
+                tradeId: rowRecord.rowId,
+            }).unwrap();
+            console.log(response);
+            setUserMessage(response.msg);
+            setUserError(!response.success);
+            handleClose();
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    const setUserMessage = useCallback(
+        (newMessage) => {
+            dispatch(setMessage({ msg: newMessage }));
+        },
+        [dispatch]
+    );
+
+    const setUserError = (isError) => {
+        dispatch(setError({ error: isError }));
+    };
+
     let editor = useTextEditor(rowRecord?.note);
 
     const handleSave = async () => {
-        let res = null;
+        console.log(tradeData.hasOwnProperty("col_d"), tradeData?.col_d);
+        if (
+            tradeData.hasOwnProperty("col_d") &&
+            !validateDirection(tradeData?.col_d)
+        ) {
+            setUserMessage(
+                "Direction value is incorrect. Value should be long or short."
+            );
+            setUserError(true);
+            return false;
+        }
+
         let data = {
-            ...rowRecord,
+            ...tradeData,
             note: editor?.getHTML(),
             imgs: images,
             rowId: rowRecord.rowId, // NOTE: this has been changed from index to rowId. Be careful it it triggers more errors.
         };
 
         delete data["index"];
-        res = await updateDocument({
-            id: documentId,
-            method: "update",
-            data,
-        });
-        setMsg(res?.data.msg);
-        setMsgStatus(res?.data.success);
+
+        try {
+            const updatedTrade = await updateTrade({
+                documentId,
+                tradeId: rowRecord.rowId,
+                trade: data,
+            });
+            setUserMessage(updatedTrade?.data.msg);
+            setUserError(!updatedTrade?.data.success);
+            onClose();
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    const handleChange =
+        (key, type = "string") =>
+        (event) => {
+            let newValue = event.target.value;
+            if (type === "number") {
+                newValue =
+                    event.target.valueAsNumber === 0
+                        ? 0
+                        : event.target.valueAsNumber || null;
+            }
+            setTradeData({ ...tradeData, [key]: newValue });
+        };
+
+    const handleDateTimeChange = (key, newValue) => {
+        try {
+            setTradeData({ ...tradeData, [key]: newValue.toISOString() });
+        } catch (err) {
+            if (err instanceof RangeError) {
+                console.log(err);
+            }
+        }
     };
 
     const addNewImage = () => {
@@ -152,9 +222,79 @@ function SingleRecordDialog({
 
     useEffect(() => {
         editor?.commands.setContent(rowRecord?.note || "");
+        setTradeData(rowRecord);
         setImages(rowRecord?.imgs || []);
-        setMsg("");
     }, [rowRecord, editor]);
+
+    const generateField = (columnId, columnValue) => {
+        switch (true) {
+            case columnId === "note":
+                return null;
+            case columnId === "imgs":
+                return null;
+            case accountColumns[columnId].type === "float64" ||
+                accountColumns[columnId].type === "int64":
+                return (
+                    <Box>
+                        <InputLabel shrink={false} sx={{ mb: 1 }}>
+                            {accountColumns[columnId].name}
+                        </InputLabel>
+
+                        {updateNumberInput(columnId, columnValue, handleChange)}
+                    </Box>
+                );
+            case accountColumns[columnId].type === "object":
+                return (
+                    <Box>
+                        <InputLabel shrink={false} sx={{ mb: 1 }}>
+                            {accountColumns[columnId].name}
+                        </InputLabel>
+
+                        {updateTextInput(columnId, columnValue, handleChange)}
+                    </Box>
+                );
+            case columnId.startsWith("col_d_"):
+                return (
+                    <Box>
+                        <InputLabel shrink={false} sx={{ mb: 1 }}>
+                            {accountColumns[columnId].name}
+                        </InputLabel>
+
+                        {updateDateInput(
+                            columnId,
+                            columnValue,
+                            handleDateTimeChange
+                        )}
+                    </Box>
+                );
+
+            default:
+                return null;
+        }
+    };
+
+    const handleFileChange = async (e) => {
+        try {
+            const file = e.target.files[0];
+            const fileType = file["type"];
+            const validImageTypes = ["image/gif", "image/jpeg", "image/png"];
+            if (validImageTypes.includes(fileType)) {
+                const response = await uploadFile(file);
+                if (response.success) {
+                    setImages([...images, response.url]);
+                } else {
+                    dispatch(setError({ error: true }));
+                    dispatch(setMessage({ msg: "Something went wrong." }));
+                }
+            } else {
+                dispatch(setError({ error: true }));
+                dispatch(setMessage({ msg: "File type not supported." }));
+            }
+        } catch (e) {
+            dispatch(setError({ error: true }));
+            dispatch(setMessage({ msg: "Something went wrong." }));
+        }
+    };
 
     return (
         <Box>
@@ -170,7 +310,8 @@ function SingleRecordDialog({
                 maxWidth="xl"
                 sx={{
                     ".MuiDialog-paper": {
-                        borderRadius: "6px",
+                        borderRadius: "10px",
+                        backgroundColor: "#F6F8F9",
                     },
                 }}
             >
@@ -179,10 +320,11 @@ function SingleRecordDialog({
                         display: "flex",
                         justifyContent: "space-between",
                         alignItems: "center",
-                        backgroundColor: "#F6F8F9",
-                        border: "1px solid #E5E9EB",
-                        px: 4,
-                        py: 1.5,
+                        backgroundColor: "white",
+                        border: "none",
+                        borderRadius: "10px",
+                        p: 2,
+                        m: 1,
                     }}
                 >
                     <DialogTitle
@@ -193,192 +335,256 @@ function SingleRecordDialog({
                             p: 0,
                         }}
                     >
-                        Trade in {rowRecord["col_p"]?.toUpperCase() || ""}
+                        Trade in {tradeData["col_p"]?.toUpperCase() || "..."}
                     </DialogTitle>
+                    <Box>
+                        <IconButton
+                            aria-label="delete-trade"
+                            onClick={handleDelete}
+                            sx={{
+                                mr: 2,
+                                color: "red",
+                                backgroundColor: "#ffedef",
+                                borderRadius: "10px",
+                                "&:hover": {
+                                    backgroundColor: "#ffedef",
+                                },
+                            }}
+                            disableRipple
+                        >
+                            <DeleteOutlineRoundedIcon />
+                        </IconButton>
+                        <TSBackButton
+                            onClick={handleClose}
+                            sx={{
+                                px: 4,
+                                py: 1,
+                                mr: 2,
+                            }}
+                        >
+                            Cancel
+                        </TSBackButton>
+                        <TSMainButton
+                            variant="contained"
+                            onClick={handleSave}
+                            sx={{
+                                px: 4,
+                                py: 1,
+                            }}
+                        >
+                            Apply
+                        </TSMainButton>
+                    </Box>
                 </Box>
 
-                <DialogContent sx={{ p: 4, pt: msg ? 1 : 4 }}>
-                    {msg && (
-                        <Message
-                            message={msg}
-                            setMessage={setMsg}
-                            isError={!msgStatus}
-                            sx={{ my: 1 }}
-                        />
-                    )}
-                    {/* have this header not scrollabel */}
-                    <Grid container spacing={3}>
-                        <Grid item xs={6} sx={{ mb: 1 }}>
-                            {/* General Info */}
-                            <HighlightBox display="flex" sx={{ p: 2 }}>
-                                <Box width="50%">
-                                    <FieldText>
+                <DialogContent sx={{ p: 2, pt: 1 }}>
+                    <HighlightBox sx={{ p: 2 }}>
+                        {accountColumns &&
+                            accountColumns.hasOwnProperty("col_o") && (
+                                <Box>
+                                    <InputLabel shrink={false} sx={{ mb: 1 }}>
                                         Entry
-                                        <HighlightText>
-                                            {rowRecord?.col_o ?? "NA"}
-                                        </HighlightText>
-                                    </FieldText>
-                                    <FieldText>
-                                        SL
-                                        <HighlightText>
-                                            {rowRecord?.col_sl ?? "NA"}
-                                        </HighlightText>
-                                    </FieldText>
-                                    <FieldText>
-                                        TP
-                                        <HighlightText>
-                                            {rowRecord?.col_tp ?? "NA"}
-                                        </HighlightText>
-                                    </FieldText>
-                                </Box>
-                                <Box width="50%">
-                                    <FieldText>
-                                        Risk Reward
-                                        <HighlightText>
-                                            {rowRecord?.col_rr ?? "NA"}
-                                        </HighlightText>
-                                    </FieldText>
-                                    {rowRecord &&
-                                        Object.entries(rowRecord).map(
-                                            ([key, value], idx) => {
-                                                if (
-                                                    isResultColumn(key) &&
-                                                    typeof value === "number"
-                                                ) {
-                                                    return (
-                                                        <FieldText key={idx}>
-                                                            {parseColumnName(
-                                                                key
-                                                            )}
-                                                            <HighlightText>
-                                                                {parseDataValues(
-                                                                    key,
-                                                                    value
-                                                                )}
-                                                            </HighlightText>
-                                                        </FieldText>
-                                                    );
-                                                }
-                                                return null;
-                                            }
-                                        )}
-                                </Box>
-                            </HighlightBox>
-                            {/* Other Info */}
-                            <Typography sx={{ fontWeight: "600" }} gutterBottom>
-                                Metrics
-                            </Typography>
-                            <Grid container spacing={0.5} sx={{ mb: 1 }}>
-                                {rowRecord &&
-                                    Object.entries(rowRecord).map(
-                                        ([key, value], idx) => {
-                                            if (isMetric(key)) {
-                                                return (
-                                                    <Grid item xs={6} key={idx}>
-                                                        {/* have this props in case a word is very large and cannot be wrapped */}
-                                                        <FieldText
-                                                            sx={{
-                                                                overflow:
-                                                                    "hidden",
-                                                                textOverflow:
-                                                                    "ellipsis",
-                                                            }}
-                                                        >
-                                                            {parseColumnName(
-                                                                key
-                                                            )}
-                                                            <HighlightText>
-                                                                {parseColumnValue(
-                                                                    value,
-                                                                    key
-                                                                )}
-                                                            </HighlightText>
-                                                        </FieldText>
-                                                    </Grid>
-                                                );
-                                            }
-                                            return null;
-                                        }
+                                    </InputLabel>
+                                    {updateNumberInput(
+                                        "col_o",
+                                        tradeData?.col_o,
+                                        handleChange
                                     )}
-                            </Grid>
-                        </Grid>
-                        <Grid item xs={6} sx={{ mb: 2 }}>
-                            {/* Notes */}
-                            <Typography variant="h6">Notes</Typography>
-                            <TipTapEditor
-                                editor={editor}
-                                sx={{ height: "100%" }}
-                            />
-                        </Grid>
-                    </Grid>
-                    <Grid container spacing={3}>
-                        <Grid item xs={6}>
-                            <AddImageBox>
-                                <Typography variant="subtitle3">
-                                    Upload your image
-                                </Typography>
-                                <Typography color="#6E7C87">
-                                    Add url or browse from your computer
-                                </Typography>
-                                <Box
+                                </Box>
+                            )}
+
+                        {accountColumns &&
+                            accountColumns.hasOwnProperty("col_sl") && (
+                                <Box>
+                                    <InputLabel shrink={false} sx={{ mb: 1 }}>
+                                        Stop Loss
+                                    </InputLabel>
+
+                                    {updateNumberInput(
+                                        "col_sl",
+                                        tradeData?.col_sl,
+                                        handleChange
+                                    )}
+                                </Box>
+                            )}
+                        {accountColumns &&
+                            accountColumns.hasOwnProperty("col_tp") && (
+                                <Box>
+                                    <InputLabel shrink={false} sx={{ mb: 1 }}>
+                                        Take Profit
+                                    </InputLabel>
+
+                                    {updateNumberInput(
+                                        "col_tp",
+                                        tradeData?.col_tp,
+                                        handleChange
+                                    )}
+                                </Box>
+                            )}
+                        {accountColumns &&
+                            accountColumns.hasOwnProperty("col_rr") && (
+                                <Box>
+                                    <InputLabel shrink={false} sx={{ mb: 1 }}>
+                                        Risk Reward Ratio
+                                    </InputLabel>
+
+                                    {updateNumberInput(
+                                        "col_rr",
+                                        tradeData?.col_rr,
+                                        handleChange
+                                    )}
+                                </Box>
+                            )}
+                        {tradeData &&
+                            Object.entries(accountColumns || {}).map(
+                                ([columnName, columnValues], idx) => {
+                                    if (isResultColumn(columnName)) {
+                                        return (
+                                            <Box key={idx}>
+                                                <InputLabel
+                                                    shrink={false}
+                                                    sx={{ mb: 1 }}
+                                                >
+                                                    {columnValues.name}
+                                                </InputLabel>
+                                                {updateNumberInput(
+                                                    columnName,
+                                                    tradeData?.[columnName],
+                                                    handleChange
+                                                )}
+                                            </Box>
+                                        );
+                                    }
+                                    return null;
+                                }
+                            )}
+                    </HighlightBox>
+                    <MetricBox>
+                        {Object.entries(accountColumns || {}).map(
+                            ([columnName, columnValues], idx) => {
+                                if (isMetric(columnName)) {
+                                    return generateField(
+                                        columnName,
+                                        tradeData?.[columnName]
+                                    );
+                                }
+                                return null;
+                            }
+                        )}
+                    </MetricBox>
+                    <Box sx={{ margin: "8px", mb: 2 }}>
+                        <Typography
+                            gutterBottom
+                            sx={{
+                                fontWeight: 600,
+                                fontSize: 14,
+                                lineHeight: "16px",
+                                letterSpacing: "-0.6px",
+                            }}
+                        >
+                            Notes
+                        </Typography>
+                        <TipTapEditor editor={editor} sx={{ height: "100%" }} />
+                    </Box>
+                    <Box sx={{ margin: "8px" }}>
+                        <Typography
+                            gutterBottom
+                            sx={{
+                                fontWeight: 600,
+                                fontSize: 14,
+                                lineHeight: "16px",
+                                letterSpacing: "-0.6px",
+                            }}
+                        >
+                            Upload Images
+                        </Typography>
+                        <Grid container spacing={3}>
+                            <Grid item xs={6}>
+                                <Button
+                                    component="label"
+                                    disableRipple
                                     sx={{
-                                        mt: 2,
-                                        display: "flex",
-                                        alignItems: "center",
+                                        py: 5,
+                                        mb: 1,
+                                        border: "1px dashed #0000003b",
+                                        backgroundColor: "white",
+                                        width: "100%",
                                     }}
                                 >
-                                    <LighTextField
-                                        placeholder="url link"
-                                        size="small"
-                                        sx={{ mr: 2 }}
-                                        value={newImageUrl}
-                                        onChange={(e) =>
-                                            setNewImageUrl(e.target.value)
-                                        }
-                                        InputProps={{
-                                            startAdornment: (
-                                                <InputAdornment position="start">
-                                                    <CloudUploadOutlinedIcon color="primary" />
-                                                </InputAdornment>
-                                            ),
-                                        }}
-                                    />
-                                    <Button
-                                        variant="contained"
-                                        onClick={addNewImage}
-                                    >
-                                        Submit
-                                    </Button>
-                                </Box>
-                            </AddImageBox>
+                                    <Box sx={{ textAlign: "center" }}>
+                                        <MoveToInboxRoundedIcon
+                                            sx={{
+                                                fontSize: 70,
+                                                color: "#0000003b",
+                                            }}
+                                        />
+                                        <Typography
+                                            sx={{
+                                                fontWeight: 500,
+                                                fontSize: 14,
+                                                color: "#0d0d254d",
+                                            }}
+                                        >
+                                            Click To Upload Image
+                                        </Typography>
+                                        <VisuallyHiddenInput
+                                            type="file"
+                                            onChange={handleFileChange}
+                                        />
+                                    </Box>
+                                </Button>
+                                <TSTextField
+                                    placeholder="Image URL"
+                                    sx={{ mr: 2 }}
+                                    value={newImageUrl}
+                                    onChange={(e) =>
+                                        setNewImageUrl(e.target.value)
+                                    }
+                                    InputProps={{
+                                        startAdornment: (
+                                            <InputAdornment position="start">
+                                                <CloudUploadOutlinedIcon
+                                                    sx={{
+                                                        color: "#1A65F1",
+                                                    }}
+                                                />
+                                            </InputAdornment>
+                                        ),
+                                        endAdornment: (
+                                            <InputAdornment
+                                                position="end"
+                                                sx={{ mr: 0.5 }}
+                                            >
+                                                <IconButton
+                                                    edge="end"
+                                                    disableRipple
+                                                    sx={{
+                                                        color: "white",
+                                                        p: 0.5,
+                                                        backgroundColor:
+                                                            "#1A65F1",
+                                                        borderRadius: "5px",
+                                                    }}
+                                                    onClick={addNewImage}
+                                                >
+                                                    <AddBoxRounded />
+                                                </IconButton>
+                                            </InputAdornment>
+                                        ),
+                                    }}
+                                />
+                            </Grid>
+                            <Grid item xs={6}>
+                                <ImagesCarousel
+                                    images={images}
+                                    setImagePreview={setImagePreview}
+                                    setImagePreviewUrl={setImagePreviewUrl}
+                                    removeImage={removeImage}
+                                />
+                            </Grid>
                         </Grid>
-                        <Grid item xs={6}>
-                            {/* Images */}
-                            <ImagesCarousel
-                                images={images}
-                                setImagePreview={setImagePreview}
-                                setImagePreviewUrl={setImagePreviewUrl}
-                                removeImage={removeImage}
-                            />
-                        </Grid>
-                    </Grid>
+                    </Box>
                 </DialogContent>
-                <Box display="flex" justifyContent="center" sx={{ m: 2 }}>
-                    <Button
-                        color="secondary"
-                        sx={{ py: 0, px: 5, mx: 1 }}
-                        onClick={handleClose}
-                    >
-                        Cancel
-                    </Button>
-                    <Button
-                        variant="contained"
-                        sx={{ py: 0.5, px: 5, mx: 1 }}
-                        onClick={handleSave}
-                    >
-                        Save
-                    </Button>
-                </Box>
             </Dialog>
         </Box>
     );

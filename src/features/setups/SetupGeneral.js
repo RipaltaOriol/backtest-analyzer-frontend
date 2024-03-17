@@ -1,7 +1,8 @@
-import { CustomMenuItem } from "common/CustomComponents";
+import { TSMenuItem, TSSelect } from "common/CustomComponents";
 import { ErrorFeedback } from "common/ErrorFeedback";
 import StateTable from "common/StateTable";
 import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { displayWinRate, parseDataValues } from "utils/displayUtils";
 import parseColumnName from "utils/parseColumns";
 
@@ -9,12 +10,13 @@ import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownR
 import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
-import Select from "@mui/material/Select";
 import Skeleton from "@mui/material/Skeleton";
 import Typography from "@mui/material/Typography";
 
 import { useGetStatisticsQuery } from "features/statistics/statisticsApiSlice";
 import { renderTemplate } from "features/templates/utilsRenderTemplate";
+import { setOpen, setTrade } from "features/trades/tradeSlice";
+import { selectOpen, selectTrade } from "features/trades/tradeSlice";
 
 import Notes from "../../pages/Analysis/Notes";
 import LineGraph from "../graphs/LineGraph";
@@ -22,8 +24,10 @@ import LineGraph from "../graphs/LineGraph";
 const SetupGeneral = (props) => {
     const { children, value, setup, index, ...other } = props;
     const [resultMetric, setResultMetric] = useState();
-    const [open, setOpen] = useState(false);
-    const [selectedRow, setSelectedRow] = useState({});
+    const trade = useSelector(selectTrade);
+    const tradeOpen = useSelector(selectOpen);
+    const dispatch = useDispatch();
+
     const {
         data: setupStatistics,
         isLoading,
@@ -40,6 +44,19 @@ const SetupGeneral = (props) => {
             setResultMetric(Object.keys(setupStatistics?.data)[0]);
     }, [setupStatistics]);
 
+    const closeTradeDialog = () => {
+        handleSetTradeOpen(false);
+        handeSetTrade({});
+    };
+
+    const handeSetTrade = (trade) => {
+        dispatch(setTrade(trade));
+    };
+
+    const handleSetTradeOpen = (open) => {
+        dispatch(setOpen(open));
+    };
+
     const statisticsPanel = () => {
         return (
             <>
@@ -47,8 +64,7 @@ const SetupGeneral = (props) => {
                     <Typography variant="body2" gutterBottom>
                         Result Metric
                     </Typography>
-                    <Select
-                        size="small"
+                    <TSSelect
                         autoWidth={true}
                         value={resultMetric || ""}
                         onChange={(e) => setResultMetric(e.target.value)}
@@ -56,26 +72,16 @@ const SetupGeneral = (props) => {
                         sx={{
                             color: "#0e73f6",
                             fontWeight: "500",
-                            "& legend": { display: "none" },
-                            "& fieldset": { top: 0 },
-                            "&.MuiOutlinedInput-root:hover fieldset": {
-                                borderColor: "#0e73f6",
-                            },
-
-                            "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                borderColor: "inherit",
-                                borderWidth: "1px",
-                            },
                         }}
                     >
                         {Object.keys(setupStatistics?.data).map(
                             (column, idx) => (
-                                <CustomMenuItem value={column} key={idx}>
+                                <TSMenuItem value={column} key={idx}>
                                     {parseColumnName(column)}
-                                </CustomMenuItem>
+                                </TSMenuItem>
                             )
                         )}
-                    </Select>
+                    </TSSelect>
                 </Box>
                 <Box
                     sx={{
@@ -122,7 +128,7 @@ const SetupGeneral = (props) => {
                     </Box>
                     <Box align="center">
                         <Typography variant="body2" gutterBottom>
-                            Average PnL
+                            Trade Expectancy
                         </Typography>
                         <Typography
                             variant="h3"
@@ -160,8 +166,7 @@ const SetupGeneral = (props) => {
                             sx={{
                                 border: "1px solid #e5e9eb",
                                 borderRadius: "5px",
-                                px: 5,
-                                py: 3,
+                                p: 3,
                             }}
                         >
                             {setupStatistics?.success ? (
@@ -199,8 +204,8 @@ const SetupGeneral = (props) => {
                         {setup?.id ? (
                             <StateTable // avoid re-rendering this component. Only load if setup.id is provided.
                                 setup={setup}
-                                setOpen={setOpen}
-                                setSelectedRow={setSelectedRow}
+                                setOpen={handleSetTradeOpen}
+                                setSelectedRow={handeSetTrade}
                             />
                         ) : (
                             <Skeleton variant="rounded" height={60} />
@@ -211,9 +216,9 @@ const SetupGeneral = (props) => {
             {renderTemplate(
                 setup?.template,
                 setup?.documentId,
-                selectedRow,
-                open,
-                setOpen
+                trade,
+                tradeOpen,
+                closeTradeDialog
             )}
         </div>
     );

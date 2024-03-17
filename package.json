@@ -23,6 +23,7 @@
         "@tiptap/pm": "^2.0.3",
         "@tiptap/react": "^2.0.3",
         "@tiptap/starter-kit": "^2.0.3",
+        "aws-sdk": "^2.1575.0",
         "axios": "^1.4.0",
         "bootstrap": "^5.2.3",
         "chart.js": "^4.3.0",
@@ -44,6 +45,7 @@
         "redux-saga": "^1.2.3",
         "swiper": "^9.3.0",
         "typeface-inter": "^3.18.1",
+        "uuid": "^9.0.1",
         "web-vitals": "^3.3.1"
     },
     "scripts": {

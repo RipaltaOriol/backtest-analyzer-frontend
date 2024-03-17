@@ -1,10 +1,12 @@
+import { TSMainButton } from "common/CustomComponents";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation, useParams } from "react-router-dom";
 
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import ArrowUpwardRoundedIcon from "@mui/icons-material/ArrowUpwardRounded";
 import CompareArrowsRoundedIcon from "@mui/icons-material/CompareArrowsRounded";
+import IsoIcon from "@mui/icons-material/Iso";
 import ViewColumnRoundedIcon from "@mui/icons-material/ViewColumnRounded";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -13,7 +15,10 @@ import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { styled } from "@mui/system";
 
+import { setError, setMessage } from "features/messages/messagesSlice";
 import AddSetupDialog from "features/setups/AllSetups/AddSetupDialog";
+import { useAddTradeMutation } from "features/trades/tradeAPISlice";
+import { setOpen, setTrade } from "features/trades/tradeSlice";
 
 import { selectDocumentById } from "../../features/documents/documentSlice";
 import { useDownloadPDFFileMutation } from "../../features/pdfs/pdfsSlice";
@@ -33,18 +38,19 @@ const MenuButton = styled(Button)({
     color: "#252C32",
     backgroundColor: "#fff",
     border: "1px solid #DDE2E4",
-    padding: "4px 12px",
+    px: 2,
+    py: 1,
     textTransform: "none",
-    borderRadius: "6px",
+    borderRadius: "10px",
 });
 
 const CustomIconMenuButton = styled(IconButton)({
     color: "#252C32",
     backgroundColor: "#fff",
     border: "1px solid #DDE2E4",
-    padding: "4px 4px",
+    p: 1,
+    borderRadius: "10px",
     textTransform: "none",
-    borderRadius: "6px",
     "& .MuiTouchRipple-root .MuiTouchRipple-child": {
         borderRadius: "6px",
     },
@@ -55,6 +61,9 @@ const Analysis = () => {
     const { state } = useLocation();
     const [currentSetup, setCurrentSetup] = useState();
     const [openAddSetup, setOpenAddSetup] = useState(false);
+
+    const [addTrade] = useAddTradeMutation();
+    const dispatch = useDispatch();
 
     // NOTE: handle Errors
     const { setupsByDocument, defaultSetup, providedSetup, actualSetup } =
@@ -78,6 +87,20 @@ const Analysis = () => {
 
     useEffect(() => {}, [currentSetup]);
 
+    const handleAddTrade = async () => {
+        try {
+            const newTrade = await addTrade({ documentId }).unwrap();
+            if (newTrade.success) {
+                dispatch(setTrade(newTrade.trade));
+                dispatch(setOpen(true));
+            }
+            dispatch(setMessage({ msg: newTrade.msg }));
+            dispatch(setError({ error: !newTrade.success }));
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
     const handleAddDialogClose = () => {
         setOpenAddSetup(false);
     };
@@ -89,13 +112,28 @@ const Analysis = () => {
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "space-between",
-                    mb: 1,
+                    mb: 2,
                 }}
             >
-                <Typography variant="h5">
+                <Typography
+                    sx={{
+                        fontWeight: 600,
+                        fontSize: 25,
+                        LineHeight: 30,
+                        letterSpacing: "-0.6px",
+                    }}
+                >
                     {document ? document?.name : "Loading"}
                 </Typography>
                 <Box>
+                    <TSMainButton
+                        variant="contained"
+                        onClick={handleAddTrade}
+                        sx={{ ml: 1 }}
+                        startIcon={<IsoIcon />}
+                    >
+                        Add Trade
+                    </TSMainButton>
                     <Tooltip
                         title="If your table has a lot of columns the PDF might fail to capture them properly"
                         placement="top"
@@ -120,8 +158,7 @@ const Analysis = () => {
                         </MenuButton>
                     </Tooltip>
                     <SetupFilter setup={actualSetup} />
-                    <Button
-                        color="primary"
+                    <TSMainButton
                         variant="contained"
                         component={Link}
                         to="/setups"
@@ -129,7 +166,7 @@ const Analysis = () => {
                         startIcon={<ViewColumnRoundedIcon />}
                     >
                         Manage
-                    </Button>
+                    </TSMainButton>
                     <MenuButton
                         color="secondary"
                         sx={{ ml: 1 }}
@@ -150,6 +187,7 @@ const Analysis = () => {
                     />
                     <CustomIconMenuButton
                         sx={{ ml: 1 }}
+                        size="small"
                         onClick={() => setOpenAddSetup(true)}
                     >
                         <AddRoundedIcon />

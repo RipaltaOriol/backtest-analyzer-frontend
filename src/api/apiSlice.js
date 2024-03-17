@@ -56,6 +56,7 @@ export const apiSlice = createApi({
         "CalendarTable",
         "CompareSetups",
         "SetupRow",
+        "AccountColumns",
     ],
     endpoints: (builder) => ({}),
 });

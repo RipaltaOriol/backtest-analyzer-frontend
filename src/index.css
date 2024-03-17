@@ -36,8 +36,12 @@ code {
 }
 
 .light-border {
-    border: 1px solid #e5e9eb;
-    border-radius: 5px;
+    border-radius: 10px;
+    background-color: #e5e9eb;
+}
+
+.light-border img {
+    border-radius: 10px;
 }
 
 /* style calendar week day label */

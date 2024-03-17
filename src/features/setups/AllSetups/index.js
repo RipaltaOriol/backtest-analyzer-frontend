@@ -1,3 +1,4 @@
+import { TSMainButton } from "common/CustomComponents";
 import DeleteConfirmationDialog from "common/DeleteConfirmation";
 import { useState } from "react";
 import { useSelector } from "react-redux";
@@ -7,7 +8,6 @@ import TextSnippetIcon from "@mui/icons-material/TextSnippet";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
-import Divider from "@mui/material/Divider";
 import Grid from "@mui/material/Grid";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
@@ -160,17 +160,26 @@ const AllSetups = () => {
 
     return (
         <Box>
-            <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                <Typography variant="h5">All Versions</Typography>
-                <Button
-                    color="primary"
+            <Box
+                sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}
+            >
+                <Typography
+                    sx={{
+                        fontWeight: 600,
+                        fontSize: 25,
+                        LineHeight: 30,
+                        letterSpacing: "-0.6px",
+                    }}
+                >
+                    All Versions
+                </Typography>
+                <TSMainButton
                     variant="contained"
                     onClick={() => setOpenAddDialog(true)}
                 >
                     Add New Setup
-                </Button>
+                </TSMainButton>
             </Box>
-            <Divider sx={{ mt: 2, mb: 4 }} />
             <Box sx={{ flexGrow: 1 }}>
                 {orderedDocuments
                     ? orderedDocuments.map((doc, id) => (

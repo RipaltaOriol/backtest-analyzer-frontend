@@ -1,14 +1,19 @@
 import defaultTemplateImg from "assets/images/templates/defaultTemplate.png";
 import pptTemplateImg from "assets/images/templates/pptTemplate.png";
+import userProflileDefault from "assets/images/userProflileDefault.svg";
+import {
+    TSBackButton,
+    TSMainButton,
+    TSTextField,
+} from "common/CustomComponents";
 import { ErrorFeedback } from "common/ErrorFeedback";
 import { useState } from "react";
 
 import VisibilityRoundedIcon from "@mui/icons-material/VisibilityRounded";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
-import TextField from "@mui/material/TextField";
+import InputLabel from "@mui/material/InputLabel";
 import Typography from "@mui/material/Typography";
 
 import {
@@ -23,18 +28,6 @@ import Message from "../common/Message";
 // import { renderTemplate } from "features/templates/utilsTemplateManager";
 import "./settings.css";
 
-function stringAvatar(name) {
-    return {
-        sx: {
-            bgcolor: "#0e73f6",
-            width: 100,
-            height: 100,
-            mr: 3,
-        },
-        children: name[0].toUpperCase(),
-    };
-}
-
 const nameToPreview = (name) => {
     if (name === "Default") {
         return defaultTemplateImg;
@@ -46,7 +39,7 @@ const nameToPreview = (name) => {
 };
 
 const Settings = () => {
-    const { data } = useGetUserSettingsQuery();
+    const { data: userSettings } = useGetUserSettingsQuery();
 
     const [newPassword, setNewPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
@@ -56,7 +49,6 @@ const Settings = () => {
 
     const [updatePassword] = useUpdatePasswordMutation();
     const [addTemplateUserSettings] = useAddTemplateUserSettingsMutation();
-
     const handleAddTemplate = (templateId) => {
         addTemplateUserSettings({ templateId });
     };
@@ -93,150 +85,184 @@ const Settings = () => {
                     sx={{ mb: 1.5 }}
                 />
             )}
-            <Typography variant="h5">Settings</Typography>
-            <Divider sx={{ mt: 2, mb: 3 }} />
+            <Box sx={{ mb: 4 }}>
+                <Typography
+                    sx={{
+                        fontWeight: 600,
+                        fontSize: 25,
+                        LineHeight: 30,
+                        letterSpacing: "-0.6px",
+                    }}
+                >
+                    Settings
+                </Typography>
+            </Box>
             <Box display="flex" sx={{ mb: 5 }}>
                 <Avatar
-                    size="40"
-                    {...stringAvatar("oriolripalta@hotmail.com")}
+                    sx={{
+                        width: "80px",
+                        height: "80px",
+                        p: 2,
+                        backgroundColor: "#0E73F6",
+                        mr: 3,
+                    }}
+                    src={userProflileDefault}
                 />
                 <Box>
                     <Typography
-                        sx={{ fontSize: 16, fontWeight: 600 }}
+                        sx={{ fontSize: 18, fontWeight: 500 }}
                         gutterBottom
                     >
-                        {data?.email || "Loading"}
+                        {userSettings?.email || "Loading"}
                     </Typography>
                     <Typography
                         sx={{ fontSize: 14, color: "#6E7C87", mb: 1.5 }}
                     >
-                        Email: {data?.email || "Loading"}
+                        Email: {userSettings?.email || "Loading"}
                     </Typography>
-                    <Button color="secondary" disabled>
-                        Change Avatar
-                    </Button>
+                    <TSBackButton disabled>Change Avatar</TSBackButton>
                 </Box>
             </Box>
-            <Box sx={{ mb: 5 }}>
-                <Typography sx={{ fontWeight: 600, mb: 2 }}>
+            <Box sx={{ mb: 2 }}>
+                <Typography gutterBottom sx={{ fontWeight: 500, fontSize: 18 }}>
                     Password:
                 </Typography>
-                <Box>
-                    <TextField
-                        label="New Password"
-                        size="small"
-                        type="password"
-                        autoComplete=""
-                        value={newPassword}
-                        onChange={(e) => setNewPassword(e.target.value)}
-                        sx={{ "& input": { fontSize: 14 }, mr: 2 }}
-                    />
-                    <TextField
-                        label="Confirm Password"
-                        size="small"
-                        autoComplete=""
-                        value={confirmPassword}
-                        onChange={(e) => setConfirmPassword(e.target.value)}
-                        type="password"
-                        sx={{ "& input": { fontSize: 14 }, mr: 2 }}
-                    />
-                    <Button
-                        color="primary"
-                        variant="outlined"
-                        sx={{ textTransform: "none" }}
+                <Box sx={{ display: "flex", alignItems: "end" }}>
+                    <Box sx={{ mr: 2 }}>
+                        <InputLabel shrink={false} sx={{ mb: 0.5 }}>
+                            New Password
+                        </InputLabel>
+                        <TSTextField
+                            value={newPassword}
+                            onChange={(e) => setNewPassword(e.target.value)}
+                            sx={{
+                                "& input": { fontSize: 14 },
+                            }}
+                        />
+                    </Box>
+                    <Box sx={{ mr: 2 }}>
+                        <InputLabel shrink={false} sx={{ mb: 0.5 }}>
+                            Confirm New Password
+                        </InputLabel>
+                        <TSTextField
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                            type="password"
+                            sx={{
+                                "& input": { fontSize: 14 },
+                            }}
+                        />
+                    </Box>
+                    <TSMainButton
+                        variant="contained"
+                        sx={{ py: 0.8 }}
                         onClick={handleUpdatePassword}
                     >
                         Update Password
-                    </Button>
+                    </TSMainButton>
                 </Box>
             </Box>
-            <Box sx={{ mb: 5 }}>
-                <Typography sx={{ fontWeight: 600, mb: 2 }}>
+            <Box sx={{ mb: 2 }}>
+                <Typography gutterBottom sx={{ fontWeight: 500, fontSize: 18 }}>
                     Payment Method:
                 </Typography>
                 <ErrorFeedback msg="No payment method detected" />
             </Box>
-            <Divider sx={{ mb: 2 }} />
+            <Divider sx={{ my: 3 }} />
             <Box sx={{ mb: 5 }}>
-                <Typography sx={{ fontWeight: 600, mb: 2 }}>
+                <Typography gutterBottom sx={{ fontWeight: 500, fontSize: 18 }}>
                     Current Templates
                 </Typography>
                 <Box className="templates-grid">
-                    {data?.templates.map((template) => (
-                        <Box
-                            className="light-border"
-                            sx={{ width: "300px", p: 2 }}
-                        >
-                            <img
-                                src={nameToPreview(template?.name)}
-                                alt="default template"
-                            />
-                            <Typography sx={{ mt: 2 }}>
-                                {template.name}
-                            </Typography>
-                            <Typography
-                                sx={{ mb: 2, fontSize: 14, color: "#6E7C87" }}
+                    {Object.values(userSettings?.templates || []).map(
+                        (template) => (
+                            <Box
+                                className="light-border"
+                                sx={{ width: "300px", p: 2 }}
                             >
-                                {template.description}
-                            </Typography>
-                            <Button
-                                variant="contained"
-                                startIcon={<VisibilityRoundedIcon />}
-                                onClick={() =>
-                                    handlePreview(
-                                        true,
-                                        template?.name.toLowerCase()
-                                    )
-                                }
-                            >
-                                Preview
-                            </Button>
-                        </Box>
-                    ))}
+                                <img
+                                    src={nameToPreview(template?.name)}
+                                    alt="default template"
+                                />
+                                <Typography sx={{ mt: 1, fontSize: 16 }}>
+                                    {template.name}
+                                </Typography>
+                                <Typography
+                                    sx={{
+                                        mb: 2,
+                                        fontSize: 14,
+                                        color: "#6E7C87",
+                                        fontWeight: 450,
+                                    }}
+                                >
+                                    {template.description}
+                                </Typography>
+                                <TSMainButton
+                                    variant="contained"
+                                    startIcon={<VisibilityRoundedIcon />}
+                                    onClick={() =>
+                                        handlePreview(
+                                            true,
+                                            template?.name.toLowerCase()
+                                        )
+                                    }
+                                >
+                                    Preview
+                                </TSMainButton>
+                            </Box>
+                        )
+                    )}
                 </Box>
             </Box>
             <Box sx={{ mb: 5 }}>
-                <Typography sx={{ fontWeight: 600, mb: 2 }}>
+                <Typography gutterBottom sx={{ fontWeight: 500, fontSize: 18 }}>
                     Other Templates
                 </Typography>
                 <Box className="templates-grid">
-                    {data?.allTemplates.map((template) => (
-                        <Box
-                            className="light-border"
-                            sx={{ width: "300px", p: 2 }}
-                        >
-                            <img
-                                src={nameToPreview(template?.name)}
-                                alt="default template"
-                            />
-                            <Typography sx={{ mt: 2 }}>
-                                {template.name}
-                            </Typography>
-                            <Typography
-                                sx={{ mb: 2, fontSize: 14, color: "#6E7C87" }}
+                    {Object.values(userSettings?.marketTemplates || []).map(
+                        (template) => (
+                            <Box
+                                className="light-border"
+                                sx={{ width: "300px", p: 2 }}
                             >
-                                {template.description}
-                            </Typography>
-                            <Box>
-                                <Button
-                                    variant="contained"
-                                    sx={{ mr: 1 }}
-                                    onClick={() =>
-                                        handleAddTemplate(template.id)
-                                    }
+                                <img
+                                    src={nameToPreview(template?.name)}
+                                    alt="default template"
+                                />
+                                <Typography sx={{ mt: 1, fontSize: 16 }}>
+                                    {template.name}
+                                </Typography>
+                                <Typography
+                                    sx={{
+                                        mb: 2,
+                                        fontSize: 14,
+                                        color: "#6E7C87",
+                                        fontWeight: 450,
+                                    }}
                                 >
-                                    Buy ${template.price.toFixed(2)}
-                                </Button>
-                                <Button
-                                    color="secondary"
-                                    startIcon={<VisibilityRoundedIcon />}
-                                    disabled
-                                >
-                                    Preview
-                                </Button>
+                                    {template.description}
+                                </Typography>
+
+                                <Box>
+                                    <TSMainButton
+                                        variant="contained"
+                                        sx={{ mr: 1 }}
+                                        onClick={() =>
+                                            handleAddTemplate(template.id)
+                                        }
+                                    >
+                                        Buy ${template.price.toFixed(2)}
+                                    </TSMainButton>
+                                    <TSBackButton
+                                        startIcon={<VisibilityRoundedIcon />}
+                                        disabled
+                                    >
+                                        Preview
+                                    </TSBackButton>
+                                </Box>
                             </Box>
-                        </Box>
-                    ))}
+                        )
+                    )}
                 </Box>
             </Box>
             <PPTPreview

@@ -23,6 +23,11 @@ const SetupTable = (props) => {
         { skip: !setup?.id }
     );
 
+    const closeTradeDialog = () => {
+        setOpen(false);
+        setSelectedRow({});
+    };
+
     return (
         <div
             role="tabpanel"
@@ -103,7 +108,7 @@ const SetupTable = (props) => {
                 setup?.documentId,
                 selectedRow,
                 open,
-                setOpen
+                closeTradeDialog
             )}
         </div>
     );

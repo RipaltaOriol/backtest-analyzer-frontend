@@ -12,6 +12,7 @@ import PersistLogin from "./common/PersistLogin";
 import RequireAuth from "./common/RequireAuth";
 import AllDocuments from "./features/documents/AllDocuments";
 import CreateDocument from "./features/documents/CreateDocument";
+import ModifyAccount from "./features/documents/ModifyAccount";
 import UpdateDocument from "./features/documents/UpdateDocument";
 import AllSetups from "./features/setups/AllSetups";
 import SetupCalendar from "./features/setups/SetupCalendar";
@@ -56,6 +57,10 @@ function App() {
                                     <Route
                                         path="files/update/:documentId"
                                         element={<UpdateDocument />}
+                                    />
+                                    <Route
+                                        path="account/modify/:documentId"
+                                        element={<ModifyAccount />}
                                     />
                                     <Route
                                         path="setups"

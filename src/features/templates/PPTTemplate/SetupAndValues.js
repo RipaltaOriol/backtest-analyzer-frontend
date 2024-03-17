@@ -1,16 +1,14 @@
-import { CustomMenuItem } from "common/CustomComponents";
+import {
+    TSAddButton,
+    TSMenuItem,
+    TSSelect,
+    TSTextField,
+} from "common/CustomComponents";
 
-import AddIcon from "@mui/icons-material/Add";
-import { Divider } from "@mui/material";
 import Box from "@mui/material/Box";
 import InputAdornment from "@mui/material/InputAdornment";
+import InputLabel from "@mui/material/InputLabel";
 import Typography from "@mui/material/Typography";
-
-import {
-    CustomAddIcon,
-    CustomSelect,
-    CustomTextField,
-} from "features/templates/templateCustomComponents";
 
 const ORDER_TYPES = [
     "Buy Limit",
@@ -20,10 +18,24 @@ const ORDER_TYPES = [
     "Sell Stop",
 ];
 
+const rowHeaderStyles = {
+    fontSize: 12,
+    fontWeight: 600,
+    lineHeight: "18px",
+    letterSpacing: "-0.6px",
+};
+
+const rowPositionStyles = {
+    fontSize: 14,
+    fontWeight: 600,
+    lineHeight: "20px",
+    letterSpacing: "-0.6px",
+};
+
 const orderOptions = ORDER_TYPES.map((state, idx) => (
-    <CustomMenuItem key={idx} value={state}>
+    <TSMenuItem key={idx} value={state}>
         {state}
-    </CustomMenuItem>
+    </TSMenuItem>
 ));
 
 const SetupAndValues = ({ template, onChangeField, onChangeFieldArray }) => {
@@ -53,30 +65,31 @@ const SetupAndValues = ({ template, onChangeField, onChangeFieldArray }) => {
 
     return (
         <Box sx={{ mb: 2.5 }}>
-            <Typography variant="h5">Trade Setup & Values</Typography>
-            <Divider sx={{ mb: 2 }} />
+            <Typography
+                sx={{
+                    fontSize: 20,
+                    fontWeight: 600,
+                    lineHeight: "30px",
+                    letterSpacing: "-0.06em",
+                    mb: 2,
+                }}
+            >
+                Trade Setup & Values
+            </Typography>
             <Box sx={{ mb: 1.5 }}>
                 <Box className="position-grid">
-                    <Box>
-                        <CustomAddIcon
-                            onClick={() => addPosition()}
-                            disableRipple
-                        >
-                            <AddIcon color="primary" />
-                        </CustomAddIcon>
-                    </Box>
-                    <Box>Order Type</Box>
-                    <Box>Price</Box>
-                    <Box>Risk (Account %)</Box>
-                    <Box>Position Size</Box>
-                    <Box>Risk Reward</Box>
+                    <Box></Box>
+                    <Box sx={rowHeaderStyles}>Order Type</Box>
+                    <Box sx={rowHeaderStyles}>Price</Box>
+                    <Box sx={rowHeaderStyles}>Risk (Account %)</Box>
+                    <Box sx={rowHeaderStyles}>Position Size</Box>
+                    <Box sx={rowHeaderStyles}>Risk Reward</Box>
                 </Box>
                 {template.positions.map((position, i) => (
                     <Box className="position-grid" key={i}>
-                        <Box>Entry Position {i + 1}</Box>
+                        <Box sx={rowPositionStyles}>Entry Position {i + 1}</Box>
                         <Box>
-                            <CustomSelect
-                                size="small"
+                            <TSSelect
                                 value={position?.order_type}
                                 onChange={(e) =>
                                     onChangeFieldArray(
@@ -88,10 +101,10 @@ const SetupAndValues = ({ template, onChangeField, onChangeFieldArray }) => {
                                 }
                             >
                                 {orderOptions}
-                            </CustomSelect>
+                            </TSSelect>
                         </Box>
                         <Box>
-                            <CustomTextField
+                            <TSTextField
                                 size="small"
                                 variant="outlined"
                                 type="number"
@@ -107,7 +120,7 @@ const SetupAndValues = ({ template, onChangeField, onChangeFieldArray }) => {
                             />
                         </Box>
                         <Box>
-                            <CustomTextField
+                            <TSTextField
                                 size="small"
                                 variant="outlined"
                                 type="number"
@@ -130,7 +143,7 @@ const SetupAndValues = ({ template, onChangeField, onChangeFieldArray }) => {
                             />
                         </Box>
                         <Box>
-                            <CustomTextField
+                            <TSTextField
                                 size="small"
                                 variant="outlined"
                                 type="number"
@@ -146,7 +159,7 @@ const SetupAndValues = ({ template, onChangeField, onChangeFieldArray }) => {
                             />
                         </Box>
                         <Box>
-                            <CustomTextField
+                            <TSTextField
                                 size="small"
                                 variant="outlined"
                                 type="number"
@@ -170,44 +183,53 @@ const SetupAndValues = ({ template, onChangeField, onChangeFieldArray }) => {
                         </Box>
                     </Box>
                 ))}
+                <Box>
+                    <TSAddButton onClick={() => addPosition()}>
+                        Add New
+                    </TSAddButton>
+                </Box>
             </Box>
 
-            <Typography variant="h6" sx={{ mr: 2, mb: 0, fontWeight: 500 }}>
+            <Typography
+                sx={{
+                    mr: 2,
+                    mb: 0.5,
+                    fontSize: 16,
+                    fontWeight: 600,
+                    lineHeight: "24px",
+                    letterSpacing: "-0.6px",
+                }}
+            >
                 Risk Management
             </Typography>
             <Box className="box-grid-sl-tp" sx={{ mb: 1 }}>
                 <Box>
-                    <Box display="flex" alignItems="center">
-                        <Typography sx={{ mr: 2 }}>Stop Loss</Typography>
-                        <Box flexGrow={1}>
-                            <CustomTextField
-                                size="small"
-                                variant="outlined"
-                                type="number"
-                                value={template.stop_loss ?? ""}
-                                onChange={(e) =>
-                                    onChangeField(
-                                        "stop_loss",
-                                        e.target.valueAsNumber
-                                    )
-                                }
-                            />
-                        </Box>
+                    <InputLabel shrink={false} sx={{ mb: 1 }}>
+                        Stop Loss
+                    </InputLabel>
+                    <Box flexGrow={1}>
+                        <TSTextField
+                            size="small"
+                            variant="outlined"
+                            type="number"
+                            value={template.stop_loss ?? ""}
+                            onChange={(e) =>
+                                onChangeField(
+                                    "stop_loss",
+                                    e.target.valueAsNumber
+                                )
+                            }
+                        />
                     </Box>
                 </Box>
                 <Box>
                     {template?.take_profit.map((tp, i) => (
-                        <Box
-                            display="flex"
-                            alignItems="center"
-                            sx={{ mb: 1 }}
-                            key={i}
-                        >
-                            <Typography sx={{ mr: 2 }}>
+                        <Box sx={{ mb: 2 }}>
+                            <InputLabel shrink={false} sx={{ mb: 1 }}>
                                 Take Profit {tp.take_profit_number + 1}
-                            </Typography>
+                            </InputLabel>
                             <Box flexGrow={1}>
-                                <CustomTextField
+                                <TSTextField
                                     size="small"
                                     variant="outlined"
                                     type="number"
@@ -225,12 +247,9 @@ const SetupAndValues = ({ template, onChangeField, onChangeFieldArray }) => {
                         </Box>
                     ))}
 
-                    <CustomAddIcon
-                        onClick={() => addTakeProfit()}
-                        disableRipple
-                    >
-                        <AddIcon color="primary" />
-                    </CustomAddIcon>
+                    <TSAddButton onClick={() => addTakeProfit()}>
+                        Add New
+                    </TSAddButton>
                 </Box>
             </Box>
         </Box>

@@ -1,22 +1,32 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-    loginMsg: "",
+    message: null,
+    isError: false,
 };
 
 export const messagesSlice = createSlice({
     name: "messages",
     initialState,
     reducers: {
-        setLoginMsg: (state, action) => {
+        setMessage: (state, action) => {
             const { msg } = action.payload;
-            state.loginMsg = msg;
+            state.message = msg;
+        },
+        setError: (state, action) => {
+            const { error } = action.payload;
+            state.isError = error;
         },
     },
 });
 
-export const { setLoginMsg } = messagesSlice.actions;
+export const { setMessage, setError } = messagesSlice.actions;
 
-export const selectLoginMsg = (state) => state.messages.loginMsg;
+export const selectMessage = (state) => {
+    return {
+        message: state.messages.message,
+        isError: state.messages.isError,
+    };
+};
 
 export default messagesSlice.reducer;

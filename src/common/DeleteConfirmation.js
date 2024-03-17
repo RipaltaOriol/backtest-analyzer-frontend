@@ -1,9 +1,9 @@
-import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
-import DialogTitle from "@mui/material/DialogTitle";
 import Typography from "@mui/material/Typography";
+
+import { TSBackButton, TSDangerButton } from "./CustomComponents";
 
 const DeleteConfirmationDialog = ({
     open,
@@ -13,34 +13,35 @@ const DeleteConfirmationDialog = ({
 }) => {
     return (
         <Dialog open={open} onClose={onClose}>
-            <DialogTitle>
-                <Typography variant="h5" component="div">
+            <DialogContent>
+                <Typography
+                    sx={{
+                        fontWeight: 600,
+                        fontSize: 22,
+                        lineHeight: "30px",
+                        letterSpacing: "-0.6px",
+                    }}
+                    component="div"
+                    gutterBottom
+                >
                     Delete
                 </Typography>
-            </DialogTitle>
-            <DialogContent>
-                <Typography variant="body2" gutterBottom>
+                <Typography>
                     Are you sure you want to delete this {itemName || "item"}?
                 </Typography>
-                <Typography variant="body2">
-                    This process cannot be undone.
-                </Typography>
-                <DialogActions sx={{ mt: 2 }}>
-                    <Button variant="outlined" onClick={onClose}>
-                        Cancel
-                    </Button>
-                    <Button
-                        variant="contained"
-                        color="error"
-                        onClick={() => {
-                            if (onSubmit) onSubmit();
-                            onClose();
-                        }}
-                    >
-                        Delete
-                    </Button>
-                </DialogActions>
+                <Typography>This process cannot be undone.</Typography>
             </DialogContent>
+            <DialogActions>
+                <TSBackButton onClick={onClose}>Cancel</TSBackButton>
+                <TSDangerButton
+                    onClick={() => {
+                        if (onSubmit) onSubmit();
+                        onClose();
+                    }}
+                >
+                    Delete
+                </TSDangerButton>
+            </DialogActions>
         </Dialog>
     );
 };

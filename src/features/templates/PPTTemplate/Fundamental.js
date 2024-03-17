@@ -1,14 +1,9 @@
-import { CustomMenuItem } from "common/CustomComponents";
+import { TSMenuItem, TSSelect, TSTextField } from "common/CustomComponents";
 
-import { Divider } from "@mui/material";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
+import InputLabel from "@mui/material/InputLabel";
 import Typography from "@mui/material/Typography";
-
-import {
-    CustomSelect,
-    CustomTextField,
-} from "features/templates/templateCustomComponents";
 
 const CURRENCY_STATES = [
     "Strong Bullish",
@@ -19,115 +14,125 @@ const CURRENCY_STATES = [
 ];
 
 const getPairBaseNQuote = (pair, pos) => {
-    if (!pair) return "XXX";
+    if (!pair) return "...";
     if (pos === 1 && pair.length > 3) {
         return pair.substring(0, 3);
     } else if (pos === 2 && pair.length > 3) return pair.substring(3);
-    else return "XXX";
+    else return "...";
 };
 
 const strengthOptions = CURRENCY_STATES.map((state, idx) => (
-    <CustomMenuItem key={idx} value={state}>
+    <TSMenuItem key={idx} value={state}>
         {state}
-    </CustomMenuItem>
+    </TSMenuItem>
 ));
 
 const Fundamental = ({ template, onChangeField }) => {
     return (
         <Box sx={{ mb: 2.5 }}>
-            <Typography variant="h5">Fundamental View</Typography>
-            <Divider sx={{ mb: 1.5 }} />
+            <Typography
+                sx={{
+                    fontSize: 20,
+                    fontWeight: 600,
+                    lineHeight: "30px",
+                    letterSpacing: "-0.06em",
+                    mb: 2,
+                }}
+            >
+                Fundamental View
+            </Typography>
             <Grid container rowSpacing={1} columnSpacing={2}>
                 <Grid item xs={6}>
-                    <Box display="flex" alignItems="center">
-                        <Typography sx={{ mr: 2 }}>Pair</Typography>
-                        <Box flexGrow={1}>
-                            <CustomTextField
-                                size="small"
-                                variant="outlined"
-                                value={template?.asset || ""}
-                                onChange={(e) =>
-                                    onChangeField("asset", e.target.value)
-                                }
-                            />
-                        </Box>
+                    <Box>
+                        <InputLabel shrink={false} sx={{ mb: 1 }}>
+                            Pair
+                        </InputLabel>
+                        <TSTextField
+                            value={template?.asset || ""}
+                            onChange={(e) =>
+                                onChangeField("asset", e.target.value)
+                            }
+                        />
                     </Box>
                 </Grid>
                 <Grid item xs={6}>
-                    <Box display="flex" alignItems="center">
-                        <Typography sx={{ mr: 2 }}>Direction</Typography>
-                        <Box flexGrow={1}>
-                            <CustomSelect
-                                size="small"
-                                value={template?.direction ?? " "}
-                                onChange={(e) =>
-                                    onChangeField("direction", e.target.value)
-                                }
-                            >
-                                <CustomMenuItem value={"Long"}>
-                                    Long
-                                </CustomMenuItem>
-                                <CustomMenuItem value={"Short"}>
-                                    Short
-                                </CustomMenuItem>
-                            </CustomSelect>
-                        </Box>
+                    <Box>
+                        <InputLabel shrink={false} sx={{ mb: 1 }}>
+                            Direction
+                        </InputLabel>
+                        <TSSelect
+                            size="small"
+                            value={template?.direction ?? " "}
+                            onChange={(e) =>
+                                onChangeField("direction", e.target.value)
+                            }
+                        >
+                            <TSMenuItem value={"Long"}>Long</TSMenuItem>
+                            <TSMenuItem value={"Short"}>Short</TSMenuItem>
+                        </TSSelect>
                     </Box>
                 </Grid>
                 <Grid item xs={6}>
                     <Typography
-                        variant="h6"
-                        sx={{ mr: 2, mb: 0.5, fontWeight: 500 }}
+                        sx={{
+                            mr: 2,
+                            mb: 0.5,
+                            fontSize: 16,
+                            fontWeight: 600,
+                            lineHeight: "24px",
+                            letterSpacing: "-0.6px",
+                        }}
                     >
                         PPT Result
                     </Typography>
-                    <Box display="flex" alignItems="center" sx={{ mb: 1 }}>
-                        <Typography sx={{ mr: 2 }}>
-                            {getPairBaseNQuote(template?.asset, 1)}
-                        </Typography>
+                    <Box display="flex" justifyContent="space-between" gap={2}>
                         <Box flexGrow={1}>
-                            <CustomSelect
-                                size="small"
+                            <InputLabel shrink={false} sx={{ mb: 1 }}>
+                                {getPairBaseNQuote(template?.asset, 1)}
+                            </InputLabel>
+                            <TSSelect
                                 value={template?.base_ppt ?? " "}
                                 onChange={(e) =>
                                     onChangeField("base_ppt", e.target.value)
                                 }
                             >
                                 {strengthOptions}
-                            </CustomSelect>
+                            </TSSelect>
                         </Box>
-                    </Box>
-                    <Box display="flex" alignItems="center">
-                        <Typography sx={{ mr: 2 }}>
-                            {getPairBaseNQuote(template?.asset, 2)}
-                        </Typography>
                         <Box flexGrow={1}>
-                            <CustomSelect
-                                size="small"
+                            <InputLabel shrink={false} sx={{ mb: 1 }}>
+                                {getPairBaseNQuote(template?.asset, 2)}
+                            </InputLabel>
+                            <TSSelect
                                 value={template?.quote_ppt ?? " "}
                                 onChange={(e) =>
                                     onChangeField("quote_ppt", e.target.value)
                                 }
                             >
                                 {strengthOptions}
-                            </CustomSelect>
+                            </TSSelect>
                         </Box>
                     </Box>
                 </Grid>
                 <Grid item xs={6}>
                     <Typography
-                        variant="h6"
-                        sx={{ mr: 2, mb: 0.5, fontWeight: 500 }}
+                        sx={{
+                            mr: 2,
+                            mb: 0.5,
+                            fontSize: 16,
+                            fontWeight: 600,
+                            lineHeight: "24px",
+                            letterSpacing: "-0.6px",
+                        }}
                     >
                         Fundamental Reading
                     </Typography>
-                    <Box display="flex" alignItems="center" sx={{ mb: 1 }}>
-                        <Typography sx={{ mr: 2 }}>
-                            {getPairBaseNQuote(template?.asset, 1)}
-                        </Typography>
+                    <Box display="flex" justifyContent="space-between" gap={2}>
                         <Box flexGrow={1}>
-                            <CustomSelect
-                                size="small"
+                            <InputLabel shrink={false} sx={{ mb: 1 }}>
+                                {getPairBaseNQuote(template?.asset, 1)}
+                            </InputLabel>
+                            <TSSelect
                                 value={template?.base_fundamental ?? " "}
                                 onChange={(e) =>
                                     onChangeField(
@@ -137,16 +142,13 @@ const Fundamental = ({ template, onChangeField }) => {
                                 }
                             >
                                 {strengthOptions}
-                            </CustomSelect>
+                            </TSSelect>
                         </Box>
-                    </Box>
-                    <Box display="flex" alignItems="center">
-                        <Typography sx={{ mr: 2 }}>
-                            {getPairBaseNQuote(template?.asset, 2)}
-                        </Typography>
                         <Box flexGrow={1}>
-                            <CustomSelect
-                                size="small"
+                            <InputLabel shrink={false} sx={{ mb: 1 }}>
+                                {getPairBaseNQuote(template?.asset, 2)}
+                            </InputLabel>
+                            <TSSelect
                                 value={template?.quote_fundamental ?? " "}
                                 onChange={(e) =>
                                     onChangeField(
@@ -156,18 +158,15 @@ const Fundamental = ({ template, onChangeField }) => {
                                 }
                             >
                                 {strengthOptions}
-                            </CustomSelect>
+                            </TSSelect>
                         </Box>
                     </Box>
                 </Grid>
                 <Grid item xs={12}>
-                    <Typography
-                        variant="h6"
-                        sx={{ mr: 2, mb: 0.5, fontWeight: 500 }}
-                    >
+                    <InputLabel shrink={false} sx={{ mb: 1 }}>
                         Reason
-                    </Typography>
-                    <CustomTextField
+                    </InputLabel>
+                    <TSTextField
                         multiline
                         value={template?.reason || ""}
                         onChange={(e) =>

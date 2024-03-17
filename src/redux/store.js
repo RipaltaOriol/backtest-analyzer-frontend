@@ -3,6 +3,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import barGraphReducer from "features/graphs/barGraphSlice";
 import lineGraphReducer from "features/graphs/lineGraphSlice";
 import scatterGraphReducer from "features/graphs/scatterGraphSlice";
+import tradeReducer from "features/trades/tradeSlice";
 
 import { apiSlice } from "../api/apiSlice";
 import authReducer from "../features/auth/authSlice";
@@ -20,6 +21,7 @@ export const store = configureStore({
         barGraph: barGraphReducer,
         scatterGraph: scatterGraphReducer,
         lineGraph: lineGraphReducer,
+        trade: tradeReducer,
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware().concat(apiSlice.middleware),

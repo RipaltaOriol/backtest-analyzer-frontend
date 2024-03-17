@@ -44,7 +44,7 @@ const PPT_MAPPINGS = {
         price: false,
     },
 };
-
+// THIS SHOULD BE MOVED TO THE BACKEND
 export const getTemplateMappings = (templateName) => {
     if (templateName === "PPT") return PPT_MAPPINGS;
     return false;

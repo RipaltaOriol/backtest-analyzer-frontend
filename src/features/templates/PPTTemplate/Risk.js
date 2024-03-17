@@ -1,14 +1,23 @@
+import { TSAddButton, TSTextField } from "common/CustomComponents";
 import dayjs from "dayjs";
 
-import AddIcon from "@mui/icons-material/Add";
-import { Divider } from "@mui/material";
 import Box from "@mui/material/Box";
+import InputLabel from "@mui/material/InputLabel";
 import Typography from "@mui/material/Typography";
 
-import {
-    CustomAddIcon,
-    CustomTextField,
-} from "features/templates/templateCustomComponents";
+const rowHeaderStyles = {
+    fontSize: 12,
+    fontWeight: 600,
+    lineHeight: "18px",
+    letterSpacing: "-0.6px",
+};
+
+const rowWeekStyles = {
+    fontSize: 14,
+    fontWeight: 600,
+    lineHeight: "20px",
+    letterSpacing: "-0.6px",
+};
 
 const Risk = ({ template, onChangeField, onChangeFieldArray }) => {
     const addWeek = () => {
@@ -28,18 +37,24 @@ const Risk = ({ template, onChangeField, onChangeFieldArray }) => {
 
     return (
         <Box sx={{ mb: 2.5 }}>
-            <Typography variant="h5">Risk</Typography>
-            <Divider sx={{ mb: 1.5 }} />
+            <Typography
+                sx={{
+                    fontSize: 20,
+                    fontWeight: 600,
+                    lineHeight: "30px",
+                    letterSpacing: "-0.06em",
+                    mb: 2,
+                }}
+            >
+                Risk
+            </Typography>
             <Box>
-                <Typography
-                    variant="h6"
-                    sx={{ mr: 2, mb: 0.5, fontWeight: 500 }}
-                >
+                <InputLabel shrink={false} sx={{ mb: 1 }}>
                     Fundamental Risk
-                </Typography>
-                <CustomTextField
+                </InputLabel>
+                <TSTextField
                     multiline
-                    minRows={3}
+                    minRows={1}
                     value={template?.fundamental_risk || ""}
                     onChange={(e) =>
                         onChangeField("fundamental_risk", e.target.value)
@@ -50,15 +65,13 @@ const Risk = ({ template, onChangeField, onChangeFieldArray }) => {
                         mb: 2,
                     }}
                 />
-                <Typography
-                    variant="h6"
-                    sx={{ mr: 2, mb: 0.5, fontWeight: 500 }}
-                >
+
+                <InputLabel shrink={false} sx={{ mb: 1 }}>
                     Events & Opportunities
-                </Typography>
-                <CustomTextField
+                </InputLabel>
+                <TSTextField
                     multiline
-                    minRows={3}
+                    minRows={1}
                     value={template?.event_opportunity || ""}
                     onChange={(e) =>
                         onChangeField("event_opportunity", e.target.value)
@@ -71,19 +84,12 @@ const Risk = ({ template, onChangeField, onChangeFieldArray }) => {
                 />
                 <Box>
                     <Box className="position-grid">
-                        <Box>
-                            <CustomAddIcon
-                                onClick={() => addWeek()}
-                                disableRipple
-                            >
-                                <AddIcon color="primary" />
-                            </CustomAddIcon>
-                        </Box>
-                        <Box>Monday</Box>
-                        <Box>Tuesday</Box>
-                        <Box>Wednesday</Box>
-                        <Box>Thursday</Box>
-                        <Box>Friday</Box>
+                        <Box></Box>
+                        <Box sx={rowHeaderStyles}>Monday</Box>
+                        <Box sx={rowHeaderStyles}>Tuesday</Box>
+                        <Box sx={rowHeaderStyles}>Wednesday</Box>
+                        <Box sx={rowHeaderStyles}>Thursday</Box>
+                        <Box sx={rowHeaderStyles}>Friday</Box>
                     </Box>
                     {template.event_risk_date.map((event, i) => (
                         <Box
@@ -91,13 +97,13 @@ const Risk = ({ template, onChangeField, onChangeFieldArray }) => {
                             className="position-grid"
                             sx={{ alignItems: "start" }}
                         >
-                            <Box>
+                            <Box sx={rowWeekStyles}>
                                 Week{" "}
                                 {dayjs(event.event_date)
                                     .day(1)
                                     .format("ddd D MMM")}
                             </Box>
-                            <CustomTextField
+                            <TSTextField
                                 multiline
                                 value={event.monday}
                                 onChange={(e) =>
@@ -113,7 +119,7 @@ const Risk = ({ template, onChangeField, onChangeFieldArray }) => {
                                     "& textarea": { fontSize: 14 },
                                 }}
                             />
-                            <CustomTextField
+                            <TSTextField
                                 multiline
                                 value={event.tuesday}
                                 onChange={(e) =>
@@ -129,7 +135,7 @@ const Risk = ({ template, onChangeField, onChangeFieldArray }) => {
                                     "& textarea": { fontSize: 14 },
                                 }}
                             />
-                            <CustomTextField
+                            <TSTextField
                                 multiline
                                 value={event.wednesday}
                                 onChange={(e) =>
@@ -145,7 +151,7 @@ const Risk = ({ template, onChangeField, onChangeFieldArray }) => {
                                     "& textarea": { fontSize: 14 },
                                 }}
                             />
-                            <CustomTextField
+                            <TSTextField
                                 multiline
                                 value={event.thursday}
                                 onChange={(e) =>
@@ -161,7 +167,7 @@ const Risk = ({ template, onChangeField, onChangeFieldArray }) => {
                                     "& textarea": { fontSize: 14 },
                                 }}
                             />
-                            <CustomTextField
+                            <TSTextField
                                 multiline
                                 value={event.friday}
                                 onChange={(e) =>
@@ -179,6 +185,11 @@ const Risk = ({ template, onChangeField, onChangeFieldArray }) => {
                             />
                         </Box>
                     ))}
+                    <Box>
+                        <TSAddButton onClick={() => addWeek()}>
+                            Add New
+                        </TSAddButton>
+                    </Box>
                 </Box>
             </Box>
         </Box>

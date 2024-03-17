@@ -1,6 +1,7 @@
-import logoTradeSharpener from "assets/svg/trade_sharpener_logo.svg";
+import logoTitleTradeSharpener from "assets/svg/TSLogoTitle.svg";
+import Message from "common/Message";
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, Outlet, useLocation } from "react-router-dom";
 
 import FileUploadIcon from "@mui/icons-material/FileUpload";
@@ -26,9 +27,9 @@ import { styled } from "@mui/material/styles";
 import { useLogoutMutation } from "../features/auth/authApiSlice";
 import { logOut } from "../features/auth/authSlice";
 import DocumentBar from "../features/documents/DocumentBar";
-import { setLoginMsg } from "../features/messages/messagesSlice";
+import { setError, setMessage } from "../features/messages/messagesSlice";
+import { selectMessage } from "../features/messages/messagesSlice";
 import Upload from "../pages/upload";
-import LogoTitle from "./LogoTitle";
 import SupportEngine from "./SupportEngine";
 
 const drawerWidth = 240;
@@ -56,13 +57,13 @@ const features = [
         id: "files",
         name: "All Accounts",
         url: "/files",
-        icon: <LibraryBooksIcon />,
+        icon: <Inventory2RoundedIcon />,
     },
     {
         id: "setups",
         name: "All Versions",
         url: "/setups",
-        icon: <Inventory2RoundedIcon />,
+        icon: <LibraryBooksIcon />,
     },
 ];
 
@@ -93,6 +94,7 @@ const assistance = [
 export default function Layout() {
     const dispatch = useDispatch();
     const location = useLocation();
+    const message = useSelector(selectMessage);
 
     const [logout] = useLogoutMutation();
     const [openUpload, setOpenUpload] = useState(false);
@@ -107,8 +109,13 @@ export default function Layout() {
 
     const signOut = async () => {
         await logout().unwrap();
-        dispatch(setLoginMsg({ msg: "Successfully logged out!" }));
+        dispatch(setMessage({ msg: "Successfully logged out!" }));
+        dispatch(setError({ error: false }));
         dispatch(logOut());
+    };
+
+    const setUserMessage = (newMessage) => {
+        dispatch(setMessage({ msg: newMessage }));
     };
 
     return (
@@ -131,16 +138,8 @@ export default function Layout() {
                     >
                         <img
                             alt="Trade Sharpener Logo"
-                            src={logoTradeSharpener}
+                            src={logoTitleTradeSharpener}
                             className="logo-icon-regular"
-                        />
-                        <LogoTitle
-                            first="Trade"
-                            second="Sharpener"
-                            variant="h6"
-                            component="p"
-                            weight="700"
-                            color="#000"
                         />
                     </Box>
                 </Toolbar>
@@ -249,6 +248,14 @@ export default function Layout() {
                 <Upload open={openUpload} onClose={handleUploadClose} />
                 <SupportEngine />
             </Box>
+            {message?.message && (
+                <Message
+                    message={message.message}
+                    setMessage={setUserMessage}
+                    isError={message.isError}
+                    sx={{ mb: 3 }}
+                />
+            )}
         </Box>
     );
 }

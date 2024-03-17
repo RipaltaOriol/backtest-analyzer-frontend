@@ -6,7 +6,7 @@ export const renderTemplate = (
     documentId,
     rowContents,
     open,
-    setOpen
+    close
 ) => {
     if (template === "PPT") {
         return (
@@ -14,14 +14,14 @@ export const renderTemplate = (
                 documentId={documentId}
                 rowId={rowContents.rowId}
                 open={open}
-                onClose={() => setOpen(false)}
+                onClose={() => close()}
             />
         );
     } else {
         return (
             <SingleRecordDialog
                 open={open}
-                onClose={() => setOpen(false)}
+                onClose={() => close()}
                 documentId={documentId}
                 rowRecord={rowContents}
             />

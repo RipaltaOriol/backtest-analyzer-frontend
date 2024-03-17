@@ -1,95 +1,171 @@
+import { uploadFile } from "api/awsS3";
+import { TSTextField } from "common/CustomComponents";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
 
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { Divider } from "@mui/material";
-import AccordionDetails from "@mui/material/AccordionDetails";
-import AccordionSummary from "@mui/material/AccordionSummary";
+import { AddBoxRounded } from "@mui/icons-material";
+import MoveToInboxRoundedIcon from "@mui/icons-material/MoveToInboxRounded";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
 import InputAdornment from "@mui/material/InputAdornment";
+import InputLabel from "@mui/material/InputLabel";
 import Typography from "@mui/material/Typography";
+import { styled } from "@mui/material/styles";
 
-import {
-    CustomTextField,
-    ImageUrlTextField,
-    TemplateAccordion,
-} from "features/templates/templateCustomComponents";
+import { setError, setMessage } from "features/messages/messagesSlice";
+
+const placeholderImg =
+    "https://static.vecteezy.com/system/resources/previews/018/767/276/original/stock-market-volatility-chart-for-stock-trading-cryptocurrency-background-the-up-and-down-chart-illustration-on-the-blue-theme-screen-graph-for-trading-free-vector.jpg";
+
+const VisuallyHiddenInput = styled("input")({
+    clip: "rect(0 0 0 0)",
+    clipPath: "inset(50%)",
+    height: 1,
+    overflow: "hidden",
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    whiteSpace: "nowrap",
+    width: 1,
+});
 
 const Technical = ({ template, onChangeField }) => {
     const [startImage, setStartImage] = useState("");
+    const dispatch = useDispatch();
+
+    const handleFileChange = async (e) => {
+        try {
+            const file = e.target.files[0];
+            const fileType = file["type"];
+            const validImageTypes = ["image/gif", "image/jpeg", "image/png"];
+            if (validImageTypes.includes(fileType)) {
+                const response = await uploadFile(file);
+                if (response.success) {
+                    onChangeField("pre_trade_screenshot", response.url);
+                    setStartImage(response.url);
+                } else {
+                    dispatch(setError({ error: true }));
+                    dispatch(setMessage({ msg: "Something went wrong." }));
+                }
+            } else {
+                dispatch(setError({ error: true }));
+                dispatch(setMessage({ msg: "File type not supported." }));
+            }
+        } catch (e) {
+            dispatch(setError({ error: true }));
+            dispatch(setMessage({ msg: "Something went wrong." }));
+        }
+    };
 
     return (
         <Box sx={{ mb: 2.5 }}>
-            <Typography variant="h5">Technical Analysis</Typography>
-            <Divider sx={{ mb: 1.5 }} />
-
-            <TemplateAccordion disableGutters sx={{ mb: 1.5 }}>
-                <AccordionSummary
-                    expandIcon={<ExpandMoreIcon />}
+            <Typography
+                sx={{
+                    fontSize: 20,
+                    fontWeight: 600,
+                    lineHeight: "30px",
+                    letterSpacing: "-0.06em",
+                    mb: 2,
+                }}
+            >
+                Technical Analysis
+            </Typography>
+            <Box sx={{ mb: 1.5 }}>
+                <InputLabel shrink={false} sx={{ mb: 1 }}>
+                    Technical Levels
+                </InputLabel>
+                <TSTextField
+                    multiline
+                    value={template?.technical_levels || ""}
+                    onChange={(e) =>
+                        onChangeField("technical_levels", e.target.value)
+                    }
+                    minRows={1}
                     sx={{
-                        px: 1.5,
+                        "& .MuiInputBase-multiline": { p: 1 },
+                        "& textarea": { fontSize: 14 },
                     }}
-                >
-                    <Typography>Technical Levels</Typography>
-                </AccordionSummary>
-                <AccordionDetails sx={{ px: 1.5, pt: 0, pb: 1.5 }}>
-                    <CustomTextField
-                        multiline
-                        minRows={3}
-                        value={template?.technical_levels || ""}
-                        onChange={(e) =>
-                            onChangeField("technical_levels", e.target.value)
-                        }
+                />
+            </Box>
+
+            <Box display="flex" alignItems="start" sx={{ mb: 1.5 }} gap={2}>
+                <Box sx={{ width: "100%" }}>
+                    <Button
+                        component="label"
+                        disableRipple
                         sx={{
-                            "& .MuiInputBase-multiline": { p: 1 },
-                            "& textarea": { fontSize: 14 },
-                            backgroundColor: "#d7edff",
-                            borderRadius: "5px",
+                            py: 5,
+                            mb: 1,
+                            border: "1px dashed #0000003b",
+                            backgroundColor: "white",
+                            width: "100%",
+                        }}
+                    >
+                        <Box sx={{ textAlign: "center" }}>
+                            <MoveToInboxRoundedIcon
+                                sx={{ fontSize: 70, color: "#0000003b" }}
+                            />
+                            <Typography
+                                sx={{
+                                    fontWeight: 500,
+                                    fontSize: 14,
+                                    color: "#0d0d254d",
+                                }}
+                            >
+                                Click To Upload Image
+                            </Typography>
+                            <VisuallyHiddenInput
+                                type="file"
+                                onChange={handleFileChange}
+                            />
+                        </Box>
+                    </Button>
+
+                    <TSTextField
+                        placeholder="Image URL"
+                        value={startImage}
+                        onChange={(e) => setStartImage(e.target.value)}
+                        InputProps={{
+                            endAdornment: (
+                                <InputAdornment position="end" sx={{ mr: 0.5 }}>
+                                    <IconButton
+                                        edge="end"
+                                        disableRipple
+                                        sx={{
+                                            color: "white",
+                                            p: 0.5,
+                                            backgroundColor: "#1A65F1",
+                                            borderRadius: "5px",
+                                        }}
+                                        onClick={() =>
+                                            onChangeField(
+                                                "pre_trade_screenshot",
+                                                startImage
+                                            )
+                                        }
+                                    >
+                                        <AddBoxRounded />
+                                    </IconButton>
+                                </InputAdornment>
+                            ),
                         }}
                     />
-                </AccordionDetails>
-            </TemplateAccordion>
-            {template?.pre_trade_screenshot && (
+                </Box>
                 <img
-                    className="preview-image"
+                    className={`preview-image ${
+                        !template?.pre_trade_screenshot && "image-placeholder"
+                    }`}
                     alt="Pre Trade Screenshot"
-                    src={template?.pre_trade_screenshot}
+                    src={template?.pre_trade_screenshot || placeholderImg}
                 />
-            )}
-            <Box display="flex" sx={{ mb: 1.5 }}>
-                <ImageUrlTextField
-                    size="small"
-                    sx={{ flexGrow: 1, mr: 1 }}
-                    variant="outlined"
-                    value={startImage}
-                    onChange={(e) => setStartImage(e.target.value)}
-                    InputProps={{
-                        startAdornment: (
-                            <InputAdornment position="start">
-                                Image URL
-                            </InputAdornment>
-                        ),
-                    }}
-                />
-                <Button
-                    variant="contained"
-                    onClick={() =>
-                        onChangeField("pre_trade_screenshot", startImage)
-                    }
-                >
-                    Accept
-                </Button>
             </Box>
             <Box sx={{ mb: 2 }}>
-                <Typography
-                    variant="h6"
-                    sx={{ mr: 2, mb: 0.5, fontWeight: 500 }}
-                >
+                <InputLabel shrink={false} sx={{ mb: 1 }}>
                     Comments
-                </Typography>
-                <CustomTextField
+                </InputLabel>
+                <TSTextField
                     multiline
-                    minRows={3}
                     value={template?.technical_analysis_comment || ""}
                     onChange={(e) =>
                         onChangeField(
@@ -97,6 +173,7 @@ const Technical = ({ template, onChangeField }) => {
                             e.target.value
                         )
                     }
+                    minRows={1}
                     sx={{
                         "& .MuiInputBase-multiline": { p: 1 },
                         "& textarea": { fontSize: 14 },

@@ -1,8 +1,8 @@
+import { TSBackButton, TSMainButton } from "common/CustomComponents";
 import dayjs from "dayjs";
 import { useCallback, useEffect, useState } from "react";
 
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
@@ -101,7 +101,8 @@ const PPTTemplate = ({ documentId, rowId, open, onClose }) => {
                     maxWidth="xl"
                     sx={{
                         ".MuiDialog-paper": {
-                            borderRadius: "6px",
+                            borderRadius: "10px",
+                            backgroundColor: "#F6F8F9",
                         },
                     }}
                 >
@@ -110,10 +111,11 @@ const PPTTemplate = ({ documentId, rowId, open, onClose }) => {
                             display: "flex",
                             justifyContent: "space-between",
                             alignItems: "center",
-                            backgroundColor: "#F6F8F9",
-                            border: "1px solid #E5E9EB",
-                            px: 4,
-                            py: 1.5,
+                            backgroundColor: "white",
+                            border: "none",
+                            borderRadius: "10px",
+                            p: 2,
+                            m: 1,
                         }}
                     >
                         <DialogTitle
@@ -127,16 +129,26 @@ const PPTTemplate = ({ documentId, rowId, open, onClose }) => {
                             Trade in {template?.asset || "..."}
                         </DialogTitle>
                         <Box>
-                            <Button
+                            <TSBackButton
+                                onClick={handleClose}
+                                sx={{
+                                    px: 4,
+                                    py: 1,
+                                    mr: 2,
+                                }}
+                            >
+                                Cancel
+                            </TSBackButton>
+                            <TSMainButton
                                 variant="contained"
                                 onClick={handleSubmit}
-                                sx={{ mr: 1.5 }}
+                                sx={{
+                                    px: 4,
+                                    py: 1,
+                                }}
                             >
                                 Apply
-                            </Button>
-                            <Button color="secondary" onClick={handleClose}>
-                                Cancel
-                            </Button>
+                            </TSMainButton>
                         </Box>
                     </Box>
                     <DialogContent sx={{ p: 4, pt: 1.5 }}>

@@ -1,3 +1,11 @@
+import {
+    TSBackButton,
+    TSDatePicker,
+    TSMainButton,
+    TSMenuItem,
+    TSSelect,
+    TSTextField,
+} from "common/CustomComponents";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 
@@ -9,12 +17,8 @@ import Checkbox from "@mui/material/Checkbox";
 import InputAdornment from "@mui/material/InputAdornment";
 import ListItemText from "@mui/material/ListItemText";
 import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
-import Select from "@mui/material/Select";
-import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { styled } from "@mui/system";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
 import { useAddFilterSetupMutation } from "features/setups/setupsSlice";
 
@@ -35,33 +39,17 @@ const MenuButton = styled(Button)({
     color: "#252C32",
     backgroundColor: "#fff",
     border: "1px solid #DDE2E4",
-    padding: "4px 12px",
-    textTransform: "none",
-    borderRadius: "6px",
-});
-
-const FilterMenuItem = styled(MenuItem)({
-    fontSize: "14px",
-    borderRadius: "6px",
-    "&:hover": {
-        color: "#0E73F6",
-        backgroundColor: "#D7EDFF",
-    },
-    "&:focus": {
-        color: "inherit",
-        backgroundColor: "inherit",
-    },
-    "&:hover:focus": {
-        color: "#0E73F6",
-        backgroundColor: "#D7EDFF",
-    },
+    px: 2,
+    py: 1,
+    borderRadius: "10px",
 });
 
 const FilterMenuItemMultiple = styled(ListItemText)({
-    borderRadius: "6px",
+    // borderRadius: "6px",
+    fontWeight: "500",
     "&:hover": {
-        color: "#0E73F6",
-        backgroundColor: "#D7EDFF",
+        color: "#1A65F1",
+        backgroundColor: "#f6f9fe",
     },
     "& .MuiTypography-root": {
         fontSize: "14px",
@@ -159,7 +147,7 @@ const SetupFilter = ({ setup }) => {
         }
         if (filterType === "string") {
             return (
-                <Select
+                <TSSelect
                     size="small"
                     autoFocus={false}
                     multiple
@@ -204,16 +192,16 @@ const SetupFilter = ({ setup }) => {
                     )}
                 >
                     {setup.options[filterOptionIdx].values.map((value, idx) => (
-                        <FilterMenuItem key={idx} value={value}>
+                        <TSMenuItem key={idx} value={value}>
                             <Checkbox
                                 checked={values.indexOf(value) > -1}
                                 size="small"
                                 sx={{ py: 0 }}
                             />
                             <FilterMenuItemMultiple primary={value} />
-                        </FilterMenuItem>
+                        </TSMenuItem>
                     ))}
-                </Select>
+                </TSSelect>
             );
         } else if (filterType === "date") {
             return (
@@ -224,7 +212,7 @@ const SetupFilter = ({ setup }) => {
                         alignItems: "center",
                     }}
                 >
-                    <DatePicker
+                    <TSDatePicker
                         label="Date From"
                         value={dayjs(dateFrom) || null}
                         onChange={(newValue) => setDateFrom(newValue)}
@@ -249,7 +237,7 @@ const SetupFilter = ({ setup }) => {
                         }}
                     />
                     <Box sx={{ mx: 4 }}>-</Box>
-                    <DatePicker
+                    <TSDatePicker
                         label="Date To"
                         value={dayjs(dateTo) || null}
                         onChange={(newValue) => setDateTo(newValue)}
@@ -280,7 +268,7 @@ const SetupFilter = ({ setup }) => {
             );
         } else {
             return (
-                <TextField
+                <TSTextField
                     fullWidth
                     value={number}
                     size="small"
@@ -350,7 +338,7 @@ const SetupFilter = ({ setup }) => {
             >
                 <Box
                     sx={(theme) => ({
-                        p: "24px",
+                        p: 2,
                         [theme.breakpoints.up("sm")]: {
                             width: "400px",
                         },
@@ -362,11 +350,20 @@ const SetupFilter = ({ setup }) => {
                         },
                     })}
                 >
-                    <Typography variant="subtitle2">Setup Filters</Typography>
+                    <Typography
+                        sx={{
+                            fontWeight: 600,
+                            fontSize: 20,
+                            lineHeight: "30px",
+                            letterSpacing: "-0.6px",
+                        }}
+                    >
+                        Setup Filters
+                    </Typography>
                     <Typography sx={{ fontSize: "14px" }} gutterBottom>
                         Select from the dropdown to apply filters to your setups
                     </Typography>
-                    <Select
+                    <TSSelect
                         size="small"
                         value={column}
                         renderValue={(value) => (
@@ -415,18 +412,19 @@ const SetupFilter = ({ setup }) => {
                     >
                         {setup
                             ? setup?.options.map((option, idx) => (
-                                  <FilterMenuItem
+                                  <TSMenuItem
                                       key={idx}
                                       id={idx}
                                       value={[option.id, option.name]}
+                                      sx={{ fontSize: 14 }}
                                   >
                                       {option.name}
-                                  </FilterMenuItem>
+                                  </TSMenuItem>
                               ))
                             : null}
-                    </Select>
+                    </TSSelect>
                     {setup?.options[filterOptionIdx]?.type !== "date" && (
-                        <Select
+                        <TSSelect
                             size="small"
                             autoFocus={false}
                             value={action}
@@ -473,32 +471,34 @@ const SetupFilter = ({ setup }) => {
                                   "number"
                                     ? Object.keys(operations.numeric).map(
                                           (item, idx) => (
-                                              <FilterMenuItem
+                                              <TSMenuItem
                                                   key={idx}
                                                   value={[
                                                       item,
                                                       operations.numeric[item],
                                                   ]}
+                                                  sx={{ fontSize: 14 }}
                                               >
                                                   {operations.numeric[item]}
-                                              </FilterMenuItem>
+                                              </TSMenuItem>
                                           )
                                       )
                                     : Object.keys(operations.string).map(
                                           (item, idx) => (
-                                              <FilterMenuItem
+                                              <TSMenuItem
                                                   key={idx}
                                                   value={[
                                                       item,
                                                       operations.string[item],
                                                   ]}
+                                                  sx={{ fontSize: 14 }}
                                               >
                                                   {operations.string[item]}
-                                              </FilterMenuItem>
+                                              </TSMenuItem>
                                           )
                                       )
                                 : null}
-                        </Select>
+                        </TSSelect>
                     )}
                     {/* FILTER VALUE OPTIONS */}
                     {displayFilterValueOptions(
@@ -506,20 +506,16 @@ const SetupFilter = ({ setup }) => {
                     )}
 
                     <Box display="flex" justifyContent="center" sx={{ mt: 1 }}>
-                        <Button
-                            variant="text"
-                            onClick={handleClose}
-                            sx={{ mx: 1 }}
-                        >
+                        <TSBackButton onClick={handleClose} sx={{ mx: 1 }}>
                             Cancel
-                        </Button>
-                        <Button
+                        </TSBackButton>
+                        <TSMainButton
                             variant="contained"
                             onClick={handleApply}
                             sx={{ mx: 1 }}
                         >
                             Apply
-                        </Button>
+                        </TSMainButton>
                     </Box>
                 </Box>
             </Menu>

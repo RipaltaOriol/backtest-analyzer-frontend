@@ -1,4 +1,4 @@
-import LogoIcon from "assets/svg/trade_sharpener_logo.svg";
+import logoTitleTradeSharpener from "assets/svg/TSLogoTitle.svg";
 import { LoginButtonMobile, NavButtonMobile } from "pages/Home/HomeComponents";
 import { useState } from "react";
 import { Link, Outlet } from "react-router-dom";
@@ -12,8 +12,6 @@ import IconButton from "@mui/material/IconButton";
 import SwipeableDrawer from "@mui/material/SwipeableDrawer";
 import Toolbar from "@mui/material/Toolbar";
 import { styled } from "@mui/system";
-
-import LogoTitle from "./LogoTitle";
 
 const LoginButton = styled(Button)({
     background: "white",
@@ -74,16 +72,8 @@ const HomeBar = () => {
                         <Box sx={{ mr: 4 }}>
                             <img
                                 alt="Trade Sharpener Logo"
-                                src={LogoIcon}
+                                src={logoTitleTradeSharpener}
                                 className="logo-icon-regular"
-                            />
-                            <LogoTitle
-                                first="Trade"
-                                second="Sharpener"
-                                variant="h6"
-                                component="p"
-                                weight="700"
-                                color="#000"
                             />
                         </Box>
                         <Box sx={{ display: { xs: "none", md: "block" } }}>

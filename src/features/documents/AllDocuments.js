@@ -1,3 +1,4 @@
+import { TSMainButton } from "common/CustomComponents";
 import DeleteConfirmationDialog from "common/DeleteConfirmation";
 import Message from "common/Message";
 import Upload from "pages/upload";
@@ -9,9 +10,9 @@ import ContentPasteSearchRoundedIcon from "@mui/icons-material/ContentPasteSearc
 import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
 import DriveFileRenameOutlineRoundedIcon from "@mui/icons-material/DriveFileRenameOutlineRounded";
 import FileCopyRoundedIcon from "@mui/icons-material/FileCopyRounded";
+import InventoryIcon from "@mui/icons-material/Inventory";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import SensorsIcon from "@mui/icons-material/Sensors";
-import TextSnippetIcon from "@mui/icons-material/TextSnippet";
 import TuneRoundedIcon from "@mui/icons-material/TuneRounded";
 import UpdateRoundedIcon from "@mui/icons-material/UpdateRounded";
 import Box from "@mui/material/Box";
@@ -23,7 +24,6 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import Divider from "@mui/material/Divider";
 import Grid from "@mui/material/Grid";
 import IconButton from "@mui/material/IconButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
@@ -218,7 +218,7 @@ const AllDocuments = () => {
                                 border: "1px solid #E5E9EB",
                             }}
                         >
-                            <TextSnippetIcon sx={{ color: "#84919A" }} />
+                            <InventoryIcon sx={{ color: "#84919A" }} />
                         </Box>
                         <Box>
                             <Typography>{doc.name}</Typography>
@@ -263,28 +263,36 @@ const AllDocuments = () => {
 
     return (
         <Box>
-            <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                <Typography variant="h5">All Accounts</Typography>
+            <Box
+                sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}
+            >
+                <Typography
+                    sx={{
+                        fontWeight: 600,
+                        fontSize: 25,
+                        LineHeight: 30,
+                        letterSpacing: "-0.6px",
+                    }}
+                >
+                    All Accounts
+                </Typography>
                 <Box>
-                    <Button
-                        color="primary"
+                    <TSMainButton
                         variant="contained"
                         component={Link}
                         to="/files/create"
                         sx={{ mr: 2 }}
                     >
                         Create Manually
-                    </Button>
-                    <Button
-                        color="primary"
+                    </TSMainButton>
+                    <TSMainButton
                         variant="contained"
                         onClick={handleUploadOpen}
                     >
                         Upload New Document
-                    </Button>
+                    </TSMainButton>
                 </Box>
             </Box>
-            <Divider sx={{ mt: 2, mb: 3 }} />
             {msg && (
                 <Message
                     message={msg}
@@ -406,14 +414,14 @@ const AllDocuments = () => {
                     </ListItemIcon>
                     <ListItemText>Modify</ListItemText>
                 </DocumentMenuItem>
-                {selectedDocument?.source === "MT4 API" && (
+                {/* {selectedDocument?.source === "MT4 API" && (
                     <DocumentMenuItem onClick={handleRefetch}>
                         <ListItemIcon sx={{ minWidth: "30px !important" }}>
                             <SensorsIcon fontSize="small" />
                         </ListItemIcon>
                         <ListItemText>Sync MetaTrader</ListItemText>
                     </DocumentMenuItem>
-                )}
+                )} */}
                 <DocumentMenuItem onClick={handleSelectTemplateClose}>
                     <ListItemIcon sx={{ minWidth: "30px !important" }}>
                         <ContentPasteSearchRoundedIcon fontSize="small" />

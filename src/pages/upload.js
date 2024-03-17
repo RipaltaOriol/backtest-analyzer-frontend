@@ -291,7 +291,7 @@ const Upload = memo(({ open, onClose }) => {
                             />
                             <FormControlLabel
                                 value="mt4_api"
-                                control={<Radio size="small" disabled />}
+                                control={<Radio size="small" />}
                                 label="Connect MT4"
                             />
                         </RadioGroup>

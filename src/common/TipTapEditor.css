@@ -1,10 +1,12 @@
 .text-editor {
     font-family: "Inter";
+    background-color: white;
 }
 
 .menu-editor {
-    padding: 5px 0;
+    display: flex;
     border-bottom: 1px solid #dde2e4;
+    background-color: #eff0f3;
 }
 
 .menu-editor-icon.is-active {
@@ -74,4 +76,41 @@
     border: none;
     border-top: 2px solid #9c9c9c;
     margin: 2rem 0;
+}
+
+/* Editor Styles */
+.text-editor h1 {
+    font-size: 24px;
+    margin: 5px 0;
+}
+.text-editor h2 {
+    font-size: 22px;
+    font-weight: 500;
+    margin: 5px 0;
+}
+.text-editor h3 {
+    font-size: 20px;
+    font-weight: 400;
+    margin: 0 0 5px;
+}
+.text-editor h4 {
+    font-size: 18px;
+    text-decoration: underline;
+    font-weight: 400;
+    margin: 0 0 5px;
+}
+.text-editor h5 {
+    font-size: 18px;
+    font-weight: 400;
+    margin: 0 0 5px;
+}
+.text-editor h6 {
+    font-size: 18px;
+    font-weight: 400;
+    margin: 0 0 5px;
+}
+
+.text-editor p {
+    font-size: 16px;
+    margin: 0 0 2px;
 }

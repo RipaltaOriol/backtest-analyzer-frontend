@@ -1,3 +1,4 @@
+import { TSMainButton } from "common/CustomComponents";
 import { useEffect, useState } from "react";
 
 import LockOpenOutlinedIcon from "@mui/icons-material/LockOpenOutlined";
@@ -36,20 +37,15 @@ const Notes = ({ setupId, notes, className }) => {
                 }}
             >
                 <Typography>Notes</Typography>
-                <Button
-                    sx={{ fontSize: 14, py: 0.5, textTransform: "none" }}
-                    color="warning"
+                <TSMainButton
                     variant="contained"
-                    size="small"
+                    sx={{ fontSize: 14, py: 0.5 }}
                     disabled={notes === setupNotes}
-                    disableRipple
-                    disableFocusRipple
-                    disableElevation
                     onClick={() => handleSaveNote()}
                     endIcon={<LockOpenOutlinedIcon />}
                 >
                     Save
-                </Button>
+                </TSMainButton>
             </Box>
             <Box>
                 <TextField

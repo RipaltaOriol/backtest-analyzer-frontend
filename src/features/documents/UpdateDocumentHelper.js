@@ -1,7 +1,5 @@
+import { TSDatePicker, TSTextField } from "common/CustomComponents";
 import dayjs from "dayjs";
-
-import TextField from "@mui/material/TextField";
-import { DateTimeField } from "@mui/x-date-pickers/DateTimeField";
 
 const checkDirectionValue = (direction) =>
     direction.toLowerCase() !== "long" && direction.toLowerCase() !== "short";
@@ -13,43 +11,34 @@ function checkValidations(columnId, value) {
     return false;
 }
 
-export const updateTextInput = (column, value, onChange) => {
+export const updateTextInput = (id, value, onChange) => {
     return (
-        <TextField
-            label={column.name}
+        <TSTextField
             type="text"
-            error={checkValidations(column.id, value)}
-            variant="outlined"
+            error={checkValidations(id, value)}
             value={value || ""}
-            onChange={onChange(column.id)}
-            size="small"
-            step={0.5}
+            onChange={onChange(id)}
         />
     );
 };
 
-export const updateNumberInput = (column, value, onChange) => {
+export const updateNumberInput = (id, value, onChange) => {
     return (
-        <TextField
-            label={column.name}
+        <TSTextField
             type="number"
-            variant="outlined"
             value={value ?? ""}
-            onChange={onChange(column.id, "number")}
-            size="small"
+            onChange={onChange(id, "number")}
             step={0.5}
         />
     );
 };
 
-export const updateDateInput = (column, value, onChange) => {
+export const updateDateInput = (id, value, onChange) => {
     return (
-        <DateTimeField
-            variant="outlined"
-            size="small"
+        <TSDatePicker
+            format="L HH:mm"
             value={value ? dayjs(value) : null}
-            onChange={(newValue) => onChange(column.id, newValue)}
-            label={column.name}
+            onChange={(newValue) => onChange(id, newValue)}
             step={0.5}
         />
     );

@@ -1,8 +1,8 @@
+import { TSMenuItem } from "common/CustomComponents";
 import { useEffect, useState } from "react";
 
 import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
 import Typography from "@mui/material/Typography";
 import { styled } from "@mui/system";
 
@@ -10,17 +10,9 @@ const MenuButton = styled(Button)({
     color: "#252C32",
     backgroundColor: "#fff",
     border: "1px solid #DDE2E4",
-    padding: "4px 12px",
-    textTransform: "none",
-    borderRadius: "6px",
-});
-
-const SetupMenuItem = styled(MenuItem)({
-    borderRadius: "6px",
-    "&:hover": {
-        color: "#0E73F6",
-        backgroundColor: "#D7EDFF",
-    },
+    px: 2,
+    py: 1,
+    borderRadius: "10px",
 });
 
 let SetupDropdown = ({ defaultSetup, setups, changeSetup }) => {
@@ -75,7 +67,8 @@ let SetupDropdown = ({ defaultSetup, setups, changeSetup }) => {
                 autoFocus={false}
             >
                 {setups.map((setup) => (
-                    <SetupMenuItem
+                    <TSMenuItem
+                        sx={{ fontSize: 14 }}
                         key={setup.id}
                         onClick={() => {
                             handleClose();
@@ -83,7 +76,7 @@ let SetupDropdown = ({ defaultSetup, setups, changeSetup }) => {
                         }}
                     >
                         {setup.name}
-                    </SetupMenuItem>
+                    </TSMenuItem>
                 ))}
             </Menu>
         </>

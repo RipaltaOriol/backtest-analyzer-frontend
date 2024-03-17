@@ -8,17 +8,15 @@ import {
     Title,
     Tooltip,
 } from "chart.js";
+import { TSMenuItem, TSSelect } from "common/CustomComponents";
 import { ErrorFeedback } from "common/ErrorFeedback";
 import { multipleColorsConfig, tooltipConfig } from "common/graphs/graphUtils";
 import { Line } from "react-chartjs-2";
 import { useDispatch, useSelector } from "react-redux";
 
 import Box from "@mui/material/Box";
-import MenuItem from "@mui/material/MenuItem";
-import Select from "@mui/material/Select";
 import Skeleton from "@mui/material/Skeleton";
 import Typography from "@mui/material/Typography";
-import { styled } from "@mui/material/styles";
 
 import {
     selectCurrentMetric,
@@ -36,29 +34,6 @@ ChartJS.register(
     Tooltip,
     Legend
 );
-
-const FilterMenuItem = styled(MenuItem)({
-    fontSize: "14px",
-    borderRadius: "6px",
-    "&:hover": {
-        color: "#0E73F6",
-        backgroundColor: "#D7EDFF",
-    },
-    "&:focus": {
-        color: "inherit",
-        backgroundColor: "inherit",
-    },
-    "&.Mui-selected": {
-        "&:focus": {
-            color: "inherit",
-            backgroundColor: "inherit",
-        },
-    },
-    "&:hover:focus": {
-        color: "#0E73F6",
-        backgroundColor: "#D7EDFF",
-    },
-});
 
 const LineGraph = ({ setupId }) => {
     const dispatch = useDispatch();
@@ -164,8 +139,7 @@ const LineGraph = ({ setupId }) => {
                             {data?.labels?.title || "Loading"}
                         </Typography>
 
-                        <Select
-                            size="small"
+                        <TSSelect
                             value={data?.active_metric || ""}
                             onChange={(e) =>
                                 dispatch(
@@ -175,13 +149,7 @@ const LineGraph = ({ setupId }) => {
                                 )
                             }
                             sx={{
-                                "& legend": { display: "none" },
-                                "& fieldset": { top: 0 },
-                                "&.Mui-focused .MuiOutlinedInput-notchedOutline":
-                                    {
-                                        borderColor: "inherit",
-                                        borderWidth: "1px",
-                                    },
+                                width: "auto",
                                 position: "absolute",
                                 right: 0,
                             }}
@@ -189,17 +157,18 @@ const LineGraph = ({ setupId }) => {
                             {data
                                 ? data?.metric_list.map(
                                       ([metric, parsedDate], idx) => (
-                                          <FilterMenuItem
+                                          <TSMenuItem
                                               key={idx}
                                               id={idx}
                                               value={metric}
+                                              sx={{ fontSize: 14 }}
                                           >
                                               {parsedDate}
-                                          </FilterMenuItem>
+                                          </TSMenuItem>
                                       )
                                   )
                                 : null}
-                        </Select>
+                        </TSSelect>
                     </Box>
                     <Line data={lineData} options={options} />
                 </>

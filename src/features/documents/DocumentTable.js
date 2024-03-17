@@ -30,7 +30,7 @@ const TablePaginationIcon = styled(IconButton)({
 
 const options = { year: "numeric", month: "numeric", day: "numeric" };
 
-let StateTable = ({ setup, setSelectedRow, setRowValues, updateEditor }) => {
+let StateTable = ({ setup, setOpen, setSelectedRow }) => {
     const [data, setData] = useState(() => []);
     const [columns, setColumns] = useState(() => []);
     const [rowSelection, setRowSelection] = useState({});
@@ -112,14 +112,12 @@ let StateTable = ({ setup, setSelectedRow, setRowValues, updateEditor }) => {
         if (!row.getIsSelected()) {
             row.toggleSelected();
         }
+        setOpen(true);
         setSelectedRow(row.original);
-        setRowValues(row.original);
-        updateEditor(row.original.note);
     };
 
     return (
         <div className="table-container">
-            <h3 className="table-title">Data</h3>
             <table>
                 <thead>
                     {table.getHeaderGroups().map((headerGroup) => (
@@ -261,7 +259,6 @@ let StateTable = ({ setup, setSelectedRow, setRowValues, updateEditor }) => {
                     <KeyboardDoubleArrowRightIcon />
                 </TablePaginationIcon>
             </Box>
-            <div className="h-4" />
         </div>
     );
 };

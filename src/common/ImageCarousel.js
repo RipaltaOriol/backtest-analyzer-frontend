@@ -36,11 +36,11 @@ const DeleteButton = styled(IconButton)({
 });
 
 const SliderNavButton = styled(IconButton)({
-    backgroundColor: "#5B6871",
+    backgroundColor: "#0E73F6",
     color: "#FFFFFF",
-    borderRadius: "50%",
+    borderRadius: "10px",
     "&:hover": {
-        backgroundColor: "#5B6871",
+        backgroundColor: "#0E73F6",
     },
 });
 
@@ -62,6 +62,7 @@ const ImagesCarousel = ({
             <Box display="flex" alignItems="center" justifyContent="center">
                 {images && images.length > 3 && (
                     <SliderNavButton
+                        size="small"
                         sx={{ mr: -2, zIndex: 2 }}
                         onClick={() => swiperRef.current?.slidePrev()}
                     >
@@ -145,6 +146,7 @@ const ImagesCarousel = ({
                 </Swiper>
                 {images && images.length > 3 && (
                     <SliderNavButton
+                        size="small"
                         sx={{ ml: -2, zIndex: 2 }}
                         onClick={() => swiperRef.current?.slideNext()}
                     >

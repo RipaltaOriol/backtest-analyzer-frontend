@@ -37,12 +37,8 @@ const MenuBar = ({ editor }) => {
     }
 
     return (
-        <Box
-            className="menu-editor"
-            display="flex"
-            justifyContent="space-between"
-        >
-            <Box>
+        <Box className="menu-editor">
+            <Box flexGrow={1} sx={{ textAlign: "center" }}>
                 <TextEditorIconButton
                     onClick={() => editor.chain().focus().toggleBold().run()}
                     disabled={!editor.can().chain().focus().toggleBold().run()}

@@ -6,6 +6,7 @@ import {
 } from "@tanstack/react-table";
 import { previewAccountTableData } from "assets/utils/previewAccountTableData";
 import { TSMenuItem } from "common/CustomComponents";
+import { TSTextField } from "common/CustomComponents";
 import Message from "common/Message";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
@@ -83,48 +84,58 @@ const ModifyAccount = () => {
         selectDocumentById(state, documentId)
     );
 
-    const { data: accountColumns } = useGetDocumentColumnsQuery({
-        documentId,
-    });
+    const { data: accountColumns } = useGetDocumentColumnsQuery(
+        {
+            documentId,
+        },
+        { skip: !documentId }
+    );
 
     const columnHelper = useMemo(() => createColumnHelper(), []);
 
     const [updateAccountColumns] = useUpdateAccountColumnsMutation();
 
+    // TODO: refactor all of this
     const generateColumnData = useCallback(() => {
         if (accountColumns !== undefined) {
             setColumns(
-                accountColumns.reduce((acc, column) => {
-                    const adjustedColumn = {
-                        ...column,
-                        columnType: column.id.substring(0, 6),
-                        type: column.type === "number" ? "float64" : "object",
-                    };
-                    acc[column.id] = adjustedColumn; // Use the id as the key and the entire object as the value
+                Object.entries(accountColumns).reduce(
+                    (acc, [columnName, columnProps]) => {
+                        const adjustedColumn = {
+                            ...columnProps,
+                            columnType: columnProps.column,
+                            type: columnProps.type,
+                        };
+                        acc[columnName] = adjustedColumn; // Use the id as the key and the entire object as the value
 
-                    return acc;
-                }, {})
+                        return acc;
+                    },
+                    {}
+                )
             );
             setCurrentColumns(
-                accountColumns.reduce((acc, column) => {
-                    if (!forbiddenColumns.includes(column.id)) {
-                        acc.push(column.id);
+                Object.keys(accountColumns).reduce((acc, columnName) => {
+                    if (!forbiddenColumns.includes(columnName)) {
+                        acc.push(columnName);
                     }
                     return acc;
                 }, [])
             );
             setTableColumns(
-                accountColumns.reduce((acc, column) => {
-                    if (!forbiddenColumns.includes(column.id)) {
-                        acc.push(
-                            columnHelper.accessor(column.id.substring(0, 6), {
-                                header: column.name,
-                                id: column.id,
-                            })
-                        );
-                    }
-                    return acc;
-                }, [])
+                Object.entries(accountColumns).reduce(
+                    (acc, [columnName, columnProps]) => {
+                        if (!forbiddenColumns.includes(columnName)) {
+                            acc.push(
+                                columnHelper.accessor(columnProps.column, {
+                                    header: columnProps.name,
+                                    id: columnName,
+                                })
+                            );
+                        }
+                        return acc;
+                    },
+                    []
+                )
             );
         }
     }, [accountColumns, columnHelper]);
@@ -534,7 +545,7 @@ const ModifyAccount = () => {
                     >
                         Account Name
                     </InputLabel>
-                    <TextField
+                    <TSTextField
                         id="accountName"
                         variant="outlined"
                         value={document?.name || ""}

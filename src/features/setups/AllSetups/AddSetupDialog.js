@@ -1,3 +1,8 @@
+import {
+    TSBackButton,
+    TSMainButton,
+    TSTextFieldStandard,
+} from "common/CustomComponents";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 
@@ -9,7 +14,6 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { styled } from "@mui/system";
 
@@ -81,9 +85,28 @@ const AddSetupDialog = ({
     };
 
     return (
-        <Dialog open={openAddDialog} onClose={handleAddDialogClose}>
+        <Dialog
+            open={openAddDialog}
+            onClose={handleAddDialogClose}
+            maxWidth="sm"
+            fullWidth
+            sx={{
+                ".MuiDialog-paper": {
+                    borderRadius: "10px",
+                    p: 1,
+                },
+            }}
+        >
             <DialogTitle sx={{ color: "inherit" }}>
-                <Typography variant="h5" component="div" sx={{ mt: 1 }}>
+                <Typography
+                    component="div"
+                    sx={{
+                        fontSize: 20,
+                        fontWeight: 600,
+                        lineHeight: "24px",
+                        letterSpacing: "-0.6px",
+                    }}
+                >
                     Add New Version
                 </Typography>
             </DialogTitle>
@@ -133,23 +156,21 @@ const AddSetupDialog = ({
                         </Menu>
                     </>
                 )}
-                <TextField
-                    margin="dense"
+                <TSTextFieldStandard
                     id="name"
                     label="Name"
                     value={name}
                     fullWidth
-                    variant="standard"
                     onChange={(e) => setName(e.target.value)}
                 />
             </DialogContent>
-            <DialogActions sx={{ mb: 1, px: 3 }}>
-                <Button onClick={handleAddDialogClose} variant="text">
+            <DialogActions>
+                <TSBackButton onClick={handleAddDialogClose} variant="text">
                     Cancel
-                </Button>
-                <Button onClick={handleAddSetup} variant="contained">
+                </TSBackButton>
+                <TSMainButton onClick={handleAddSetup} variant="contained">
                     Apply
-                </Button>
+                </TSMainButton>
             </DialogActions>
         </Dialog>
     );

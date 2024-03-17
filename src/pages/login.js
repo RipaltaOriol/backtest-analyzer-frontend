@@ -1,11 +1,10 @@
+import { TSMainButton, TSTextField } from "common/CustomComponents";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import { Container } from "@mui/material";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 
@@ -14,8 +13,8 @@ import Footer from "../common/Footer";
 import Message from "../common/Message";
 import { useLoginMutation } from "../features/auth/authApiSlice";
 import { setCredentials } from "../features/auth/authSlice";
-import { setLoginMsg } from "../features/messages/messagesSlice";
-import { selectLoginMsg } from "../features/messages/messagesSlice";
+import { setError, setMessage } from "../features/messages/messagesSlice";
+import { selectMessage } from "../features/messages/messagesSlice";
 import "./Login.css";
 
 const Login = () => {
@@ -25,10 +24,9 @@ const Login = () => {
 
     const from = location.state?.from?.pathname || "/files";
 
-    const message = useSelector(selectLoginMsg);
+    const message = useSelector(selectMessage);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [isError, setIsError] = useState(false);
 
     const [login] = useLoginMutation();
 
@@ -46,19 +44,23 @@ const Login = () => {
             );
             setEmail("");
             setPassword("");
-            setIsError(false);
-            setMessage("Successfully logged in!");
+            setAuthError(false);
+            setAuthMessage("Successfully logged in!");
             navigate(from, { replace: true });
         } catch (err) {
             if (!err?.originalStatus) {
-                setMessage(err?.data?.msg || "Something went wrong");
-                setIsError(true);
+                setAuthMessage(err?.data?.msg || "Something went wrong");
+                setAuthError(true);
             }
         }
     };
 
-    const setMessage = (newMessage) => {
-        dispatch(setLoginMsg({ msg: newMessage }));
+    const setAuthMessage = (newMessage) => {
+        dispatch(setMessage({ msg: newMessage }));
+    };
+
+    const setAuthError = (isError) => {
+        dispatch(setError({ error: isError }));
     };
 
     return (
@@ -117,11 +119,11 @@ const Login = () => {
                             >
                                 Log In
                             </Typography>
-                            {message && (
+                            {message.message && (
                                 <Message
-                                    message={message}
-                                    setMessage={setMessage}
-                                    isError={isError}
+                                    message={message.message}
+                                    setMessage={setAuthMessage}
+                                    isError={message.isError}
                                     sx={{ mb: 3 }}
                                 />
                             )}
@@ -130,14 +132,14 @@ const Login = () => {
                                 autoComplete="off"
                                 onSubmit={handleSubmit}
                             >
-                                <TextField
+                                <TSTextField
                                     sx={{ mb: 2 }}
                                     label="Email"
                                     fullWidth
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                 />
-                                <TextField
+                                <TSTextField
                                     sx={{ mb: 2 }}
                                     type="password"
                                     label="Password"
@@ -148,7 +150,7 @@ const Login = () => {
                                     }
                                 />
 
-                                <Button
+                                <TSMainButton
                                     type="submit"
                                     variant="contained"
                                     color="primary"
@@ -156,7 +158,7 @@ const Login = () => {
                                     fullWidth
                                 >
                                     Sign In
-                                </Button>
+                                </TSMainButton>
                                 <Link to="" className="forgot-password-link">
                                     Forgot Password?
                                 </Link>

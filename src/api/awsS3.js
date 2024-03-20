@@ -22,8 +22,8 @@ export const uploadFile = async (file) => {
 
     try {
         const result = await s3.upload(params).promise();
+        // update the state or call a parent component method to handle the uploaded image URL
         return { url: result.Location, success: true };
-        // Here you can update the state or call a parent component method to handle the uploaded image URL
     } catch (error) {
         return { success: false };
     }

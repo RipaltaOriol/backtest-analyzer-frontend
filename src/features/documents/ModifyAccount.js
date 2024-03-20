@@ -310,7 +310,7 @@ const ModifyAccount = () => {
 
         // new name
         modifiedColumns["to_delete"] = deletedColumns;
-        console.log(modifiedColumns);
+
         const response = await updateAccountColumns({
             id: documentId,
             columns: modifiedColumns,

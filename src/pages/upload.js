@@ -39,7 +39,7 @@ const Upload = memo(({ open, onClose }) => {
     const [file, setFile] = useState("");
     const [isError, setIsError] = useState(false);
     const [fileName, setFileName] = useState("Choose File");
-    const [fileSource, setFileSource] = useState("default");
+    const [fileSource, setFileSource] = useState("DEFAULT");
     const [account, setAccount] = useState("");
     const [password, setPassword] = useState("");
     const [server, setServer] = useState("");
@@ -53,7 +53,7 @@ const Upload = memo(({ open, onClose }) => {
         setMsg("");
         setFile("");
         setFileName("Choose File");
-        setFileSource("default");
+        setFileSource("DEFAULT");
         onClose();
     };
 
@@ -78,7 +78,7 @@ const Upload = memo(({ open, onClose }) => {
 
     const onSubmitConnet = async (e) => {
         if (account && password && server) {
-            connectDocument({ account, password, server })
+            connectDocument({ account, password, server, platform: fileSource })
                 .unwrap()
                 .then((response) => {
                     setIsError(!response.success);
@@ -96,7 +96,7 @@ const Upload = memo(({ open, onClose }) => {
     const onSubmit = async (e) => {
         e.preventDefault();
 
-        if (fileSource === "mt4_api") {
+        if (fileSource.endsWith("API")) {
             onSubmitConnet();
         } else {
             if (
@@ -146,7 +146,7 @@ const Upload = memo(({ open, onClose }) => {
                     component="div"
                     sx={{ mt: 1 }}
                 >
-                    {fileSource === "mt4_api"
+                    {fileSource.endsWith("API")
                         ? "Connect Meta Trader"
                         : "File Upload"}
                 </Typography>
@@ -163,10 +163,10 @@ const Upload = memo(({ open, onClose }) => {
                 <form onSubmit={onSubmit}>
                     <UploadBox
                         sx={{
-                            p: fileSource === "mt4_api" ? 4 : 6,
+                            p: fileSource.endsWith("API") ? 4 : 6,
                         }}
                     >
-                        {fileSource === "mt4_api" ? (
+                        {fileSource.endsWith("API") ? (
                             <Box>
                                 {!isConnecting && (
                                     <Box>
@@ -280,19 +280,24 @@ const Upload = memo(({ open, onClose }) => {
                             onChange={(e) => setFileSource(e.target.value)}
                         >
                             <FormControlLabel
-                                value="default"
+                                value="DEFAULT"
                                 control={<Radio size="small" />}
                                 label="Default"
                             />
                             <FormControlLabel
-                                value="mt4_file"
+                                value="MT4_FILE"
                                 control={<Radio size="small" />}
                                 label="MT4 Trade History"
                             />
                             <FormControlLabel
-                                value="mt4_api"
+                                value="MT4_API"
                                 control={<Radio size="small" />}
                                 label="Connect MT4"
+                            />
+                            <FormControlLabel
+                                value="MT5_API"
+                                control={<Radio size="small" />}
+                                label="Connect MT5"
                             />
                         </RadioGroup>
 
@@ -309,7 +314,7 @@ const Upload = memo(({ open, onClose }) => {
                         fullWidth
                         disableRipple
                     >
-                        {fileSource === "mt4_api" ? "Connect" : "Upload"}
+                        {fileSource.endsWith("API") ? "Connect" : "Upload"}
                     </Button>
                 </form>
             </DialogContent>

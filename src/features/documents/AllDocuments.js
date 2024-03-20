@@ -13,6 +13,7 @@ import FileCopyRoundedIcon from "@mui/icons-material/FileCopyRounded";
 import InventoryIcon from "@mui/icons-material/Inventory";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import SensorsIcon from "@mui/icons-material/Sensors";
+import SettingsRoundedIcon from "@mui/icons-material/SettingsRounded";
 import TuneRoundedIcon from "@mui/icons-material/TuneRounded";
 import UpdateRoundedIcon from "@mui/icons-material/UpdateRounded";
 import Box from "@mui/material/Box";
@@ -414,6 +415,15 @@ const AllDocuments = () => {
                     </ListItemIcon>
                     <ListItemText>Modify</ListItemText>
                 </DocumentMenuItem>
+                <DocumentMenuItem
+                    onClick={() => navigate(`/${selectedDocument.id}/settings`)}
+                >
+                    <ListItemIcon sx={{ minWidth: "30px !important" }}>
+                        <SettingsRoundedIcon fontSize="small" />
+                    </ListItemIcon>
+                    <ListItemText>Settings</ListItemText>
+                </DocumentMenuItem>
+
                 {/* {selectedDocument?.source === "MT4 API" && (
                     <DocumentMenuItem onClick={handleRefetch}>
                         <ListItemIcon sx={{ minWidth: "30px !important" }}>

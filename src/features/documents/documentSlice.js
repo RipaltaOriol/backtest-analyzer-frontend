@@ -26,6 +26,16 @@ export const documentsApiSlice = apiSlice.injectEndpoints({
             query: ({ documentId }) => `/documents/${documentId}`,
             providesTags: ["DocumentTable"],
         }),
+        getAccountSettings: builder.query({
+            query: ({ accountId }) => `/documents/${accountId}/settings`,
+        }),
+        putAccountSettings: builder.mutation({
+            query: ({ accountId, name, balance, currency, openCondition }) => ({
+                url: `/documents/${accountId}/settings`,
+                method: "PUT",
+                body: { name, balance, currency, openCondition },
+            }),
+        }),
         postDocument: builder.mutation({
             query: ({ name, fields, checkbox }) => ({
                 url: "/documents",
@@ -73,10 +83,10 @@ export const documentsApiSlice = apiSlice.injectEndpoints({
             invalidatesTags: [{ type: "Document", id: "LIST" }, "Setup"],
         }),
         connectDcoument: builder.mutation({
-            query: ({ account, password, server }) => ({
+            query: ({ account, password, server, platform }) => ({
                 url: "/documents/fetch",
                 method: "POST",
-                body: { account, password, server },
+                body: { account, password, server, platform },
             }),
             invalidatesTags: [{ type: "Document", id: "LIST" }, "Setup"],
         }),
@@ -162,6 +172,8 @@ export const {
     useGetDocumentColumnsQuery,
     useUpdateAccountColumnsMutation,
     useAssignDocumentTemplateMutation,
+    useGetAccountSettingsQuery,
+    usePutAccountSettingsMutation,
 } = documentsApiSlice;
 
 // returns the query result object

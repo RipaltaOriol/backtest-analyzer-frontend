@@ -106,7 +106,6 @@ let StateTable = ({ setup, setOpen, setSelectedRow }) => {
     });
 
     useEffect(() => {
-        console.log(setup?.state.data);
         reloadTable();
     }, [setup, reloadTable]);
 

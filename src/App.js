@@ -5,6 +5,8 @@ import { ThemeProvider } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
+import AccountSettings from "features/documents/AccountSettings";
+
 import theme from "./assets/utils/theme";
 import HomeBar from "./common/HomeBar";
 import Layout from "./common/Layout";
@@ -67,6 +69,10 @@ function App() {
                                         element={<AllSetups />}
                                     />
                                     <Route path="help" element={<Help />} />
+                                    <Route
+                                        path=":documentId/settings"
+                                        element={<AccountSettings />}
+                                    />
                                     <Route
                                         path=":documentId/compare"
                                         element={<SetupsCompare />}

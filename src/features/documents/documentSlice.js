@@ -30,10 +30,10 @@ export const documentsApiSlice = apiSlice.injectEndpoints({
             query: ({ accountId }) => `/documents/${accountId}/settings`,
         }),
         putAccountSettings: builder.mutation({
-            query: ({ accountId, name, balance, currency }) => ({
+            query: ({ accountId, name, balance, currency, openCondition }) => ({
                 url: `/documents/${accountId}/settings`,
                 method: "PUT",
-                body: { name, balance, currency },
+                body: { name, balance, currency, openCondition },
             }),
         }),
         postDocument: builder.mutation({
@@ -83,10 +83,10 @@ export const documentsApiSlice = apiSlice.injectEndpoints({
             invalidatesTags: [{ type: "Document", id: "LIST" }, "Setup"],
         }),
         connectDcoument: builder.mutation({
-            query: ({ account, password, server }) => ({
+            query: ({ account, password, server, platform }) => ({
                 url: "/documents/fetch",
                 method: "POST",
-                body: { account, password, server },
+                body: { account, password, server, platform },
             }),
             invalidatesTags: [{ type: "Document", id: "LIST" }, "Setup"],
         }),

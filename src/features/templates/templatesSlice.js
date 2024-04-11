@@ -20,6 +20,7 @@ export const templatesSlice = apiSlice.injectEndpoints({
                 "Stats",
                 "Graphs",
                 "Charts",
+                "openPositions",
             ],
         }),
     }),

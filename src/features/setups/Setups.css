@@ -291,3 +291,17 @@
         grid-column: span 4;
     }
 }
+
+.trade-long-decoration {
+    color: #1b4332;
+    background-color: #b7e4c7;
+    padding: 2px 8px;
+    border-radius: 5px;
+}
+
+.trade-short-decoration {
+    color: #77030b;
+    background-color: #fb747d;
+    padding: 2px 8px;
+    border-radius: 5px;
+}

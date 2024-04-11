@@ -98,6 +98,10 @@ export const setupsSlice = apiSlice.injectEndpoints({
             }),
             providesTags: ["CalendarTable"],
         }),
+        getSetupOpenPositions: builder.query({
+            query: ({ versionId }) => `/setups/${versionId}/open-trades`,
+            providesTags: ["openPositions"],
+        }),
     }),
 });
 
@@ -110,6 +114,7 @@ export const {
     useAddFilterSetupMutation,
     useGetCalendarTableQuery,
     useDeleteFilterSetupMutation,
+    useGetSetupOpenPositionsQuery,
 } = setupsSlice;
 
 export const {

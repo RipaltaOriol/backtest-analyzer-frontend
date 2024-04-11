@@ -15,6 +15,7 @@ export const tradeSlice = apiSlice.injectEndpoints({
                 "Stats",
                 "Graphs",
                 "Charts",
+                "openPositions",
             ],
         }),
         addTrade: builder.mutation({
@@ -30,6 +31,7 @@ export const tradeSlice = apiSlice.injectEndpoints({
                 "Stats",
                 "Graphs",
                 "Charts",
+                "openPositions",
             ],
         }),
         updateTrade: builder.mutation({
@@ -46,6 +48,7 @@ export const tradeSlice = apiSlice.injectEndpoints({
                 "Stats",
                 "Graphs",
                 "Charts",
+                "openPositions",
             ],
         }),
     }),

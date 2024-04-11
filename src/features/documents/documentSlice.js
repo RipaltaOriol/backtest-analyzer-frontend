@@ -35,6 +35,7 @@ export const documentsApiSlice = apiSlice.injectEndpoints({
                 method: "PUT",
                 body: { name, balance, currency, openCondition },
             }),
+            invalidatesTags: ["openPositions"],
         }),
         postDocument: builder.mutation({
             query: ({ name, fields, checkbox }) => ({

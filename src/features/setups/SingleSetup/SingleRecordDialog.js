@@ -128,7 +128,7 @@ function SingleRecordDialog({ open, onClose, documentId, rowRecord }) {
                 documentId,
                 tradeId: rowRecord.rowId,
             }).unwrap();
-            console.log(response);
+
             setUserMessage(response.msg);
             setUserError(!response.success);
             handleClose();
@@ -235,7 +235,7 @@ function SingleRecordDialog({ open, onClose, documentId, rowRecord }) {
             case accountColumns[columnId].type === "float64" ||
                 accountColumns[columnId].type === "int64":
                 return (
-                    <Box>
+                    <Box key={columnId}>
                         <InputLabel shrink={false} sx={{ mb: 1 }}>
                             {accountColumns[columnId].name}
                         </InputLabel>
@@ -245,7 +245,7 @@ function SingleRecordDialog({ open, onClose, documentId, rowRecord }) {
                 );
             case accountColumns[columnId].type === "object":
                 return (
-                    <Box>
+                    <Box key={columnId}>
                         <InputLabel shrink={false} sx={{ mb: 1 }}>
                             {accountColumns[columnId].name}
                         </InputLabel>
@@ -255,7 +255,7 @@ function SingleRecordDialog({ open, onClose, documentId, rowRecord }) {
                 );
             case columnId.startsWith("col_d_"):
                 return (
-                    <Box>
+                    <Box key={columnId}>
                         <InputLabel shrink={false} sx={{ mb: 1 }}>
                             {accountColumns[columnId].name}
                         </InputLabel>

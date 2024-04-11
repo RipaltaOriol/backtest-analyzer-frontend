@@ -7,14 +7,13 @@ import { displayWinRate, parseDataValues } from "utils/displayUtils";
 import parseColumnName from "utils/parseColumns";
 
 import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
-import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
-import Divider from "@mui/material/Divider";
 import Skeleton from "@mui/material/Skeleton";
 import Typography from "@mui/material/Typography";
 
 import { useGetStatisticsQuery } from "features/statistics/statisticsApiSlice";
 import { renderTemplate } from "features/templates/utilsRenderTemplate";
+import OpenTrades from "features/trades/OpenTrades";
 import { setOpen, setTrade } from "features/trades/tradeSlice";
 import { selectOpen, selectTrade } from "features/trades/tradeSlice";
 
@@ -176,22 +175,13 @@ const SetupGeneral = (props) => {
                             )}
                         </Box>
                     )}
-                    <Box
+
+                    <OpenTrades
                         className="setup-open-trades"
-                        sx={{
-                            border: "1px solid #e5e9eb",
-                            borderRadius: "5px",
-                            p: 3,
-                        }}
-                    >
-                        <Typography variant="h6" gutterBottom>
-                            Open Trades
-                        </Typography>
-                        <Divider sx={{ my: 2 }} />
-                        <Alert severity="info">
-                            Coming soon! - This widget is under construction.
-                        </Alert>
-                    </Box>
+                        setupId={setup?.id}
+                        setOpen={handleSetTradeOpen}
+                        setSelectedRow={handeSetTrade}
+                    />
                     <Notes
                         setupId={setup?.id}
                         notes={setup?.notes}

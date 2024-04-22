@@ -9,6 +9,7 @@ import parseColumnName from "utils/parseColumns";
 import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
 import Box from "@mui/material/Box";
 import Skeleton from "@mui/material/Skeleton";
+import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 
 import { useGetStatisticsQuery } from "features/statistics/statisticsApiSlice";
@@ -126,9 +127,14 @@ const SetupGeneral = (props) => {
                         </Typography>
                     </Box>
                     <Box align="center">
-                        <Typography variant="body2" gutterBottom>
-                            Trade Expectancy
-                        </Typography>
+                        <Tooltip
+                            placement="top"
+                            title="Estimates the average amount a trader can expect to win or lose per trade based on their historical performance."
+                        >
+                            <Typography variant="body2" gutterBottom>
+                                Trade Expectancy
+                            </Typography>
+                        </Tooltip>
                         <Typography
                             variant="h3"
                             color={

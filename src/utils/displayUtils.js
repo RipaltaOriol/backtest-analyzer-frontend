@@ -23,7 +23,7 @@ function getResultDecorator(column) {
             decorator = "%";
             break;
         case column.startsWith("col_v_"):
-            decorator = "$";
+            decorator = " $";
             break;
         case column.startsWith("col_r_"):
             decorator = "RR";
@@ -35,7 +35,7 @@ function getResultDecorator(column) {
 }
 
 function parseStatsValues(column, metric, value) {
-    if (!value) return null;
+    if (!value && value !== 0) return null;
     let decorator = getResultDecorator(column);
 
     switch (true) {

@@ -8,6 +8,7 @@ import {
     Tooltip,
 } from "chart.js";
 import annotationPlugin from "chartjs-plugin-annotation";
+import SimpleTable from "common/SimpleTable";
 import BarChart from "common/graphs/BarChart";
 import RadarChart from "common/graphs/BubbleChart";
 import HorizontalBarChart from "common/graphs/HorizontalBarChart";
@@ -21,7 +22,6 @@ import NetBarChart from "features/graphs/NetBarChart";
 import { useGetDailyDistributionQuery } from "features/graphs/graphsSlice";
 import { useGetStatisticsQuery } from "features/statistics/statisticsApiSlice";
 
-import SimpleTable from "../../common/SimpleTable";
 import BarGraph from "../graphs/BarGraph";
 import ScatterGraph from "../graphs/ScatterGraph";
 

@@ -54,6 +54,7 @@ const PolarChart = ({ statsData }) => {
         }
         data.datasets[0].data = dataValues;
         data.datasets[0].backgroundColor = multipleColorsConfig;
+        data.datasets[0].borderRadius = 10;
         data.labels = parseColumnList(dataLabels);
         options.scales.r = {
             min: minValue - 1,

@@ -16,6 +16,7 @@ export const templatesSlice = apiSlice.injectEndpoints({
                 "SetupRow",
                 "DocumentTable",
                 "CalendarTable",
+                "CalendarStatistics",
                 "Setup",
                 "Stats",
                 "Graphs",

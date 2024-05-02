@@ -27,6 +27,7 @@ export const tradeSlice = apiSlice.injectEndpoints({
                 "SetupRow",
                 "DocumentTable",
                 "CalendarTable",
+                "CalendarStatistics",
                 "Setup",
                 "Stats",
                 "Graphs",

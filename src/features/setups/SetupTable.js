@@ -32,7 +32,6 @@ const SetupTable = (props) => {
     };
 
     const handeSetTrade = (trade) => {
-        console.log(trade);
         dispatch(setTrade(trade));
     };
 

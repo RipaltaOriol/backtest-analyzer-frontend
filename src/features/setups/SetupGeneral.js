@@ -112,7 +112,8 @@ const SetupGeneral = (props) => {
                         >
                             {parseDataValues(
                                 resultMetric,
-                                setupStatistics?.data[resultMetric]?.total
+                                setupStatistics?.data[resultMetric]?.total,
+                                true
                             )}
                         </Typography>
                     </Box>
@@ -146,7 +147,8 @@ const SetupGeneral = (props) => {
                         >
                             {parseDataValues(
                                 resultMetric,
-                                setupStatistics?.data[resultMetric]?.expectancy
+                                setupStatistics?.data[resultMetric]?.expectancy,
+                                true
                             )}
                         </Typography>
                     </Box>

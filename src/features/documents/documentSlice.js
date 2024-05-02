@@ -54,6 +54,7 @@ export const documentsApiSlice = apiSlice.injectEndpoints({
             invalidatesTags: [
                 "DocumentTable",
                 "CalendarTable",
+                "CalendarStatistics",
                 "Setup",
                 "SetupRow",
                 "Stats",
@@ -69,6 +70,7 @@ export const documentsApiSlice = apiSlice.injectEndpoints({
             invalidatesTags: [
                 "DocumentTable",
                 "CalendarTable",
+                "CalendarStatistics",
                 "Setup",
                 "Stats",
                 "Graphs",
@@ -140,6 +142,7 @@ export const documentsApiSlice = apiSlice.injectEndpoints({
                 { type: "Document", id: arg.documentId },
                 "DocumentTable",
                 "CalendarTable",
+                "CalendarStatistics",
                 "Setup",
                 "SetupRow",
                 "Stats",

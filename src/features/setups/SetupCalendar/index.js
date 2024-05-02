@@ -1,4 +1,5 @@
 import { ErrorFeedback } from "common/ErrorFeedback";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 
@@ -9,6 +10,8 @@ import {
     deselectTrade,
     isTradeSelected,
     selectSelectedTrade,
+    setDateFormat,
+    setResultDisplay,
 } from "features/calendar/calendarSlice";
 import {
     selectDateFormat,
@@ -52,6 +55,15 @@ const SetupCalendar = (props) => {
         { skip: !setup?.id }
     );
 
+    useEffect(() => {
+        if (calendarData) {
+            dispatch(
+                setResultDisplay({ resultDisplay: calendarData?.active_metric })
+            );
+            dispatch(setDateFormat({ dateFormat: calendarData?.active_date }));
+        }
+    }, [calendarData, dispatch]);
+
     return (
         <Box
             role="tabpanel"
@@ -71,7 +83,10 @@ const SetupCalendar = (props) => {
                 <Box className="calendar-tab" sx={{ mt: 3 }}>
                     <CalendarGrid calendarData={calendarData} />
 
-                    <CalendarDrawer calendarData={calendarData} />
+                    <CalendarDrawer
+                        versionId={setup?.id}
+                        calendarData={calendarData}
+                    />
                 </Box>
             ) : (
                 <ErrorFeedback msg={calendarData?.msg} />

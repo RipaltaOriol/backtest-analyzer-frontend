@@ -54,6 +54,7 @@ export const apiSlice = createApi({
         "DocumentTable",
         "Charts",
         "CalendarTable",
+        "CalendarStatistics",
         "CompareSetups",
         "SetupRow",
         "AccountColumns",

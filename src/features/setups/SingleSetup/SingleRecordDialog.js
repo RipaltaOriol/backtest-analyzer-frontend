@@ -151,7 +151,6 @@ function SingleRecordDialog({ open, onClose, documentId, rowRecord }) {
     let editor = useTextEditor(rowRecord?.note);
 
     const handleSave = async () => {
-        console.log(tradeData.hasOwnProperty("col_d"), tradeData?.col_d);
         if (
             tradeData.hasOwnProperty("col_d") &&
             !validateDirection(tradeData?.col_d)
@@ -222,7 +221,16 @@ function SingleRecordDialog({ open, onClose, documentId, rowRecord }) {
 
     useEffect(() => {
         editor?.commands.setContent(rowRecord?.note || "");
-        setTradeData(rowRecord);
+
+        // TODO: this is a quick fix better solution should be handled by the server
+        let temp = { ...rowRecord };
+        for (let column in rowRecord) {
+            if (column.startsWith("col_p_") && rowRecord[column]) {
+                temp[column] = rowRecord[column] * 100;
+            }
+        }
+
+        setTradeData(temp);
         setImages(rowRecord?.imgs || []);
     }, [rowRecord, editor]);
 
@@ -450,7 +458,10 @@ function SingleRecordDialog({ open, onClose, documentId, rowRecord }) {
                                                 {updateNumberInput(
                                                     columnName,
                                                     tradeData?.[columnName],
-                                                    handleChange
+                                                    handleChange,
+                                                    columnName.startsWith(
+                                                        "col_p_"
+                                                    )
                                                 )}
                                             </Box>
                                         );

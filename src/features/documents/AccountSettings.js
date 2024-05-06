@@ -316,7 +316,7 @@ const AccountSettins = () => {
                         }}
                     />
                     <Select
-                        value={accountSettings?.currency}
+                        value={accountSettings?.currency || "USD"}
                         inputProps={{
                             MenuProps: {
                                 PaperProps: {

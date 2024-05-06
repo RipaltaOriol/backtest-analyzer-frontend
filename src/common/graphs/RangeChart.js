@@ -1,12 +1,18 @@
 import { tooltipConfig } from "common/graphs/graphUtils";
 import { Bar } from "react-chartjs-2";
+import { useSelector } from "react-redux";
+import parseDataValues from "utils/displayUtils";
 
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 
-const RangeChart = ({ rangeData, decorator = "" }) => {
+import { selectResultDisplay } from "features/calendar/calendarSlice";
+
+const RangeChart = ({ rangeData }) => {
     let max_win, max_loss, average_profit;
     ({ max_win = 0, max_loss = 0, average_profit = 0 } = rangeData || {});
+
+    const resultMetric = useSelector(selectResultDisplay);
 
     const options = {
         indexAxis: "y",
@@ -35,7 +41,21 @@ const RangeChart = ({ rangeData, decorator = "" }) => {
             legend: {
                 display: false,
             },
-            tooltip: { ...tooltipConfig, yAlign: "bottom" },
+            tooltip: {
+                ...tooltipConfig,
+                yAlign: "bottom",
+                callbacks: {
+                    label: function (context) {
+                        let label = context.dataset.label || "";
+                        let value = parseDataValues(
+                            resultMetric,
+                            context.parsed.x || "",
+                            true
+                        );
+                        return label + ": " + value;
+                    },
+                },
+            },
             annotation: {
                 annotations: {
                     line1: {
@@ -48,7 +68,11 @@ const RangeChart = ({ rangeData, decorator = "" }) => {
                         borderWidth: 5,
                         label: {
                             backgroundColor: "rgba(0,0,0,0)",
-                            content: `Average Return: ${average_profit}${decorator}`,
+                            content: `Average Return: ${parseDataValues(
+                                resultMetric,
+                                average_profit,
+                                true
+                            )}`,
                             color: "black",
                             font: {
                                 weight: "normal",

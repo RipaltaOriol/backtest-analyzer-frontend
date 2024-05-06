@@ -2,7 +2,7 @@ import { TSMainButton, TSMenuItem, TSSelect } from "common/CustomComponents";
 import DoghnutChart from "common/graphs/DoughnutChart";
 import RangeChart from "common/graphs/RangeChart";
 import { useDispatch, useSelector } from "react-redux";
-import { getResultDecorator } from "utils/displayUtils";
+import parseDataValues from "utils/displayUtils";
 
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
@@ -54,22 +54,12 @@ const CalendarDrawer = ({ versionId, calendarData }) => {
         } // skip if any parameters are missing
     );
 
-    const decorator = getResultDecorator(calendarData?.active_metric);
+    const dateMetric = useSelector(selectDateFormat);
+    const resultMetric = useSelector(selectResultDisplay);
 
-    const dateFormat = useSelector(selectDateFormat);
-    const resultDisplay = useSelector(selectResultDisplay);
-
-    const renderStatistic = (
-        value,
-        isDecorator = false,
-        renderSkeleton = true
-    ) => {
+    const renderStatistic = (value, renderSkeleton = true) => {
         if (value || value === 0) {
-            if (isDecorator) {
-                return value.toString() + decorator;
-            } else {
-                return value.toString();
-            }
+            return value.toString();
         } else if (renderSkeleton) {
             return <Skeleton variant="rounded" sx={{ my: 1 }} />;
         }
@@ -129,11 +119,11 @@ const CalendarDrawer = ({ versionId, calendarData }) => {
                         <Typography>Select date display format:</Typography>
                         <TSSelect
                             size="small"
-                            value={dateFormat || ""}
+                            value={dateMetric || ""}
                             onChange={(e) =>
                                 dispatch(
                                     setDateFormat({
-                                        dateFormat: e.target.value,
+                                        dateMetric: e.target.value,
                                     })
                                 )
                             }
@@ -168,11 +158,11 @@ const CalendarDrawer = ({ versionId, calendarData }) => {
                         <Typography>Select result format:</Typography>
                         <TSSelect
                             size="small"
-                            value={resultDisplay || ""}
+                            value={resultMetric || ""}
                             onChange={(e) =>
                                 dispatch(
                                     setResultDisplay({
-                                        resultDisplay: e.target.value,
+                                        resultMetric: e.target.value,
                                     })
                                 )
                             }
@@ -228,8 +218,11 @@ const CalendarDrawer = ({ versionId, calendarData }) => {
                         }}
                     >
                         {renderStatistic(
-                            calendarStatistics?.current?.net_pnl,
-                            true
+                            parseDataValues(
+                                resultMetric,
+                                calendarStatistics?.current?.net_pnl,
+                                true
+                            )
                         )}
                     </Typography>
                     <Typography sx={{ fontSize: 14 }}>
@@ -243,7 +236,6 @@ const CalendarDrawer = ({ versionId, calendarData }) => {
                         >
                             {renderStatistic(
                                 calendarStatistics?.previous?.net_pnl,
-                                false,
                                 false
                             )}
                             %
@@ -267,8 +259,7 @@ const CalendarDrawer = ({ versionId, calendarData }) => {
                         }}
                     >
                         {renderStatistic(
-                            calendarStatistics?.current?.profit_factor,
-                            false
+                            calendarStatistics?.current?.profit_factor
                         )}
                     </Typography>
                 </BoxElement>
@@ -288,23 +279,18 @@ const CalendarDrawer = ({ versionId, calendarData }) => {
                         }}
                     >
                         {renderStatistic(
-                            calendarStatistics?.current?.total_trades,
-                            false
+                            calendarStatistics?.current?.total_trades
                         )}
                     </Typography>
                     <Typography sx={{ fontSize: 14 }}>
                         {renderStatistic(
                             calendarStatistics?.previous?.total_trades,
-                            false,
                             false
                         )}
                         % vs. last month
                     </Typography>
                 </BoxElement>
-                <RangeChart
-                    rangeData={calendarStatistics?.current}
-                    decorator={decorator}
-                />
+                <RangeChart rangeData={calendarStatistics?.current} />
 
                 <BoxElement
                     className="calendar-result-breakdown"

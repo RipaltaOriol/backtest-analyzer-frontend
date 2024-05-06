@@ -28,6 +28,7 @@ export const documentsApiSlice = apiSlice.injectEndpoints({
         }),
         getAccountSettings: builder.query({
             query: ({ accountId }) => `/documents/${accountId}/settings`,
+            providesTags: ["AccountSettings"],
         }),
         putAccountSettings: builder.mutation({
             query: ({ accountId, name, balance, currency, openCondition }) => ({
@@ -35,7 +36,7 @@ export const documentsApiSlice = apiSlice.injectEndpoints({
                 method: "PUT",
                 body: { name, balance, currency, openCondition },
             }),
-            invalidatesTags: ["openPositions"],
+            invalidatesTags: ["openPositions", "AccountSettings"],
         }),
         postDocument: builder.mutation({
             query: ({ name, fields, checkbox }) => ({

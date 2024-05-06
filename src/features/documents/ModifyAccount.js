@@ -280,7 +280,7 @@ const ModifyAccount = () => {
     });
 
     const handleModifyAccount = async () => {
-        // TODO: missing control checks
+        // TODO: missing control checks! What checks
         let modifiedColumns = Object.entries(columns).reduce(
             (acc, [id, column]) => {
                 if (column.hasOwnProperty("action")) {
@@ -303,12 +303,6 @@ const ModifyAccount = () => {
             {}
         );
 
-        // column_name: {....} =>
-        // action!
-        // type (has to be a python dype)
-        // new type (is the type. for metric)
-
-        // new name
         modifiedColumns["to_delete"] = deletedColumns;
 
         const response = await updateAccountColumns({

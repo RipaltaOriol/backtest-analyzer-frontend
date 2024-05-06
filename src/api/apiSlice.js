@@ -58,6 +58,7 @@ export const apiSlice = createApi({
         "CompareSetups",
         "SetupRow",
         "AccountColumns",
+        "AccountSettings",
     ],
     endpoints: (builder) => ({}),
 });

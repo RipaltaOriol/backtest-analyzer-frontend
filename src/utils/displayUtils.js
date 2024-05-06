@@ -1,3 +1,5 @@
+// TODO: this functions need to be optimized: testing should be required
+// TODO: note what each funciton does: make a list
 // fix the use of %
 function parseDataValues(column, value, isDecorator = false) {
     if (!column) return value;

@@ -1,8 +1,12 @@
 import {
     TSBackButton,
+    TSDatePicker,
     TSMainButton,
+    TSMenuItem,
+    TSSelect,
     TSTextField,
 } from "common/CustomComponents";
+import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
@@ -22,6 +26,7 @@ import { setError, setMessage } from "features/messages/messagesSlice";
 
 import {
     useGetAccountSettingsQuery,
+    useGetDocumentColumnsQuery,
     usePutAccountSettingsMutation,
 } from "./documentSlice";
 
@@ -58,6 +63,37 @@ export const CurrencyMenuItem = styled(MenuItem)({
 
 const allCurrencies = ["USD", "EUR", "GBP", "AUD", "NZD", "CHF", "JPY", "CAD"];
 
+const conditions = {
+    object: {
+        empty: "Empty",
+        not_empty: "Not Empty",
+        equal: "Equal",
+        not_equal: "Not Equal",
+    },
+    float64: {
+        empty: "Empty",
+        not_empty: "Not Empty",
+        higher: "Higher",
+        lower: "Lower",
+        equal: "Equal",
+        not_equal: "Not Equal",
+    },
+    int64: {
+        empty: "Empty",
+        not_empty: "Not Empty",
+        higher: "Higher",
+        lower: "Lower",
+        equal: "Equal",
+        not_equal: "Not Equal",
+    },
+    "datetime64[ns, UTC]": {
+        empty: "Empty",
+        not_empty: "Not Empty",
+        before: "Before",
+        after: "After",
+    },
+};
+
 const currencyAdornmentMapping = (currency) => {
     switch (currency) {
         case "USD":
@@ -77,10 +113,18 @@ const AccountSettins = () => {
     let navigate = useNavigate();
     const dispatch = useDispatch();
 
+    // TODO: handle None for currency
     const [accountSettings, setAccountSettings] = useState({
         currency: "USD",
         balance: 0,
         name: "Loading...",
+    });
+
+    // TODO: potentially merge this with settings
+    const [openCondition, setOpenCondition] = useState({
+        column: null,
+        condition: null,
+        value: null,
     });
 
     const { documentId } = useParams();
@@ -90,10 +134,40 @@ const AccountSettins = () => {
         { skip: !documentId }
     );
 
+    const { data: accountColumns } = useGetDocumentColumnsQuery(
+        { documentId },
+        { skip: !documentId }
+    );
+
     const [putAccountSettings] = usePutAccountSettingsMutation();
 
     const handleChangeCurrency = (e) => {
         setAccountSettings({ ...accountSettings, currency: e.target.value });
+    };
+
+    const handleOpenPosition = (event) => {
+        let { name, value } = event.target;
+        if (name === "value") {
+            // Convert value as a number if indicated by data type
+            let columnType = accountColumns[openCondition.column]?.type;
+            if (columnType === "int64" || columnType === "float64") {
+                value = Number(value);
+            }
+        }
+        if (name === "column") {
+            setOpenCondition({
+                [name]: value,
+                condition: null,
+                value: null,
+            });
+        } else {
+            setOpenCondition({ ...openCondition, [name]: value });
+        }
+    };
+
+    const handleOpenPositionDate = (date) => {
+        let formatedDate = date.format("MM/DD/YYYY");
+        setOpenCondition({ ...openCondition, value: formatedDate });
     };
 
     const handleChangeBalance = (e) => {
@@ -108,6 +182,7 @@ const AccountSettins = () => {
             const updatedSettings = await putAccountSettings({
                 ...accountSettings,
                 accountId: documentId,
+                openCondition,
             });
             dispatch(setMessage({ msg: updatedSettings?.data.message }));
             dispatch(setError({ error: !updatedSettings?.data.success }));
@@ -118,7 +193,9 @@ const AccountSettins = () => {
 
     useEffect(() => {
         if (settings) {
-            setAccountSettings(settings);
+            const { positionCondition, ...otherSettings } = settings;
+            setAccountSettings(otherSettings);
+            setOpenCondition(positionCondition);
         }
     }, [settings]);
 
@@ -239,7 +316,7 @@ const AccountSettins = () => {
                         }}
                     />
                     <Select
-                        value={accountSettings?.currency}
+                        value={accountSettings?.currency || "USD"}
                         inputProps={{
                             MenuProps: {
                                 PaperProps: {
@@ -291,9 +368,106 @@ const AccountSettins = () => {
                         lineHeight: "30px",
                         letterSpacing: "-0.6px",
                     }}
+                    gutterBottom
                 >
                     Open Positions
                 </Typography>
+                <Box
+                    sx={{
+                        display: "grid",
+                        gridTemplateColumns: "repeat(3, 1fr)",
+                        columnGap: 2,
+                    }}
+                >
+                    <Box>
+                        <InputLabel shrink={false} sx={{ mb: 1 }}>
+                            Column
+                        </InputLabel>
+                        <TSSelect
+                            value={openCondition.column ?? ""}
+                            size="small"
+                            name="column"
+                            onChange={handleOpenPosition}
+                        >
+                            {Object.entries(accountColumns || {}).map(
+                                ([columnId, columnProps]) => {
+                                    // Filter out images and notes
+                                    if (
+                                        columnId !== "imgs" &&
+                                        columnId !== "note"
+                                    ) {
+                                        return (
+                                            <TSMenuItem
+                                                key={columnId}
+                                                value={columnId}
+                                            >
+                                                {columnProps.name}
+                                            </TSMenuItem>
+                                        );
+                                    }
+                                    return null;
+                                }
+                            )}
+                        </TSSelect>
+                    </Box>
+                    <Box>
+                        <InputLabel shrink={false} sx={{ mb: 1 }}>
+                            Condition
+                        </InputLabel>
+                        <TSSelect
+                            value={openCondition.condition ?? ""}
+                            size="small"
+                            name="condition"
+                            onChange={handleOpenPosition}
+                        >
+                            {accountColumns &&
+                                Object.entries(
+                                    conditions[
+                                        accountColumns[openCondition.column]
+                                            ?.type
+                                    ] || {}
+                                ).map(([id, name]) => (
+                                    <TSMenuItem key={id} value={id}>
+                                        {name}
+                                    </TSMenuItem>
+                                ))}
+                        </TSSelect>
+                    </Box>
+                    <Box>
+                        <InputLabel shrink={false} sx={{ mb: 1 }}>
+                            Value
+                        </InputLabel>
+                        {openCondition?.condition === "before" ||
+                        openCondition?.condition === "after" ? (
+                            <TSDatePicker
+                                label=""
+                                value={dayjs(openCondition.value) || null}
+                                onChange={(newValue) =>
+                                    handleOpenPositionDate(newValue)
+                                }
+                                sx={{}}
+                            />
+                        ) : (
+                            <TSTextField
+                                value={openCondition.value ?? ""}
+                                name="value"
+                                onChange={handleOpenPosition}
+                                disabled={
+                                    openCondition.condition === "empty" ||
+                                    openCondition.condition === "not_empty"
+                                }
+                                sx={{
+                                    "& .Mui-disabled": {
+                                        backgroundColor: "#ced4da",
+                                        borderRadius: "5px",
+                                        textDecoration: "line-through",
+                                        "& input": {},
+                                    },
+                                }}
+                            />
+                        )}
+                    </Box>
+                </Box>
             </Box>
         </Box>
     );

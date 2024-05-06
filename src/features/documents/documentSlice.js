@@ -28,6 +28,7 @@ export const documentsApiSlice = apiSlice.injectEndpoints({
         }),
         getAccountSettings: builder.query({
             query: ({ accountId }) => `/documents/${accountId}/settings`,
+            providesTags: ["AccountSettings"],
         }),
         putAccountSettings: builder.mutation({
             query: ({ accountId, name, balance, currency, openCondition }) => ({
@@ -35,6 +36,7 @@ export const documentsApiSlice = apiSlice.injectEndpoints({
                 method: "PUT",
                 body: { name, balance, currency, openCondition },
             }),
+            invalidatesTags: ["openPositions", "AccountSettings"],
         }),
         postDocument: builder.mutation({
             query: ({ name, fields, checkbox }) => ({
@@ -53,6 +55,7 @@ export const documentsApiSlice = apiSlice.injectEndpoints({
             invalidatesTags: [
                 "DocumentTable",
                 "CalendarTable",
+                "CalendarStatistics",
                 "Setup",
                 "SetupRow",
                 "Stats",
@@ -68,6 +71,7 @@ export const documentsApiSlice = apiSlice.injectEndpoints({
             invalidatesTags: [
                 "DocumentTable",
                 "CalendarTable",
+                "CalendarStatistics",
                 "Setup",
                 "Stats",
                 "Graphs",
@@ -139,6 +143,7 @@ export const documentsApiSlice = apiSlice.injectEndpoints({
                 { type: "Document", id: arg.documentId },
                 "DocumentTable",
                 "CalendarTable",
+                "CalendarStatistics",
                 "Setup",
                 "SetupRow",
                 "Stats",

@@ -9,7 +9,7 @@ import { breakDownConfig, tooltipConfig } from "./graphUtils";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-const DoughnutChart = ({ statsData }) => {
+const DoughnutChart = ({ statsData, props = {} }) => {
     let data = {
         labels: ["Win", "Loss", "Break Even"],
         datasets: [],
@@ -33,13 +33,14 @@ const DoughnutChart = ({ statsData }) => {
                 label: parseColumn(key),
                 data: [value.wins, value.breakEvens, value.losses],
                 backgroundColor: breakDownConfig,
+                borderRadius: 10,
             });
         }
         data.datasets = dataSets;
     }
 
     return (
-        <Box>
+        <Box sx={props}>
             {Object.keys(statsData?.data).length ? (
                 <Doughnut data={data} options={options} />
             ) : (

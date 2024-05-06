@@ -43,6 +43,7 @@ export const setupsSlice = apiSlice.injectEndpoints({
                 "Charts",
                 "CompareSetups",
                 "CalendarTable",
+                "CalendarStatistics",
             ],
         }),
         deleteFilterSetup: builder.mutation({
@@ -57,6 +58,7 @@ export const setupsSlice = apiSlice.injectEndpoints({
                 "Charts",
                 "CompareSetups",
                 "CalendarTable",
+                "CalendarStatistics",
             ],
         }),
         addSetups: builder.mutation({
@@ -98,6 +100,22 @@ export const setupsSlice = apiSlice.injectEndpoints({
             }),
             providesTags: ["CalendarTable"],
         }),
+        getCalendarStatistics: builder.query({
+            query: ({ versionId, metric, date, monthYear, offset }) => ({
+                url: `/setups/${versionId}/calendar/statistics`,
+                params: {
+                    metric,
+                    date,
+                    monthYear,
+                    offset,
+                },
+            }),
+            providesTags: ["CalendarStatistics"],
+        }),
+        getSetupOpenPositions: builder.query({
+            query: ({ versionId }) => `/setups/${versionId}/open-trades`,
+            providesTags: ["openPositions"],
+        }),
     }),
 });
 
@@ -109,7 +127,9 @@ export const {
     useDeleteSetupsMutation,
     useAddFilterSetupMutation,
     useGetCalendarTableQuery,
+    useGetCalendarStatisticsQuery,
     useDeleteFilterSetupMutation,
+    useGetSetupOpenPositionsQuery,
 } = setupsSlice;
 
 export const {

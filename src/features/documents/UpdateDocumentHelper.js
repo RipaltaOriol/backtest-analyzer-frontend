@@ -1,6 +1,8 @@
 import { TSDatePicker, TSTextField } from "common/CustomComponents";
 import dayjs from "dayjs";
 
+import InputAdornment from "@mui/material/InputAdornment";
+
 const checkDirectionValue = (direction) =>
     direction.toLowerCase() !== "long" && direction.toLowerCase() !== "short";
 
@@ -22,13 +24,24 @@ export const updateTextInput = (id, value, onChange) => {
     );
 };
 
-export const updateNumberInput = (id, value, onChange) => {
+export const updateNumberInput = (
+    id,
+    value,
+    onChange,
+    isPercentage = false
+) => {
     return (
         <TSTextField
             type="number"
             value={value ?? ""}
             onChange={onChange(id, "number")}
-            step={0.5}
+            InputProps={{
+                endAdornment: (
+                    <InputAdornment position="end">
+                        {isPercentage && "%"}
+                    </InputAdornment>
+                ),
+            }}
         />
     );
 };

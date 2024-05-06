@@ -1,11 +1,22 @@
-function parseDataValues(column, value) {
+// TODO: this functions need to be optimized: testing should be required
+// TODO: note what each funciton does: make a list
+// fix the use of %
+function parseDataValues(column, value, isDecorator = false) {
     if (!column) return value;
+    if (!value && value !== 0) return null;
+    let parsedValue = value;
     switch (true) {
         case column.startsWith("col_p_"):
-            return Number(value * 100).toFixed(2) + "%";
+            parsedValue = Number(value * 100).toFixed(2);
+            break;
         default:
-            return value;
+            break;
     }
+    if (isDecorator) {
+        let decorator = getResultDecorator(column);
+        return parsedValue + decorator;
+    }
+    return parsedValue;
 }
 
 function parseDataValuesDecorator(column, value, decorator) {
@@ -23,10 +34,10 @@ function getResultDecorator(column) {
             decorator = "%";
             break;
         case column.startsWith("col_v_"):
-            decorator = "$";
+            decorator = " $";
             break;
         case column.startsWith("col_r_"):
-            decorator = "RR";
+            decorator = " RR";
             break;
         default:
             decorator = "";
@@ -35,7 +46,7 @@ function getResultDecorator(column) {
 }
 
 function parseStatsValues(column, metric, value) {
-    if (!value) return null;
+    if (!value && value !== 0) return null;
     let decorator = getResultDecorator(column);
 
     switch (true) {
@@ -65,7 +76,10 @@ function displayWinRate(value) {
 }
 
 function displayPercent(value) {
-    return value ? Number(value * 100).toFixed(2) + "%" : null;
+    if (value || value === 0) {
+        return Number(value * 100).toFixed(2) + "%";
+    }
+    return null;
 }
 
 function parseColumn(column) {

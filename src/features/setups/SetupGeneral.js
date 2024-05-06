@@ -7,14 +7,14 @@ import { displayWinRate, parseDataValues } from "utils/displayUtils";
 import parseColumnName from "utils/parseColumns";
 
 import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
-import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
-import Divider from "@mui/material/Divider";
 import Skeleton from "@mui/material/Skeleton";
+import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 
 import { useGetStatisticsQuery } from "features/statistics/statisticsApiSlice";
 import { renderTemplate } from "features/templates/utilsRenderTemplate";
+import OpenTrades from "features/trades/OpenTrades";
 import { setOpen, setTrade } from "features/trades/tradeSlice";
 import { selectOpen, selectTrade } from "features/trades/tradeSlice";
 
@@ -112,7 +112,8 @@ const SetupGeneral = (props) => {
                         >
                             {parseDataValues(
                                 resultMetric,
-                                setupStatistics?.data[resultMetric]?.total
+                                setupStatistics?.data[resultMetric]?.total,
+                                true
                             )}
                         </Typography>
                     </Box>
@@ -127,9 +128,14 @@ const SetupGeneral = (props) => {
                         </Typography>
                     </Box>
                     <Box align="center">
-                        <Typography variant="body2" gutterBottom>
-                            Trade Expectancy
-                        </Typography>
+                        <Tooltip
+                            placement="top"
+                            title="Estimates the average amount a trader can expect to win or lose per trade based on their historical performance."
+                        >
+                            <Typography variant="body2" gutterBottom>
+                                Trade Expectancy
+                            </Typography>
+                        </Tooltip>
                         <Typography
                             variant="h3"
                             color={
@@ -141,7 +147,8 @@ const SetupGeneral = (props) => {
                         >
                             {parseDataValues(
                                 resultMetric,
-                                setupStatistics?.data[resultMetric]?.expectancy
+                                setupStatistics?.data[resultMetric]?.expectancy,
+                                true
                             )}
                         </Typography>
                     </Box>
@@ -176,22 +183,13 @@ const SetupGeneral = (props) => {
                             )}
                         </Box>
                     )}
-                    <Box
+
+                    <OpenTrades
                         className="setup-open-trades"
-                        sx={{
-                            border: "1px solid #e5e9eb",
-                            borderRadius: "5px",
-                            p: 3,
-                        }}
-                    >
-                        <Typography variant="h6" gutterBottom>
-                            Open Trades
-                        </Typography>
-                        <Divider sx={{ my: 2 }} />
-                        <Alert severity="info">
-                            Coming soon! - This widget is under construction.
-                        </Alert>
-                    </Box>
+                        setupId={setup?.id}
+                        setOpen={handleSetTradeOpen}
+                        setSelectedRow={handeSetTrade}
+                    />
                     <Notes
                         setupId={setup?.id}
                         notes={setup?.notes}

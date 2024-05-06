@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 import { useDispatch, useSelector } from "react-redux";
-import { getResultDecorator } from "utils/displayUtils";
+import { parseDataValues } from "utils/displayUtils";
 
 import { Typography } from "@mui/material";
 import Box from "@mui/material/Box";
@@ -33,9 +33,6 @@ const Day = ({ day, rowIdx, cellIdx, calendarData }) => {
 
     let trades = [];
 
-    // const dateFormat = useSelector(selectDateFormat);
-    // const resultDisplay = useSelector(selectResultDisplay);
-
     if (calendarData) {
         trades = calendarData?.table.reduce((filtered, trade) => {
             if (
@@ -61,7 +58,7 @@ const Day = ({ day, rowIdx, cellIdx, calendarData }) => {
     }
 
     function getTradeClass(tradeResult) {
-        tradeResult = parseInt(tradeResult);
+        tradeResult = parseFloat(tradeResult);
         if (tradeResult > 0) {
             return "trade-win";
         } else if (tradeResult < 0) {
@@ -149,9 +146,10 @@ const Day = ({ day, rowIdx, cellIdx, calendarData }) => {
                                     trade[PAIR_METRIC].toUpperCase()}
                             </Typography>
                             <Typography>
-                                {trade[calendarData?.active_metric]}
-                                {getResultDecorator(
-                                    calendarData?.active_metric
+                                {parseDataValues(
+                                    calendarData?.active_metric,
+                                    trade[calendarData?.active_metric],
+                                    true
                                 )}
                             </Typography>
                         </Box>

@@ -9,6 +9,7 @@ import { CustomSelect } from "common/CustomComponents";
 import { ErrorFeedback } from "common/ErrorFeedback";
 import { useState } from "react";
 import { Bubble } from "react-chartjs-2";
+import { calculateLinearRegression } from "utils/statistics";
 
 import Box from "@mui/material/Box";
 import MenuItem from "@mui/material/MenuItem";
@@ -125,10 +126,32 @@ const RadarChart = ({ setupId }) => {
     if (data?.success) {
         let bubbleDatasets = [];
         data?.data.forEach((dataset, idx) => {
+            // Get the regression coefficients
+            const { m, b } = calculateLinearRegression(dataset.data);
+
+            // Generate two points for the regression line
+            const minX = Math.min(...dataset.data.map((d) => d.x));
+            const maxX = Math.max(...dataset.data.map((d) => d.x));
+
+            const regressionLine = [
+                { x: minX, y: m * minX + b },
+                { x: maxX, y: m * maxX + b },
+            ];
+
             bubbleDatasets.push({
                 ...dataset,
                 backgroundColor: multipleColorsConfig[idx],
                 borderColor: multipleColorsConfig[idx],
+            });
+
+            bubbleDatasets.push({
+                type: "line",
+                label: dataset?.label + " Regression",
+                borderColor: multipleColorsConfig[idx],
+                backgroundColor: multipleColorsConfig[idx],
+                borderWidth: 2,
+                data: regressionLine,
+                pointRadius: 0,
             });
         });
         bubbleData.datasets = bubbleDatasets;

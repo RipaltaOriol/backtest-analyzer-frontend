@@ -86,7 +86,7 @@ const conditions = {
         equal: "Equal",
         not_equal: "Not Equal",
     },
-    "datetime64[ns, UTC]": {
+    "datetime64[ns, utc]": {
         empty: "Empty",
         not_empty: "Not Empty",
         before: "Before",
@@ -421,10 +421,13 @@ const AccountSettins = () => {
                             onChange={handleOpenPosition}
                         >
                             {accountColumns &&
+                                // TODO: seriously optimize this line
                                 Object.entries(
                                     conditions[
-                                        accountColumns[openCondition.column]
-                                            ?.type
+                                        (
+                                            accountColumns[openCondition.column]
+                                                ?.type || ""
+                                        ).toLowerCase()
                                     ] || {}
                                 ).map(([id, name]) => (
                                     <TSMenuItem key={id} value={id}>

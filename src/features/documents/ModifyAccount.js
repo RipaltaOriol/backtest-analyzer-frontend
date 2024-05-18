@@ -5,27 +5,27 @@ import {
     useReactTable,
 } from "@tanstack/react-table";
 import { previewAccountTableData } from "assets/utils/previewAccountTableData";
-import { TSMenuItem } from "common/CustomComponents";
-import { TSTextField } from "common/CustomComponents";
+import {
+    TSAddButton,
+    TSMenuItem,
+    TSSelect,
+    TSTextField,
+} from "common/CustomComponents";
 import Message from "common/Message";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { ValidationError } from "errors";
+import { useCallback, useEffect, useMemo, useReducer, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 
-import { AddBoxRounded } from "@mui/icons-material";
 import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
-import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Checkbox from "@mui/material/Checkbox";
-import Divider from "@mui/material/Divider";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import IconButton from "@mui/material/IconButton";
 import InputLabel from "@mui/material/InputLabel";
-import Select from "@mui/material/Select";
-import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { styled } from "@mui/system";
 
@@ -44,7 +44,7 @@ const columnOptions = {
     "Value Result": "col_v_",
 };
 
-const validCheckboxes = [
+const invalidFields = [
     "col_p",
     "col_o",
     "col_c",
@@ -69,7 +69,30 @@ const checkboxMapping = {
     col_d: "Direction",
 };
 
-const forbiddenColumns = ["#", "note", "imgs"];
+// Simplified state reducer for columns
+const columnsReducer = (state, action) => {
+    switch (action.type) {
+        case "UPDATE_COLUMN":
+            return {
+                ...state,
+                [action.id]: {
+                    ...state[action.id],
+                    ...action.newAttributes,
+                    action:
+                        state[action.id]?.action ||
+                        action.newAttributes?.action ||
+                        "edit",
+                },
+            };
+        case "REMOVE_COLUMN":
+            const { [action.id]: _, ...remainingColumns } = state;
+            return remainingColumns;
+        case "SET_COLUMNS":
+            return action.columns;
+        default:
+            return state;
+    }
+};
 
 const BoxContainer = styled(Box)({
     backgroundColor: "#F6F8F9",
@@ -83,7 +106,6 @@ const ModifyAccount = () => {
     const document = useSelector((state) =>
         selectDocumentById(state, documentId)
     );
-
     const { data: accountColumns } = useGetDocumentColumnsQuery(
         {
             documentId,
@@ -93,50 +115,38 @@ const ModifyAccount = () => {
 
     const columnHelper = useMemo(() => createColumnHelper(), []);
 
+    // const [columns, setColumns] = useState(() => []);
+    const [columns, dispatchColumns] = useReducer(columnsReducer, {});
+    const [tableColumns, setTableColumns] = useState(() => []);
+    const [deletedColumns, setDeleteColumns] = useState(() => []);
+    const [tableData, setTableData] = useState(() => []);
+    const [message, setMessage] = useState("");
+    const [isMessageError, setIsMessageError] = useState(true);
+
     const [updateAccountColumns] = useUpdateAccountColumnsMutation();
 
-    // TODO: refactor all of this
+    // Generates column structure needed to create page components
     const generateColumnData = useCallback(() => {
-        if (accountColumns !== undefined) {
-            setColumns(
-                Object.entries(accountColumns).reduce(
-                    (acc, [columnName, columnProps]) => {
-                        const adjustedColumn = {
-                            ...columnProps,
-                            columnType: columnProps.column,
-                            type: columnProps.type,
-                        };
-                        acc[columnName] = adjustedColumn; // Use the id as the key and the entire object as the value
-
-                        return acc;
-                    },
-                    {}
-                )
-            );
-            setCurrentColumns(
-                Object.keys(accountColumns).reduce((acc, columnName) => {
-                    if (!forbiddenColumns.includes(columnName)) {
-                        acc.push(columnName);
-                    }
+        if (accountColumns) {
+            const componentColumns = Object.entries(accountColumns).reduce(
+                (acc, [name, props]) => {
+                    acc[name] = { ...props };
                     return acc;
-                }, [])
+                },
+                {}
             );
-            setTableColumns(
-                Object.entries(accountColumns).reduce(
-                    (acc, [columnName, columnProps]) => {
-                        if (!forbiddenColumns.includes(columnName)) {
-                            acc.push(
-                                columnHelper.accessor(columnProps.column, {
-                                    header: columnProps.name,
-                                    id: columnName,
-                                })
-                            );
-                        }
-                        return acc;
-                    },
-                    []
-                )
-            );
+            dispatchColumns({ type: "SET_COLUMNS", columns: componentColumns });
+
+            const newTableColumns = Object.entries(accountColumns)
+                .filter(([name]) => !["#", "note", "imgs"].includes(name))
+                .map(([name, props]) =>
+                    columnHelper.accessor(props.column, {
+                        header: props.name,
+                        id: name,
+                    })
+                );
+
+            setTableColumns(newTableColumns);
         }
     }, [accountColumns, columnHelper]);
 
@@ -144,134 +154,278 @@ const ModifyAccount = () => {
         generateColumnData();
     }, [generateColumnData]);
 
-    const [columns, setColumns] = useState(() => []);
-    const [tableColumns, setTableColumns] = useState(() => []);
-    const [deletedColumns, setDeleteColumns] = useState(() => []);
-    // TODO this should be optimized and removed
-    const [currentColumns, setCurrentColumns] = useState(() => []);
-    const [tableData, setTableData] = useState(() => []);
-    const [message, setMessage] = useState("");
-    const [isMessageError, setIsMessageError] = useState(true);
-
-    const handleCheckbox = (id) => {
-        if (columns.hasOwnProperty(id)) {
-            const { [id]: ommited, ...newColumns } = columns;
-            // set the new object as the new state
-            setColumns(newColumns);
-            setTableColumns(tableColumns.filter((column) => column.id !== id));
-            // add the prop to the deleted list
-            if (currentColumns.includes(id)) {
-                setDeleteColumns([...deletedColumns, id]);
-            }
-        } else {
-            setColumns({
-                ...columns,
-                [id]: {
-                    columnType: id,
-                    action: !currentColumns.includes(id) ? "add" : null,
-                    type: "object", // placeholder to avoid backend errors
-                },
-            });
-            // remove from the delete list if it's there
-            setDeleteColumns(deletedColumns.filter((column) => column !== id));
-
-            setTableColumns([
-                ...tableColumns,
-                columnHelper.accessor(id, {
-                    header: checkboxMapping[id],
-                    id: id,
-                }),
-            ]);
-        }
-    };
-
     useEffect(() => {
         setTableData(previewAccountTableData);
     }, []);
 
-    const handleChangeType = (event, id) => {
-        const columnSate = columns[id];
-        setColumns({
-            ...columns,
-            [id]: {
-                ...columnSate,
-                columnType: event.target.value,
-                action: columnSate["action"] ? columnSate["action"] : "edit",
-            },
-        });
-        setTableColumns(
-            tableColumns.map((column) => {
-                if (column.id === id) {
-                    return { ...column, accessorKey: event.target.value };
-                }
-                return column;
-            })
+    // Update or remove columns and their mapping
+    // TODO: update action should also trigger an update of the sample table data
+    const updateColumn = useCallback((id, newAttributes) => {
+        dispatchColumns({ type: "UPDATE_COLUMN", id, newAttributes });
+    }, []);
+
+    // Generalized function to update the external table column mapping
+    const updateTableColumnMapping = useCallback((id, newKey, newValue) => {
+        setTableColumns((prev) =>
+            prev.map((column) =>
+                column.id === id ? { ...column, [newKey]: newValue } : column
+            )
         );
-    };
+    }, []);
 
-    const handleChangeDataType = (event, id) => {
-        // set new object action to edit if its not add
-        const columnSate = columns[id];
-        setColumns({
-            ...columns,
-            [id]: {
-                ...columnSate,
-                type: event.target.value,
-                action: columnSate["action"] ? columnSate["action"] : "edit",
-            },
-        });
-    };
+    const handleCheckbox = useCallback(
+        (id) => {
+            if (columns.hasOwnProperty(id)) {
+                dispatchColumns({ type: "REMOVE_COLUMN", id });
+                setTableColumns((prev) =>
+                    prev.filter((column) => column.id !== id)
+                );
+                if (accountColumns?.hasOwnProperty(id))
+                    setDeleteColumns((prev) => [...prev, id]);
+            } else {
+                const newColumn = {
+                    name: "",
+                    column: id,
+                    action: accountColumns?.hasOwnProperty(id) ? null : "add",
+                };
 
-    const handleChangeName = (event, id) => {
-        const columnSate = columns[id];
-        setColumns({
-            ...columns,
-            [id]: {
-                ...columnSate,
-                name: event.target.value,
-                action: columnSate["action"] ? columnSate["action"] : "edit",
-            },
-        });
-        setTableColumns(
-            tableColumns.map((column) => {
-                if (column.id === id) {
-                    return { ...column, header: event.target.value };
+                updateColumn(id, newColumn); // TODO: not sure if this will work
+                setDeleteColumns((prev) =>
+                    prev.filter((column) => column !== id)
+                );
+                setTableColumns((prev) => [
+                    ...prev,
+                    columnHelper.accessor(id, {
+                        header: checkboxMapping[id],
+                        id,
+                    }),
+                ]);
+            }
+        },
+        [columns, accountColumns, columnHelper, updateColumn]
+    );
+
+    // Handle change to change column type
+    const handleChangeType = useCallback(
+        (event, id) => {
+            const newValue = event.target.value;
+            updateColumn(id, { column: newValue });
+            updateTableColumnMapping(id, "accessorKey", newValue);
+        },
+        [updateColumn, updateTableColumnMapping]
+    );
+
+    // Handle change column data type
+    const handleChangeDataType = useCallback(
+        (event, id) => {
+            const newValue = event.target.value;
+            updateColumn(id, { type: newValue });
+        },
+        [updateColumn]
+    );
+
+    // Handle change column name
+    const handleChangeName = useCallback(
+        (event, id) => {
+            const newNameValue = event.target.value;
+            updateColumn(id, { name: newNameValue });
+            updateTableColumnMapping(id, "header", newNameValue);
+        },
+        [updateColumn, updateTableColumnMapping]
+    );
+
+    // Handle delete column
+    const handleDeleteColumn = useCallback(
+        (id) => {
+            dispatchColumns({ type: "REMOVE_COLUMN", id });
+            setTableColumns((prev) =>
+                prev.filter((column) => column.id !== id)
+            );
+            if (accountColumns?.hasOwnProperty(id))
+                setDeleteColumns((prev) => [...prev, id]);
+        },
+        [accountColumns]
+    );
+
+    // Handle add a new column
+    const addNewColumn = useCallback(() => {
+        const id = uuidv4();
+        const newColumn = {
+            name: "",
+            column: "col_d_",
+            action: "add",
+            type: "object",
+        };
+        updateColumn(id, newColumn);
+        setTableColumns((prev) => [
+            ...prev,
+            columnHelper.accessor("col_d_", { header: "", id }),
+        ]);
+    }, [columnHelper, updateColumn]);
+
+    const submitModifiedColumns = async () => {
+        try {
+            const addedColumns = [];
+            const editedColumns = [];
+
+            Object.entries(columns).forEach(([id, column]) => {
+                if (
+                    !column.name &&
+                    !checkboxMapping.hasOwnProperty(column.column)
+                )
+                    throw new ValidationError("Column name cannot be empty.");
+
+                if (column.hasOwnProperty("action")) {
+                    if (column.action === "add")
+                        addedColumns.push({
+                            name: column.name,
+                            type: column.type || null,
+                            column: column.column,
+                        });
+                    if (column.action === "edit")
+                        // TODO: check if edit is needed
+                        editedColumns.push({
+                            prev_name: id,
+                            new_name: column.column + column.name,
+                            type: column.type || null,
+                            column: column.column,
+                        });
                 }
-                return column;
-            })
-        );
-    };
+            });
 
-    const handleDeleteColumn = (id) => {
-        const { [id]: ommited, ...newColumns } = columns;
-        // Set the new object as the new state
-        setColumns(newColumns);
-        setTableColumns(tableColumns.filter((column) => column.id !== id));
-        if (currentColumns.includes(id)) {
-            setDeleteColumns([...deletedColumns, id]);
+            const actions = {
+                add: addedColumns,
+                edit: editedColumns,
+                delete: deletedColumns,
+            };
+            const response = await updateAccountColumns({
+                id: documentId,
+                columns: actions,
+            });
+            setIsMessageError(!response.data.success);
+            setMessage(response.data.msg);
+            setDeleteColumns([]);
+            generateColumnData();
+        } catch (error) {
+            let errorMessage = "Something went wrong. Please try again.";
+            if (error instanceof ValidationError) errorMessage = error.message;
+            setIsMessageError(true);
+            setMessage(errorMessage);
         }
     };
 
-    const addNewColumn = () => {
-        const id = uuidv4();
-        setColumns({
-            ...columns,
-            [id]: {
-                name: "",
-                columnType: "col_d_",
-                action: "add",
-                type: "object",
-            },
-        });
+    const renderCheckboxes = useMemo(() => {
+        return Object.entries(checkboxMapping).map(([id, label]) => (
+            <FormControlLabel
+                key={id}
+                checked={columns.hasOwnProperty(id)}
+                onChange={() => handleCheckbox(id)}
+                control={<Checkbox disableRipple />}
+                label={label}
+                sx={{ mr: 5 }}
+            />
+        ));
+    }, [columns, handleCheckbox]);
 
-        setTableColumns([
-            ...tableColumns,
-            columnHelper.accessor("col_d_", {
-                header: "",
-                id: id,
-            }),
-        ]);
-    };
+    const renderFields = useMemo(() => {
+        // Generate elements for account columns
+        return Object.entries(columns)
+            .filter(([id]) => !invalidFields.includes(id))
+            .map(([id, column]) => (
+                <Box
+                    key={id}
+                    sx={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        mb: 2,
+                        p: 1,
+                        borderRadius: "10px",
+                        backgroundColor: "rgba(13, 13, 37, 0.02)",
+                    }}
+                >
+                    <Box sx={{ width: "100%", mr: 2 }}>
+                        <InputLabel
+                            id="columnType"
+                            shrink={false}
+                            sx={{ mb: 1 }}
+                        >
+                            Column Type
+                        </InputLabel>
+                        <TSSelect
+                            id="columnType"
+                            value={column.column}
+                            onChange={(e) => handleChangeType(e, id)}
+                        >
+                            {Object.entries(columnOptions).map(
+                                ([name, key]) => (
+                                    <TSMenuItem key={key} value={key}>
+                                        {name}
+                                    </TSMenuItem>
+                                )
+                            )}
+                        </TSSelect>
+                    </Box>
+
+                    <Box sx={{ width: "100%", mr: 2 }}>
+                        <InputLabel
+                            shrink={false}
+                            htmlFor={"columnName"}
+                            sx={{ mb: 1 }}
+                        >
+                            Column Name
+                        </InputLabel>
+                        <TSTextField
+                            id="columnName"
+                            value={column.name}
+                            onChange={(e) => handleChangeName(e, id)}
+                        />
+                    </Box>
+
+                    <Box sx={{ width: "100%", mr: 2 }}>
+                        {column.column.startsWith("col_m_") && (
+                            <>
+                                <InputLabel
+                                    shrink={false}
+                                    htmlFor={"columnType"}
+                                    sx={{ mb: 1 }}
+                                >
+                                    Data Type
+                                </InputLabel>
+                                <TSSelect
+                                    id="columnType"
+                                    value={column.type}
+                                    onChange={(e) =>
+                                        handleChangeDataType(e, id)
+                                    }
+                                >
+                                    <TSMenuItem value="object">Text</TSMenuItem>
+                                    <TSMenuItem value="float64">
+                                        Number
+                                    </TSMenuItem>
+                                </TSSelect>
+                            </>
+                        )}
+                    </Box>
+
+                    <IconButton
+                        onClick={() => handleDeleteColumn(id)}
+                        sx={{
+                            backgroundColor: "white",
+                            color: "#FF4D5E",
+                            border: "1px solid rgba(13, 13, 37, 0.08)",
+                        }}
+                    >
+                        <DeleteRoundedIcon />
+                    </IconButton>
+                </Box>
+            ));
+    }, [
+        columns,
+        handleChangeDataType,
+        handleChangeName,
+        handleChangeType,
+        handleDeleteColumn,
+    ]);
 
     const table = useReactTable({
         data: tableData,
@@ -279,210 +433,22 @@ const ModifyAccount = () => {
         getCoreRowModel: getCoreRowModel(),
     });
 
-    const handleModifyAccount = async () => {
-        // TODO: missing control checks! What checks
-        let modifiedColumns = Object.entries(columns).reduce(
-            (acc, [id, column]) => {
-                if (column.hasOwnProperty("action")) {
-                    if (column.action === "add") {
-                        acc[String(column.columnType + (column.name || ""))] = {
-                            action: "add",
-                            type: column.type ? column.type : null,
-                        };
-                    }
-                    if (column.action === "edit") {
-                        acc[id] = {
-                            action: "edit",
-                            type: column.type ? column.type : null,
-                            new_column: column.columnType + column.name,
-                        };
-                    }
-                }
-                return acc;
-            },
-            {}
-        );
-
-        modifiedColumns["to_delete"] = deletedColumns;
-
-        const response = await updateAccountColumns({
-            id: documentId,
-            columns: modifiedColumns,
-        });
-        setIsMessageError(!response.data.success);
-        setMessage(response.data.msg);
-        setDeleteColumns([]);
-        generateColumnData();
-    };
-
-    const generateAccountColumns = () => {
-        return Object.entries(columns).map(([id, column]) => {
-            if (!validCheckboxes.includes(id)) {
-                return (
-                    <Box
-                        key={id}
-                        sx={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                            mb: 2,
-                            p: 1,
-                            borderRadius: "10px",
-                            backgroundColor: "rgba(13, 13, 37, 0.02)",
-                        }}
-                    >
-                        <Box sx={{ width: "100%", mr: 2 }}>
-                            <InputLabel
-                                id="columnType"
-                                shrink={false}
-                                sx={{ mb: 1 }}
-                            >
-                                Column Type
-                            </InputLabel>
-                            <Select
-                                id="columnType"
-                                IconComponent={KeyboardArrowDownRoundedIcon}
-                                sx={{
-                                    width: "100%",
-                                    backgroundColor: "white",
-                                    borderRadius: "5px",
-                                    "&.MuiOutlinedInput-root:hover fieldset": {
-                                        borderColor: "grey",
-                                    },
-
-                                    "&.Mui-focused .MuiOutlinedInput-notchedOutline":
-                                        {
-                                            borderColor: "#0e73f6",
-                                            borderWidth: "1px",
-                                        },
-                                }}
-                                value={column.columnType}
-                                size="small"
-                                onChange={(e) => handleChangeType(e, id)}
-                            >
-                                {Object.entries(columnOptions).map(
-                                    ([name, key]) => (
-                                        <TSMenuItem key={key} value={key}>
-                                            {name}
-                                        </TSMenuItem>
-                                    )
-                                )}
-                            </Select>
-                        </Box>
-
-                        <Box sx={{ width: "100%", mr: 2 }}>
-                            <InputLabel
-                                shrink={false}
-                                htmlFor={"columnName"}
-                                sx={{ mb: 1 }}
-                            >
-                                Column Name
-                            </InputLabel>
-                            <TextField
-                                id="columnName"
-                                variant="outlined"
-                                size="small"
-                                value={column.name}
-                                onChange={(e) => handleChangeName(e, id)}
-                                sx={{
-                                    border: "null",
-                                    width: "100%",
-                                    backgroundColor: "white",
-                                    "& .MuiOutlinedInput-root": {
-                                        "& fieldset": {
-                                            // targets the <fieldset> element
-                                            borderRadius: "5px",
-                                        },
-                                        // targets the root of the outlined input
-                                        "&:hover fieldset": {
-                                            borderColor: "gray", // border color on hover
-                                        },
-                                        "&.Mui-focused fieldset": {
-                                            // targets the <fieldset> when the input is focused
-                                            borderColor: "#0e73f6", // border color on focus
-                                            borderWidth: "1px", // border width on focus
-                                        },
-                                    },
-                                }}
-                            />
-                        </Box>
-
-                        <Box sx={{ width: "100%", mr: 2 }}>
-                            {column.columnType === "col_m_" && (
-                                <>
-                                    <InputLabel
-                                        shrink={false}
-                                        htmlFor={"columnType"}
-                                        sx={{ mb: 1 }}
-                                    >
-                                        Data Type
-                                    </InputLabel>
-                                    <Select
-                                        id="columnType"
-                                        IconComponent={
-                                            KeyboardArrowDownRoundedIcon
-                                        }
-                                        sx={{
-                                            width: "100%",
-                                            backgroundColor: "white",
-                                            borderRadius: "5px",
-                                            "&.MuiOutlinedInput-root:hover fieldset":
-                                                {
-                                                    borderColor: "grey",
-                                                },
-
-                                            "&.Mui-focused .MuiOutlinedInput-notchedOutline":
-                                                {
-                                                    borderColor: "#0e73f6",
-                                                    borderWidth: "1px",
-                                                },
-                                        }}
-                                        value={column.type}
-                                        size="small"
-                                        onChange={(e) =>
-                                            handleChangeDataType(e, id)
-                                        }
-                                    >
-                                        <TSMenuItem value="object">
-                                            Text
-                                        </TSMenuItem>
-                                        <TSMenuItem value="float64">
-                                            Number
-                                        </TSMenuItem>
-                                    </Select>
-                                </>
-                            )}
-                        </Box>
-
-                        <IconButton
-                            onClick={() => handleDeleteColumn(id)}
-                            sx={{
-                                backgroundColor: "white",
-                                color: "#FF4D5E",
-                                border: "1px solid rgba(13, 13, 37, 0.08)",
-                            }}
-                        >
-                            <DeleteRoundedIcon />
-                        </IconButton>
-                    </Box>
-                );
-            }
-            return null;
-        });
-    };
-
     return (
         <Box>
             <Box
-                display="flex"
-                justifyContent="space-between"
-                alignItems="center"
+                sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    mb: 2,
+                }}
             >
                 <Typography
                     sx={{
-                        fontSize: 22,
                         fontWeight: 600,
-                        lineHeight: "29px",
-                        letterSpacing: "-0.03em",
+                        fontSize: 25,
+                        LineHeight: 30,
+                        letterSpacing: "-0.6px",
                     }}
                 >
                     Modify Account
@@ -507,7 +473,7 @@ const ModifyAccount = () => {
                     </Button>
                     <Button
                         variant="contained"
-                        onClick={handleModifyAccount}
+                        onClick={submitModifiedColumns}
                         sx={{
                             ml: 1,
                             backgroundColor: "#0E73F6",
@@ -515,13 +481,11 @@ const ModifyAccount = () => {
                             py: 1,
                             borderRadius: "10px",
                         }}
-                        // onClick={handleCreateAccount}
                     >
                         Confirm
                     </Button>
                 </Box>
             </Box>
-            <Divider sx={{ mt: 2, mb: 3 }} />
             {message && (
                 <Message
                     message={message}
@@ -579,29 +543,10 @@ const ModifyAccount = () => {
                         Fields
                     </Typography>
                     <Box>
-                        {generateAccountColumns()}
-                        <Button
-                            variant="contained"
-                            disableRipple
-                            disableElevation
-                            disableFocusRipple
-                            onClick={addNewColumn}
-                            startIcon={<AddBoxRounded />}
-                            sx={{
-                                width: "100%",
-                                py: 1,
-                                backgroundColor: "#e0e8f8",
-                                color: "#1A65F1",
-                                fontSize: "15px",
-                                fontWeight: 600,
-                                "&:hover": {
-                                    color: "#1A65F1",
-                                    backgroundColor: "#e0e8f8",
-                                },
-                            }}
-                        >
+                        {renderFields}
+                        <TSAddButton variant="contained" onClick={addNewColumn}>
                             Add New
-                        </Button>
+                        </TSAddButton>
                     </Box>
                 </Box>
                 <Box
@@ -611,64 +556,10 @@ const ModifyAccount = () => {
                         justifyContent: "space-between",
                     }}
                 >
-                    <FormControlLabel
-                        sx={{ mr: 5 }}
-                        checked={columns.hasOwnProperty("col_p")}
-                        onChange={() => handleCheckbox("col_p")}
-                        control={<Checkbox disableRipple />}
-                        label="Pair"
-                    />
-                    <FormControlLabel
-                        sx={{ mr: 5 }}
-                        checked={columns.hasOwnProperty("col_o")}
-                        onChange={() => handleCheckbox("col_o")}
-                        control={<Checkbox disableRipple />}
-                        label="Open Price"
-                    />
-                    <FormControlLabel
-                        sx={{ mr: 5 }}
-                        checked={columns.hasOwnProperty("col_c")}
-                        onChange={() => handleCheckbox("col_c")}
-                        control={<Checkbox disableRipple />}
-                        label="Close Price"
-                    />
-                    <FormControlLabel
-                        sx={{ mr: 5 }}
-                        checked={columns.hasOwnProperty("col_rr")}
-                        onChange={() => handleCheckbox("col_rr")}
-                        control={<Checkbox disableRipple />}
-                        label="Risk Reward Ratio"
-                    />
-                    <FormControlLabel
-                        sx={{ mr: 5 }}
-                        checked={columns.hasOwnProperty("col_sl")}
-                        onChange={() => handleCheckbox("col_sl")}
-                        control={<Checkbox disableRipple />}
-                        label="Stop Loss"
-                    />
-                    <FormControlLabel
-                        sx={{ mr: 5 }}
-                        checked={columns.hasOwnProperty("col_tp")}
-                        onChange={() => handleCheckbox("col_tp")}
-                        control={<Checkbox disableRipple />}
-                        label="Take Profit"
-                    />
-                    <FormControlLabel
-                        sx={{ mr: 5 }}
-                        checked={columns.hasOwnProperty("col_t")}
-                        onChange={() => handleCheckbox("col_t")}
-                        control={<Checkbox disableRipple />}
-                        label="Timeframe"
-                    />
-                    <FormControlLabel
-                        sx={{ mr: 5 }}
-                        checked={columns.hasOwnProperty("col_d")}
-                        onChange={() => handleCheckbox("col_d")}
-                        control={<Checkbox disableRipple />}
-                        label="Direction"
-                    />
+                    {renderCheckboxes}
                 </Box>
                 <Box sx={{ mt: 3 }}>
+                    {/* TODO: OPTIMIZE THIS */}
                     {tableColumns.length > 0 && (
                         <div className="ts-table-container">
                             <table>
